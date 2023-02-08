@@ -24,7 +24,7 @@ public class ChangePlayerName : MonoBehaviour
             playButton.interactable = false;
         else
             playButton.interactable = true;
-            PersistantInfo.Instance.SetPlayerName(newName);
+            PersistantInfo.Instance.PlayerName = newName;
     }
     public void SaveName()
     {

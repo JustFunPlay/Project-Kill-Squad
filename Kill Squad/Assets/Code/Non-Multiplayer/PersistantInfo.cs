@@ -7,12 +7,7 @@ public class PersistantInfo : MonoBehaviour
     public static PersistantInfo Instance { get; private set; }
 
     private string playerName;
-    public string PlayerName => playerName;
-
-    public void SetPlayerName(string name)
-    {
-        playerName = name;
-    }
+    public string PlayerName { get { return playerName; } set { playerName = value; } }
 
     void Awake()
     {
