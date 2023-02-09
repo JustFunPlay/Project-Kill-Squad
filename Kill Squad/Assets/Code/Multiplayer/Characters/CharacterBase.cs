@@ -107,20 +107,20 @@ public class CharacterBase : NetworkBehaviour
         turnProgress += Speed / (25f + Speed);
     }
 
-    [Client] public void StartTurn()
+    [ClientRpc] public void StartTurn()
     {
         if (isOwned)
             button.SetActive(true);
     }
-    public void EndTurn()
+    [Command]public void EndTurn()
     {
         Progress -= 1;
-        button.SetActive(false);
-        CmdProgressTurns();
-    }
-    private void CmdProgressTurns()
-    {
         StartCoroutine(TurnTracker.instance.ProgressTurns());
+        DeactivateTurnUi();
+    }
+    [ClientRpc]private void DeactivateTurnUi()
+    {
+        button.SetActive(false);
     }
 
 }

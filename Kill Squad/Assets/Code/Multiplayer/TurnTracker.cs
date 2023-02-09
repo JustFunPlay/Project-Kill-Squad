@@ -111,5 +111,5 @@ public class TurnTracker : NetworkBehaviour
         }
         return true;
     }
-    [ClientRpc]private void StartTurn(int index) => characters[index].StartTurn();
+    private void StartTurn(int index) => characters[index].StartTurn();
 }
