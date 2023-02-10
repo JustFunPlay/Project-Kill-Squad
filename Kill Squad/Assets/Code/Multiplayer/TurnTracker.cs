@@ -88,7 +88,6 @@ public class TurnTracker : NetworkBehaviour
         {
             for (int i = 0; i < characters.Count; i++)
             {
-                //ProgressTurn(i);
                 characters[i].ProgressTurn();
             }
             turns++;

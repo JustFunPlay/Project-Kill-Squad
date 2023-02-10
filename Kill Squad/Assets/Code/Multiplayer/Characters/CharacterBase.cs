@@ -30,6 +30,7 @@ public class CharacterBase : NetworkBehaviour
     [SyncVar] [SerializeField] private LuckyRate critLuck;
 
     [Header("Other Stuff")]
+    [SyncVar] private InGamePlayer owner;
     public GameObject button;
 
     #region Getters/Setters
@@ -53,7 +54,7 @@ public class CharacterBase : NetworkBehaviour
     /// </summary>
     public override void OnStartServer()
     {
-        TurnTracker.instance.characters.Add(this);
+        
     }
 
     /// <summary>
@@ -101,6 +102,20 @@ public class CharacterBase : NetworkBehaviour
 
     #endregion
 
+    [Server] public virtual void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    {
+        owner = player;
+        turnSpeed = info.speed;
+        maxHealth = info.health;
+        armorSave = info.armor;
+        rangedSkill = info.ranged;
+        meleeSkill = info.melee;
+        meleeAttacks = info.attacks;
+        currentHealth = maxHealth;
+        TurnTracker.instance.characters.Add(this);
+    }
+
+    #region Turns and actions
     [Server] public void ProgressTurn()
     {
         //Debug.Log("Progressing turn");
@@ -109,7 +124,7 @@ public class CharacterBase : NetworkBehaviour
 
     [ClientRpc] public void StartTurn()
     {
-        if (isOwned)
+        if (owner.isOwned)
             button.SetActive(true);
     }
     [Command]public void EndTurn()
@@ -122,6 +137,8 @@ public class CharacterBase : NetworkBehaviour
     {
         button.SetActive(false);
     }
+    #endregion
+
 
 }
 
