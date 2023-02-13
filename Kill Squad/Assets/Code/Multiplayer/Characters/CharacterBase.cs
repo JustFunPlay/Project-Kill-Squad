@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-
+using System.Collections;
 /*
 	Documentation: https://mirror-networking.gitbook.io/docs/guides/networkbehaviour
 	API Reference: https://mirror-networking.com/docs/api/Mirror.NetworkBehaviour.html
@@ -18,13 +18,17 @@ public class CharacterBase : NetworkBehaviour
     [SyncVar] [SerializeField] private int rangedSkill;
     [SyncVar] [SerializeField] private int meleeSkill;
     [SyncVar] [SerializeField] private int meleeAttacks;
-    [SyncVar] [SerializeField]private float turnProgress = 0;
+    [SyncVar] [SerializeField] private float turnProgress = 0;
     [SyncVar] private int currentHealth;
 
     [Header("Specialized Stats")]
     [SyncVar] [SerializeField] private int dodgeChance;
     [SyncVar] [SerializeField] private int damageReduction;
     [SyncVar] [SerializeField] private LuckyRate armorLuck;
+    [SyncVar] private bool luckyArmor;
+    [SyncVar] private bool luckyShot;
+    [SyncVar] private bool luckyMelee;
+    [SyncVar] private bool luckyCrit;
     [SyncVar] [SerializeField] private LuckyRate rangedLuck;
     [SyncVar] [SerializeField] private LuckyRate meleeLuck;
     [SyncVar] [SerializeField] private LuckyRate critLuck;
@@ -32,6 +36,17 @@ public class CharacterBase : NetworkBehaviour
     [Header("Other Stuff")]
     [SyncVar] private InGamePlayer owner;
     public GameObject button;
+    public TMPro.TextMeshProUGUI speedText;
+    public TMPro.TextMeshProUGUI hpText;
+    public TMPro.TextMeshProUGUI toHitText;
+    public TMPro.TextMeshProUGUI attacksText;
+    public TMPro.TextMeshProUGUI damageText;
+    [SyncVar] public int damage;
+    public TMPro.TextMeshProUGUI armorText;
+    [SyncVar] public int ap;
+    public TMPro.TextMeshProUGUI apText;
+    public TMPro.TextMeshProUGUI critText;
+    [SyncVar] public int crit;
 
     #region Getters/Setters
     public int Speed { get { return turnSpeed; } protected set { turnSpeed = value; } }
@@ -113,13 +128,31 @@ public class CharacterBase : NetworkBehaviour
         meleeAttacks = info.attacks;
         currentHealth = maxHealth;
         TurnTracker.instance.characters.Add(this);
+        if (armorLuck != LuckyRate.Never)
+            luckyArmor = true;
+        UpdateUI();
+    }
+    [ClientRpc] private void UpdateUI()
+    {
+        if (owner.isOwned)
+        {
+            speedText.text = $"Speed: {Speed}";
+            hpText.text = $"Healt: {currentHealth}";
+            toHitText.text = $"To hit: {meleeSkill}";
+            attacksText.text = $"Attacks: {meleeAttacks}";
+            damageText.text = $"Damage: {damage}";
+            armorText.text = $"Armor: {armorSave}";
+            apText.text = $"Armor penetration: {ap}";
+            critText.text = $"Crit: {crit}";
+        }
     }
 
     #region Turns and actions
     [Server] public void ProgressTurn()
     {
-        //Debug.Log("Progressing turn");
         turnProgress += Speed / (25f + Speed);
+        if (armorLuck == LuckyRate.First)
+            luckyArmor = true;
     }
 
     [ClientRpc] public void StartTurn()
@@ -139,7 +172,108 @@ public class CharacterBase : NetworkBehaviour
     }
     #endregion
 
+    #region Damage & healing
+    [Server] public virtual void ArmorSave(int pen, int crit, bool luckyCrit, int damage, out bool wound, out bool critConfirm, out int damageDealt)
+    {
+        int armorCheck = Random.Range(0, 10);
+        critConfirm = false;
+        damageDealt = 0;
+        if (armorCheck < armorSave + pen)
+        {
+            wound = false;
+            return;
+        }
+        else if (luckyArmor)
+        {
+            if (armorLuck == LuckyRate.First)
+                luckyArmor = false;
+            armorCheck = Random.Range(0, 10);
+            if (armorCheck < armorSave + pen)
+            {
+                wound = false;
+                return;
+            }
+        }
+        wound = true;
+        int critCheck = Random.Range(0, 10);
+        if (critCheck < crit)
+        {
+            critConfirm = true;
+            damage *= 2;
+        }
+        else if (luckyCrit)
+        {
+            critCheck = Random.Range(0, 10);
+            if (critCheck < crit)
+            {
+                critConfirm = true;
+                damage *= 2;
+            }
+        }
+        TakeDamage(damage, out damageDealt);
+    }
+    [Server] public virtual void TakeDamage(int damage, out int recievedDamage)
+    {
+        damage = Mathf.Max(damage - damageReduction, 1);
+        currentHealth -= damage;
+        recievedDamage = damage;
+        UpdateUI();
+        if (currentHealth <= 0)
+            OnDeath();
+    }
+    [Server] protected virtual void OnDeath()
+    {
+        TurnTracker.instance.characters.Remove(this);
+    }
+    [Server] public void GetHealed(int healValue, out int healingDone)
+    {
+        healingDone = Mathf.Min(maxHealth - currentHealth, healValue);
+        currentHealth = Mathf.Min(currentHealth + healValue, maxHealth);
+    }
+    #endregion
 
+    [Command] public void AttackRandomEnemy()
+    {
+        List<CharacterBase> availableTargets = new List<CharacterBase>();
+        foreach (CharacterBase character in TurnTracker.instance.characters)
+        {
+            if (character.owner != owner)
+                availableTargets.Add(character);
+        }
+        CharacterBase target = availableTargets[Random.Range(0, availableTargets.Count)];
+        StartCoroutine(AttackSequence(target));
+    }
+    [Server] private IEnumerator AttackSequence(CharacterBase target)
+    {
+        for (int i = 0; i < meleeAttacks; i++)
+        {
+            Attack(meleeSkill, luckyMelee, ap, crit, luckyCrit, damage, target);
+            yield return new WaitForSeconds(0.25f);
+        }
+        EndTurn();
+    }
+
+    [Server] private void Attack(int accuracy, bool luckyAttack, int penetration, int crit, bool luckyCrit, int damage, CharacterBase target)
+    {
+        int hitRoll = Random.Range(0, 10);
+        bool wound = false;
+        bool critConfirm = false;
+        int damageDealt = 0; ;
+        if (hitRoll < accuracy - target.dodgeChance)
+        {
+            target.ArmorSave(penetration, crit, luckyCrit, damage, out wound, out critConfirm, out damageDealt);
+            return;
+        }
+        else if (luckyAttack)
+        {
+            hitRoll = Random.Range(0, 10);
+            if (hitRoll < accuracy - target.dodgeChance)
+            {
+                target.ArmorSave(penetration, crit, luckyCrit, damage, out wound, out critConfirm, out damageDealt);
+                return;
+            }
+        }
+    }
 }
 
 public enum LuckyRate

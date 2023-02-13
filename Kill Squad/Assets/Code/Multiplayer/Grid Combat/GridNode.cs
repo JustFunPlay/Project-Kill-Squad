@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+
 /*
 	Documentation: https://mirror-networking.gitbook.io/docs/guides/networkbehaviour
 	API Reference: https://mirror-networking.com/docs/api/Mirror.NetworkBehaviour.html
@@ -9,13 +9,17 @@ using Mirror;
 
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
-public class TurnTracker : NetworkBehaviour
+public class GridNode : NetworkBehaviour
 {
-    public static TurnTracker instance { get; private set; }
-    public SyncList<CharacterBase> characters = new SyncList<CharacterBase>();
-    [SyncVar] [SerializeField] private int turns = 0;
-    [SyncVar] [SerializeField] private bool progressing;
-    [SerializeField] private TMPro.TextMeshProUGUI text;
+    //private Grid<GridNode> grid;
+    private int x;
+    private int z;
+
+    public int gCost;
+    public int hCost;
+    public int fCost;
+
+    public GridNode cameFromNode;
 
     #region Start & Stop Callbacks
 
@@ -24,15 +28,7 @@ public class TurnTracker : NetworkBehaviour
     /// <para>This could be triggered by NetworkServer.Listen() for objects in the scene, or by NetworkServer.Spawn() for objects that are dynamically created.</para>
     /// <para>This will be called for objects on a "host" as well as for object on a dedicated server.</para>
     /// </summary>
-    public override void OnStartServer()
-    {
-        if (!instance)
-            instance = this;
-        else
-            Destroy(gameObject);
-        StartCoroutine(ProgressTurns());
-        //Grid grid = new Grid(4, 6, 3);
-    }
+    public override void OnStartServer() { }
 
     /// <summary>
     /// Invoked on the server when the object is unspawned
@@ -78,36 +74,4 @@ public class TurnTracker : NetworkBehaviour
     public override void OnStopAuthority() { }
 
     #endregion
-
-    [Server]public IEnumerator ProgressTurns()
-    {
-        yield return new WaitForSeconds(0.5f);
-        progressing = CheckForTurn();
-        while (characters.Count > 0 && progressing == true)
-        {
-            for (int i = 0; i < characters.Count; i++)
-            {
-                characters[i].ProgressTurn();
-            }
-            turns++;
-            UpdateTurnCount();
-            progressing = CheckForTurn();
-            yield return new WaitForSeconds(0.25f);
-        }
-    }
-    [ClientRpc] void UpdateTurnCount() => text.text = $"Turn: {turns}";
-    bool CheckForTurn()
-    {
-        for (int i = 0; i < characters.Count; i++)
-        {
-            if (characters[i].Progress >= 1)
-            {
-                NetworkIdentity id = characters[i].GetComponent<NetworkIdentity>();
-                StartTurn(i);
-                return false;
-            }
-        }
-        return true;
-    }
-    private void StartTurn(int index) => characters[index].StartTurn();
 }
