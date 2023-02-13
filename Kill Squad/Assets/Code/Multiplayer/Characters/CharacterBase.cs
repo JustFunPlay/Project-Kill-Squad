@@ -130,7 +130,7 @@ public class CharacterBase : NetworkBehaviour
         TurnTracker.instance.characters.Add(this);
         if (armorLuck != LuckyRate.Never)
             luckyArmor = true;
-        UpdateUI();
+        Invoke("UpdateUI", 0.5f);
     }
     [ClientRpc] private void UpdateUI()
     {
@@ -229,6 +229,7 @@ public class CharacterBase : NetworkBehaviour
     {
         healingDone = Mathf.Min(maxHealth - currentHealth, healValue);
         currentHealth = Mathf.Min(currentHealth + healValue, maxHealth);
+        UpdateUI();
     }
     #endregion
 
@@ -240,6 +241,8 @@ public class CharacterBase : NetworkBehaviour
             if (character.owner != owner)
                 availableTargets.Add(character);
         }
+        if (availableTargets.Count == 0)
+            return;
         CharacterBase target = availableTargets[Random.Range(0, availableTargets.Count)];
         StartCoroutine(AttackSequence(target));
     }
@@ -250,7 +253,6 @@ public class CharacterBase : NetworkBehaviour
             Attack(meleeSkill, luckyMelee, ap, crit, luckyCrit, damage, target);
             yield return new WaitForSeconds(0.25f);
         }
-        EndTurn();
     }
 
     [Server] private void Attack(int accuracy, bool luckyAttack, int penetration, int crit, bool luckyCrit, int damage, CharacterBase target)
