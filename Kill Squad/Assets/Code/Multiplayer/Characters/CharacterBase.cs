@@ -251,7 +251,7 @@ public class CharacterBase : NetworkBehaviour
         for (int i = 0; i < meleeAttacks; i++)
         {
             Attack(meleeSkill, luckyMelee, ap, crit, luckyCrit, damage, target);
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.15f);
         }
     }
 

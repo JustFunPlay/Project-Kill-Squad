@@ -81,7 +81,7 @@ public class TurnTracker : NetworkBehaviour
 
     [Server]public IEnumerator ProgressTurns()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         progressing = CheckForTurn();
         while (characters.Count > 0 && progressing == true)
         {
