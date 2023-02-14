@@ -625,12 +625,12 @@ MonoBehaviour:
   toHitText: {fileID: 9177689557717875854}
   attacksText: {fileID: 4620474916995251611}
   damageText: {fileID: 5771635392717625155}
-  damage: 4
+  damage: 6
   armorText: {fileID: 6607626215198298043}
-  ap: -1
+  ap: -2
   apText: {fileID: 2783185177532886319}
   critText: {fileID: 3677656918773534935}
-  crit: 4
+  crit: 3
 --- !u!1 &4227236418532689042
 GameObject:
   m_ObjectHideFlags: 0

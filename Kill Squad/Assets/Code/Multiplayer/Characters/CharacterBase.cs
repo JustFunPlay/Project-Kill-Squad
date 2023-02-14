@@ -137,7 +137,7 @@ public class CharacterBase : NetworkBehaviour
         if (owner.isOwned)
         {
             speedText.text = $"Speed: {Speed}";
-            hpText.text = $"Healt: {currentHealth}";
+            hpText.text = $"Health: {currentHealth}";
             toHitText.text = $"To hit: {meleeSkill}";
             attacksText.text = $"Attacks: {meleeAttacks}";
             damageText.text = $"Damage: {damage}";
