@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using System.Collections;
 
 /*
 	Documentation: https://mirror-networking.gitbook.io/docs/guides/networkbehaviour
@@ -8,15 +9,9 @@ using Mirror;
 */
 
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
-
-public class GridCombatSystem : NetworkBehaviour
+[RequireComponent(typeof(NetworkTransform))]
+public class CharacterMovement : CharacterBase
 {
-    public static GridCombatSystem instance;
-    [SyncVar] [SerializeField] private Pathfinding pathfinding;
-    [SerializeField] private int gridSizeX, gridSizeZ;
-    [SerializeField] private Vector3 gridOrigin;
-
-    public Pathfinding PathFinder {  get { return pathfinding; } }
 
     #region Start & Stop Callbacks
 
@@ -25,14 +20,7 @@ public class GridCombatSystem : NetworkBehaviour
     /// <para>This could be triggered by NetworkServer.Listen() for objects in the scene, or by NetworkServer.Spawn() for objects that are dynamically created.</para>
     /// <para>This will be called for objects on a "host" as well as for object on a dedicated server.</para>
     /// </summary>
-    public override void OnStartServer()
-    {
-        if (!instance)
-            instance = this;
-        else
-            Destroy(this);
-        Invoke("SetupPathFinder", 0.1f);
-    }
+    public override void OnStartServer() { }
 
     /// <summary>
     /// Invoked on the server when the object is unspawned
@@ -79,8 +67,20 @@ public class GridCombatSystem : NetworkBehaviour
 
     #endregion
 
-    [Server] private void SetupPathFinder()
+    [Command] public void MoveToNewPostion(Vector3 targetpos)
     {
-        pathfinding = new Pathfinding(gridSizeX, gridSizeZ, gridOrigin);
+        List<Vector3> path = GridCombatSystem.instance.PathFinder.FindPath(transform.position, targetpos);
+        StartCoroutine(MoveCharacter(path));
+    }
+    [Server] private IEnumerator MoveCharacter(List<Vector3> path)
+    {
+        while (path.Count > 0)
+        {
+            transform.LookAt(path[0]);
+            transform.Translate(0, 0, 0.2f);
+            yield return new WaitForSeconds(0.1f);
+            if (Vector3.Distance(transform.position, path[0]) <= 0.1f)
+                path.RemoveAt(0);
+        }
     }
 }

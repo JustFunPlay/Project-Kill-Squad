@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fd573b71268948499f289d508d2402c, type: 3}
   m_Name: New Character Info
   m_EditorClassIdentifier: 
-  physicalCharacter: {fileID: 8337481948530564873, guid: 526152e1ca2c8f5479fac8b42d9b7e05, type: 3}
+  physicalCharacter: {fileID: 1883677160784327822, guid: 526152e1ca2c8f5479fac8b42d9b7e05, type: 3}
   speed: 5
   movement: 6
   health: 52

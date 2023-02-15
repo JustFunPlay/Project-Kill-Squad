@@ -12,29 +12,29 @@ using System.Collections;
 public class CharacterBase : NetworkBehaviour
 {
     [Header("Stats")]
-    [SyncVar] [SerializeField] private int turnSpeed;
-    [SyncVar] [SerializeField] private int maxHealth;
-    [SyncVar] [SerializeField] private int armorSave;
-    [SyncVar] [SerializeField] private int rangedSkill;
-    [SyncVar] [SerializeField] private int meleeSkill;
-    [SyncVar] [SerializeField] private int meleeAttacks;
-    [SyncVar] [SerializeField] private float turnProgress = 0;
-    [SyncVar] private int currentHealth;
+    [SyncVar] [SerializeField] protected int turnSpeed;
+    [SyncVar] [SerializeField] protected int maxHealth;
+    [SyncVar] [SerializeField] protected int armorSave;
+    [SyncVar] [SerializeField] protected int rangedSkill;
+    [SyncVar] [SerializeField] protected int meleeSkill;
+    [SyncVar] [SerializeField] protected int meleeAttacks;
+    [SyncVar] [SerializeField] protected float turnProgress = 0;
+    [SyncVar] protected int currentHealth;
 
     [Header("Specialized Stats")]
-    [SyncVar] [SerializeField] private int dodgeChance;
-    [SyncVar] [SerializeField] private int damageReduction;
-    [SyncVar] [SerializeField] private LuckyRate armorLuck;
-    [SyncVar] private bool luckyArmor;
-    [SyncVar] private bool luckyShot;
-    [SyncVar] private bool luckyMelee;
-    [SyncVar] private bool luckyCrit;
-    [SyncVar] [SerializeField] private LuckyRate rangedLuck;
-    [SyncVar] [SerializeField] private LuckyRate meleeLuck;
-    [SyncVar] [SerializeField] private LuckyRate critLuck;
+    [SyncVar] [SerializeField] protected int dodgeChance;
+    [SyncVar] [SerializeField] protected int damageReduction;
+    [SyncVar] [SerializeField] protected LuckyRate armorLuck;
+    [SyncVar] protected bool luckyArmor;
+    [SyncVar] protected bool luckyShot;
+    [SyncVar] protected bool luckyMelee;
+    [SyncVar] protected bool luckyCrit;
+    [SyncVar] [SerializeField] protected LuckyRate rangedLuck;
+    [SyncVar] [SerializeField] protected LuckyRate meleeLuck;
+    [SyncVar] [SerializeField] protected LuckyRate critLuck;
 
     [Header("Other Stuff")]
-    [SyncVar] private InGamePlayer owner;
+    [SyncVar] protected InGamePlayer owner;
     public GameObject button;
     public TMPro.TextMeshProUGUI speedText;
     public TMPro.TextMeshProUGUI hpText;
@@ -132,7 +132,7 @@ public class CharacterBase : NetworkBehaviour
             luckyArmor = true;
         Invoke("UpdateUI", 0.5f);
     }
-    [ClientRpc] private void UpdateUI()
+    [ClientRpc] protected void UpdateUI()
     {
         if (owner.isOwned)
         {
@@ -166,7 +166,7 @@ public class CharacterBase : NetworkBehaviour
         StartCoroutine(TurnTracker.instance.ProgressTurns());
         DeactivateTurnUi();
     }
-    [ClientRpc]private void DeactivateTurnUi()
+    [ClientRpc]protected void DeactivateTurnUi()
     {
         button.SetActive(false);
     }
@@ -246,7 +246,7 @@ public class CharacterBase : NetworkBehaviour
         CharacterBase target = availableTargets[Random.Range(0, availableTargets.Count)];
         StartCoroutine(AttackSequence(target));
     }
-    [Server] private IEnumerator AttackSequence(CharacterBase target)
+    [Server] protected IEnumerator AttackSequence(CharacterBase target)
     {
         for (int i = 0; i < meleeAttacks; i++)
         {
@@ -255,7 +255,7 @@ public class CharacterBase : NetworkBehaviour
         }
     }
 
-    [Server] private void Attack(int accuracy, bool luckyAttack, int penetration, int crit, bool luckyCrit, int damage, CharacterBase target)
+    [Server] protected void Attack(int accuracy, bool luckyAttack, int penetration, int crit, bool luckyCrit, int damage, CharacterBase target)
     {
         int hitRoll = Random.Range(0, 10);
         bool wound = false;

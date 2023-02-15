@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 /*
 	Documentation: https://mirror-networking.gitbook.io/docs/guides/networkbehaviour
@@ -86,5 +88,21 @@ public class InGamePlayer : NetworkBehaviour
     [Command] private void CmdSetName()
     {
         playerName = PersistantInfo.Instance.PlayerName;
+    }
+
+    [Client] public void LeftClick(InputAction.CallbackContext callbackContext)
+    {
+        if (isOwned && callbackContext.started && !EventSystem.current.IsPointerOverGameObject())
+        {
+            if (TurnTracker.instance.activeCharacter.isOwned)
+            {
+                CharacterBase activeCharacter = TurnTracker.instance.activeCharacter;
+                if (Physics.Raycast(GetComponentInChildren<Camera>().ScreenPointToRay(Mouse.current.position.ReadValue()), out RaycastHit hit, 100f))
+                {
+                    CharacterMovement moveCharacter = (CharacterMovement)activeCharacter;
+                    moveCharacter.MoveToNewPostion(hit.point);
+                }
+            }
+        }
     }
 }

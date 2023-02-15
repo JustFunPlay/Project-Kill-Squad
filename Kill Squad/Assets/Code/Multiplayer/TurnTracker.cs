@@ -13,6 +13,7 @@ public class TurnTracker : NetworkBehaviour
 {
     public static TurnTracker instance { get; private set; }
     public SyncList<CharacterBase> characters = new SyncList<CharacterBase>();
+    [SyncVar] public CharacterBase activeCharacter;
     [SyncVar] [SerializeField] private int turns = 0;
     [SyncVar] [SerializeField] private bool progressing;
     [SerializeField] private TMPro.TextMeshProUGUI text;
@@ -29,7 +30,7 @@ public class TurnTracker : NetworkBehaviour
         if (!instance)
             instance = this;
         else
-            Destroy(gameObject);
+            Destroy(this);
         StartCoroutine(ProgressTurns());
         //Grid grid = new Grid(4, 6, 3);
     }
@@ -81,6 +82,7 @@ public class TurnTracker : NetworkBehaviour
 
     [Server]public IEnumerator ProgressTurns()
     {
+        activeCharacter = null;
         yield return new WaitForSeconds(1f);
         progressing = CheckForTurn();
         while (characters.Count > 0 && progressing == true)
@@ -102,7 +104,8 @@ public class TurnTracker : NetworkBehaviour
         {
             if (characters[i].Progress >= 1)
             {
-                NetworkIdentity id = characters[i].GetComponent<NetworkIdentity>();
+                //NetworkIdentity id = characters[i].GetComponent<NetworkIdentity>();
+                activeCharacter = characters[i];
                 StartTurn(i);
                 return false;
             }
