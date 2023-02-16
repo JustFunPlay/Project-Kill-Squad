@@ -349,6 +349,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
+  activeCharacter: {fileID: 0}
   turns: 0
   progressing: 0
   text: {fileID: 1995477459}
@@ -399,6 +400,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
+  pathfinding: {fileID: 5723175282602449765, guid: a5f67163e0e19ef47bb974d2615648f3, type: 3}
   gridSizeX: 50
   gridSizeZ: 50
   gridOrigin: {x: -50, y: 0, z: -50}

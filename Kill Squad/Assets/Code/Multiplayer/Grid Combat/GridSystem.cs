@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Mirror;
 
-public class Grid<TGridObject>
+public class GridSystem<TGridObject> : SyncObject
 {
     public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
     public class OnGridValueChangedEventArgs : EventArgs
@@ -17,7 +18,7 @@ public class Grid<TGridObject>
     private Vector3 originPosition;
     private TGridObject[,] gridArray;
 
-    public Grid(int width, int length, float cellSize, Vector3 originPosition, Func<Grid<TGridObject>, int, int, TGridObject> createGridObject)
+    public GridSystem(int width, int length, float cellSize, Vector3 originPosition, Func<GridSystem<TGridObject>, int, int, TGridObject> createGridObject)
     {
 
         this.width = width;
@@ -35,10 +36,15 @@ public class Grid<TGridObject>
             }
         }
     }
+    public GridSystem()
+    {
+        gridArray = null;
+    }
 
     public int GetWidth() { return width; }
     public int GetLength() { return length; }
     public float GetCellSize() { return cellSize; }
+    //public int GetGridsize() { return gridArray.Length; }
 
     public Vector3 GetWorldPosition(int x, int z)
     {
@@ -82,5 +88,53 @@ public class Grid<TGridObject>
         int x, z;
         GetXZ(worldPosition, out x, out z);
         return (GetGridObject(x, z));
+    }
+
+    public override void ClearChanges()
+    {
+
+    }
+
+    public override void OnSerializeAll(NetworkWriter writer)
+    {
+        //for (int x = 0; x < width; x++)
+        //{
+        //    for (int z = 0; z < length; z++)
+        //    {
+        //        writer.Write(gridArray[x, z]);
+        //    }
+        //}
+        writer.Write(gridArray);
+    }
+
+    public override void OnSerializeDelta(NetworkWriter writer)
+    {
+        //for (int x = 0; x < width; x++)
+        //{
+        //    for (int z = 0; z < length; z++)
+        //    {
+        //        writer.Write(gridArray[x, z]);
+        //    }
+        //}
+        writer.Write(gridArray);
+    }
+
+    public override void OnDeserializeAll(NetworkReader reader)
+    {
+        gridArray = reader.Read<TGridObject[,]>();
+    }
+
+    public override void OnDeserializeDelta(NetworkReader reader)
+    {
+        gridArray = reader.Read<TGridObject[,]>();
+    }
+
+    public override void Reset()
+    {
+        width = 0;
+        length = 0;
+        cellSize = 0;
+        originPosition = Vector3.zero;
+        gridArray = null;
     }
 }

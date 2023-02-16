@@ -5,13 +5,13 @@ using Mirror;
 
 public class Pathfinding : NetworkBehaviour
 {
-    private Grid<GridNode> grid;
+    private GridSystem<GridNode> grid = new GridSystem<GridNode>();
     private List<GridNode> openList;
     private List<GridNode> closedList;
 
-    public Pathfinding(int width, int height, Vector3 origin)
+    [Server] public void InitializeGrid(int width, int height, Vector3 origin)
     {
-        grid = new Grid<GridNode>(width, height, 2f, origin, (Grid<GridNode> grid, int x, int z) => new GridNode(grid, x, z));
+        grid = new GridSystem<GridNode>(width, height, 2f, origin, (GridSystem<GridNode> grid, int x, int z) => new GridNode(grid, x, z));
     }
     
     public List<Vector3> FindPath(Vector3 startPos, Vector3 endPos)

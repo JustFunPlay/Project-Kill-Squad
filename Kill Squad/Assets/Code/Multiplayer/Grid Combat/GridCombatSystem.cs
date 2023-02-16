@@ -81,6 +81,9 @@ public class GridCombatSystem : NetworkBehaviour
 
     [Server] private void SetupPathFinder()
     {
-        pathfinding = new Pathfinding(gridSizeX, gridSizeZ, gridOrigin);
+        Pathfinding newPathfinder = Instantiate(pathfinding, transform);
+        NetworkServer.Spawn(newPathfinder.gameObject);
+        newPathfinder.InitializeGrid(gridSizeX, gridSizeZ, gridOrigin);
+        pathfinding = newPathfinder;
     }
 }

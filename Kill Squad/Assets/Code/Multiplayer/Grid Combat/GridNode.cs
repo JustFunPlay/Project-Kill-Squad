@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GridNode
 {
-    private Grid<GridNode> grid;
+    private GridSystem<GridNode> grid;
     private int x;
     private int z;
     public int X { get { return x; } }
@@ -17,11 +17,17 @@ public class GridNode
 
     public GridNode cameFromNode;
 
-    public GridNode(Grid<GridNode> grid, int x, int z)
+    public GridNode(GridSystem<GridNode> grid, int x, int z)
     {
         this.grid = grid;
         this.x = x;
         this.z = z;
+    }
+    public GridNode()
+    {
+        this.grid = null;
+        this.x = -5;
+        this.z = -5;
     }
 
     public void CalculateFCost()
