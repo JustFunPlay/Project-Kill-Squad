@@ -13,6 +13,7 @@ public class CharacterBase : NetworkBehaviour
 {
     [Header("Stats")]
     [SyncVar] [SerializeField] protected int turnSpeed;
+    [SyncVar] [SerializeField] protected int movement;
     [SyncVar] [SerializeField] protected int maxHealth;
     [SyncVar] [SerializeField] protected int armorSave;
     [SyncVar] [SerializeField] protected int rangedSkill;
@@ -50,6 +51,7 @@ public class CharacterBase : NetworkBehaviour
 
     #region Getters/Setters
     public int Speed { get { return turnSpeed; } protected set { turnSpeed = value; } }
+    public int Movement { get { return movement; } protected set { movement = value; } }
     public float Progress { get { return turnProgress; } protected set { turnProgress = value; } }
     public int Health { get { return currentHealth; } protected set { currentHealth = value; } }
     public int Armor { get { return armorSave; } protected set { armorSave = value; } }
@@ -159,7 +161,10 @@ public class CharacterBase : NetworkBehaviour
     [ClientRpc] public void StartTurn()
     {
         if (owner.isOwned)
+        {
             button.SetActive(true);
+            GetMoveRange();
+        }
     }
     [Command]public void EndTurn()
     {
@@ -233,6 +238,11 @@ public class CharacterBase : NetworkBehaviour
         UpdateUI();
     }
     #endregion
+
+    [Command] public void GetMoveRange()
+    {
+        GridCombatSystem.instance.VisualizeMoveDistance(this);
+    }
 
     [Command] public void AttackRandomEnemy()
     {

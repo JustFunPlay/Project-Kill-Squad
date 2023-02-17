@@ -563,7 +563,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1954461992}
   - component: {fileID: 1954461991}
-  - component: {fileID: 1954461990}
   - component: {fileID: 1954461989}
   m_Layer: 0
   m_Name: CombatManager
@@ -595,26 +594,8 @@ MonoBehaviour:
   gridSizeX: 50
   gridSizeZ: 50
   gridOrigin: {x: -50, y: 0, z: -50}
---- !u!114 &1954461990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1954461988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 147874f2ff428724a9526dc4af6f22dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0.1
-  grid:
-    width: 0
-    length: 0
-    cellSize: 0
-    originPosition: {x: 0, y: 0, z: 0}
+  gridCube: {fileID: 6052704675058433591, guid: 8bdd85f288a3c094a94653b24a8e4df4, type: 3}
+  gridSlots: []
 --- !u!114 &1954461991
 MonoBehaviour:
   m_ObjectHideFlags: 0

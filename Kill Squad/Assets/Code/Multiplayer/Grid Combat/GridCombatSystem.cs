@@ -84,4 +84,29 @@ public class GridCombatSystem : Pathfinding
     {
         InitializeGrid(gridSizeX, gridSizeZ, gridOrigin);
     }
+    
+    [ClientRpc] public void VisualizeMoveDistance(CharacterBase character)
+    {
+        while (gridSlots.Count > 0)
+        {
+            Destroy(gridSlots[0]);
+            gridSlots.RemoveAt(0);
+        }
+        if (character.isOwned)
+        {
+            int maxMove = character.Movement;
+            grid.GetXZ(character.transform.position, out int charX, out int charZ);
+            for (int x = 0; x < grid.GetWidth(); x++)
+            {
+                for (int z = 0; z < grid.GetLength(); z++)
+                {
+                    if (grid.GetGridObject(x, z).isWalkable && Findpath(charX, charZ, x, z) != null && Findpath(charX, charZ, x, z).Count <= maxMove)
+                    {
+                        GameObject newGridCube = Instantiate(gridCube, grid.GetWorldPosition(x, z) + new Vector3(grid.GetCellSize() * 0.5f, 0.1f, grid.GetCellSize() * 0.5f), Quaternion.identity, transform);
+                        gridSlots.Add(newGridCube);
+                    }
+                }
+            }
+        }
+    }
 }
