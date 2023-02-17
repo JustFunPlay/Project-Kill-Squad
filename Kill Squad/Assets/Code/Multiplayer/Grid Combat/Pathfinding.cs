@@ -5,7 +5,7 @@ using Mirror;
 
 public class Pathfinding : NetworkBehaviour
 {
-    private GridSystem<GridNode> grid = new GridSystem<GridNode>();
+    public GridSystem<GridNode> grid = new GridSystem<GridNode>();
     private List<GridNode> openList;
     private List<GridNode> closedList;
 
@@ -14,7 +14,7 @@ public class Pathfinding : NetworkBehaviour
         grid = new GridSystem<GridNode>(width, height, 2f, origin, (GridSystem<GridNode> grid, int x, int z) => new GridNode(grid, x, z));
     }
     
-    public List<Vector3> FindPath(Vector3 startPos, Vector3 endPos)
+    [Server]public List<Vector3> FindPath(Vector3 startPos, Vector3 endPos)
     {
         grid.GetXZ(startPos, out int startX, out int startZ);
         grid.GetXZ(endPos, out int endX, out int endZ);
@@ -26,10 +26,14 @@ public class Pathfinding : NetworkBehaviour
         {
             vectorPath.Add(grid.GetWorldPosition(gridNode.X, gridNode.Z));
         }
+        for (int i = 0; i < vectorPath.Count; i++)
+        {
+            vectorPath[i] += new Vector3(grid.GetCellSize() * 0.5f, 0, grid.GetCellSize() * 0.5f);
+        }
         return vectorPath;
     }
 
-    public List<GridNode> Findpath(int startX, int startZ, int endX, int endZ)
+    [Server]public List<GridNode> Findpath(int startX, int startZ, int endX, int endZ)
     {
         GridNode startNode = grid.GetGridObject(startX, startZ);
         GridNode endNode = grid.GetGridObject(endX, endZ);
@@ -68,20 +72,22 @@ public class Pathfinding : NetworkBehaviour
                 if (!neighborNode.isWalkable)
                     closedList.Add(neighborNode);
                 int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighborNode);
+                Debug.Log($"tentative cost: {tentativeGCost}, actual cost: {neighborNode.gCost}");
                 if (tentativeGCost < neighborNode.gCost)
                 {
                     neighborNode.cameFromNode = currentNode;
                     neighborNode.gCost = tentativeGCost;
                     neighborNode.hCost = CalculateDistanceCost(neighborNode, endNode);
                     neighborNode.CalculateFCost();
-                    if (openList.Contains(neighborNode))
+                    if (!openList.Contains(neighborNode))
                         openList.Add(neighborNode);
                 }
             }
         }
+        Debug.Log($"Failed to create path\n {closedList.Count} options checked");
         return null;
     }
-    private List<GridNode> CalculatePath(GridNode endNode)
+    [Server]private List<GridNode> CalculatePath(GridNode endNode)
     {
         List<GridNode> path = new List<GridNode>();
 
@@ -97,7 +103,7 @@ public class Pathfinding : NetworkBehaviour
         return path;
     }
 
-    private List<GridNode> GetneighborList(GridNode currentnode)
+    [Server]private List<GridNode> GetneighborList(GridNode currentnode)
     {
         List<GridNode> neighbors = new List<GridNode>();
 
@@ -117,21 +123,22 @@ public class Pathfinding : NetworkBehaviour
         {
             neighbors.Add(GetNode(currentnode.X, currentnode.Z + 1));
         }
+        Debug.Log($"{neighbors.Count} neighbors");
         return neighbors;
     }
-    private GridNode GetNode(int x, int z)
+    [Server]private GridNode GetNode(int x, int z)
     {
         return grid.GetGridObject(x, z);
     }
 
-    private int CalculateDistanceCost(GridNode a, GridNode b)
+    [Server]private int CalculateDistanceCost(GridNode a, GridNode b)
     {
         int xDistance = Mathf.Abs(a.X - b.X);
         int zDistance = Mathf.Abs(a.Z - b.Z);
         //int remaining = Mathf.Abs(xDistance - zDistance);
         return xDistance + zDistance;
     }
-    private GridNode GetLowestFCostNode(List<GridNode> gridNodeList)
+    [Server]private GridNode GetLowestFCostNode(List<GridNode> gridNodeList)
     {
         GridNode lowestFCostNode = gridNodeList[0];
         for (int i = 0; i < gridNodeList.Count; i++)
@@ -140,5 +147,17 @@ public class Pathfinding : NetworkBehaviour
                 lowestFCostNode = gridNodeList[i];
         }
         return lowestFCostNode;
+    }
+
+    public void OnDrawGizmos()
+    {
+        for (int x = 0; x < grid.GetWidth(); x++)
+        {
+            for (int z = 0; z < grid.GetLength(); z++)
+            {
+                Gizmos.DrawLine(grid.GetWorldPosition(x, z), grid.GetWorldPosition(x, z) + new Vector3(grid.GetCellSize(), 0, 0));
+                Gizmos.DrawLine(grid.GetWorldPosition(x, z), grid.GetWorldPosition(x, z) + new Vector3(0, 0, grid.GetCellSize()));
+            }
+        }
     }
 }

@@ -9,14 +9,15 @@ using Mirror;
 
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
-public class GridCombatSystem : NetworkBehaviour
+public class GridCombatSystem : Pathfinding
 {
     public static GridCombatSystem instance;
-    [SyncVar] [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private int gridSizeX, gridSizeZ;
     [SerializeField] private Vector3 gridOrigin;
 
-    public Pathfinding PathFinder {  get { return pathfinding; } }
+    [Header("Visualisation")]
+    [SerializeField] private GameObject gridCube;
+    [SerializeField] private List<GameObject> gridSlots = new List<GameObject>();
 
     #region Start & Stop Callbacks
 
@@ -81,9 +82,6 @@ public class GridCombatSystem : NetworkBehaviour
 
     [Server] private void SetupPathFinder()
     {
-        Pathfinding newPathfinder = Instantiate(pathfinding, transform);
-        NetworkServer.Spawn(newPathfinder.gameObject);
-        newPathfinder.InitializeGrid(gridSizeX, gridSizeZ, gridOrigin);
-        pathfinding = newPathfinder;
+        InitializeGrid(gridSizeX, gridSizeZ, gridOrigin);
     }
 }

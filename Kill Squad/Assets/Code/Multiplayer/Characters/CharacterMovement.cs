@@ -67,16 +67,18 @@ public class CharacterMovement : CharacterBase
 
     #endregion
 
-    [Command] public void MoveToNewPostion(Vector3 targetpos)
+    [Server] public void MoveToNewPostion(Vector3 targetpos)
     {
-        List<Vector3> path = GridCombatSystem.instance.PathFinder.FindPath(transform.position, targetpos);
-        StartCoroutine(MoveCharacter(path));
+        List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, targetpos);
+        Debug.Log(path);
+        if (path != null)
+            StartCoroutine(MoveCharacter(path));
     }
     [Server] private IEnumerator MoveCharacter(List<Vector3> path)
     {
         while (path.Count > 0)
         {
-            transform.LookAt(path[0]);
+            transform.LookAt(path[0], Vector3.up);
             transform.Translate(0, 0, 0.2f);
             yield return new WaitForSeconds(0.1f);
             if (Vector3.Distance(transform.position, path[0]) <= 0.1f)

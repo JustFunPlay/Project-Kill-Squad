@@ -94,14 +94,19 @@ public class InGamePlayer : NetworkBehaviour
     {
         if (isOwned && callbackContext.started && !EventSystem.current.IsPointerOverGameObject())
         {
-            if (TurnTracker.instance.activeCharacter.isOwned)
+            Ray newRay = GetComponentInChildren<Camera>().ScreenPointToRay(Mouse.current.position.ReadValue());
+            TryMoveCharacter(newRay, this);
+        }
+    }
+    [Command]public void TryMoveCharacter(Ray ray, InGamePlayer player)
+    {
+        if (TurnTracker.instance.activeCharacter && TurnTracker.instance.activeCharacter.Owner == player)
+        {
+            CharacterBase activeCharacter = TurnTracker.instance.activeCharacter;
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
             {
-                CharacterBase activeCharacter = TurnTracker.instance.activeCharacter;
-                if (Physics.Raycast(GetComponentInChildren<Camera>().ScreenPointToRay(Mouse.current.position.ReadValue()), out RaycastHit hit, 100f))
-                {
-                    CharacterMovement moveCharacter = (CharacterMovement)activeCharacter;
-                    moveCharacter.MoveToNewPostion(hit.point);
-                }
+                CharacterMovement moveCharacter = (CharacterMovement)activeCharacter;
+                moveCharacter.MoveToNewPostion(hit.point);
             }
         }
     }

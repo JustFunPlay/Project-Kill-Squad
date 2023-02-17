@@ -58,6 +58,7 @@ public class CharacterBase : NetworkBehaviour
     public int Attacks { get { return meleeAttacks; } protected set { meleeAttacks = value; } }
     public int Dodge { get { return dodgeChance; } protected set { dodgeChance = value; } }
     public int DR { get { return damageReduction; } protected set { damageReduction = value; } }
+    public InGamePlayer Owner { get { return owner; } }
     #endregion
 
     #region Start & Stop Callbacks
