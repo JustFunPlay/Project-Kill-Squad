@@ -17,7 +17,7 @@ public class GridCombatSystem : Pathfinding
 
     [Header("Visualisation")]
     [SerializeField] private GameObject gridCube;
-    [SerializeField] private List<GameObject> gridSlots = new List<GameObject>();
+    public SyncList<GridVisualizer> gridSlots = new SyncList<GridVisualizer>();
 
     #region Start & Stop Callbacks
 
@@ -83,30 +83,67 @@ public class GridCombatSystem : Pathfinding
     [Server] private void SetupPathFinder()
     {
         InitializeGrid(gridSizeX, gridSizeZ, gridOrigin);
+        Invoke("SetupGridVisualizer", 0.1f);
     }
-    
-    [ClientRpc] public void VisualizeMoveDistance(CharacterBase character)
+    [Server]private void SetupGridVisualizer()
     {
-        while (gridSlots.Count > 0)
+        for (int x = 0; x < grid.GetWidth(); x++)
         {
-            Destroy(gridSlots[0]);
-            gridSlots.RemoveAt(0);
-        }
-        if (character.isOwned)
-        {
-            int maxMove = character.Movement;
-            grid.GetXZ(character.transform.position, out int charX, out int charZ);
-            for (int x = 0; x < grid.GetWidth(); x++)
+            for (int z = 0; z < grid.GetLength(); z++)
             {
-                for (int z = 0; z < grid.GetLength(); z++)
-                {
-                    if (grid.GetGridObject(x, z).isWalkable && Findpath(charX, charZ, x, z) != null && Findpath(charX, charZ, x, z).Count <= maxMove)
-                    {
-                        GameObject newGridCube = Instantiate(gridCube, grid.GetWorldPosition(x, z) + new Vector3(grid.GetCellSize() * 0.5f, 0.1f, grid.GetCellSize() * 0.5f), Quaternion.identity, transform);
-                        gridSlots.Add(newGridCube);
-                    }
-                }
+                GameObject newVisualizer = Instantiate(gridCube, gridOrigin + new Vector3(x * 2 + 1, 0.1f, z * 2 + 1), Quaternion.identity, transform);
+                NetworkServer.Spawn(newVisualizer);
+                gridSlots.Add(new GridVisualizer(newVisualizer, new Vector2(x, z)));
+                //newVisualizer.SetActive(false);
             }
         }
+    }
+    
+    [Server] public void VisualizeMoveDistance(CharacterBase character)
+    {
+        //for (int i = 0; i < gridSlots.Count; i++)
+        //{
+        //    gridSlots[i].visualizer.SetActive(false);
+        //}
+        //int maxMove = character.Movement;
+        //grid.GetXZ(character.transform.position, out int charX, out int charZ);
+        //for (int x = 0; x < grid.GetWidth(); x++)
+        //{
+        //    for (int z = 0; z < grid.GetLength(); z++)
+        //    {
+        //        if (grid.GetGridObject(x, z).isWalkable && Findpath(charX, charZ, x, z) != null && Findpath(charX, charZ, x, z).Count <= maxMove)
+        //        {
+        //            GridVisualizer visualizer = GetGridVisualizer(x, z);
+        //            if (visualizer != null)
+        //                visualizer.visualizer.SetActive(true);
+        //        }
+        //    }
+        //}
+    }
+
+    private GridVisualizer GetGridVisualizer(int x, int z)
+    {
+        int i = grid.GetWidth() * z + x;
+        if (gridSlots[i].gridLocation != new Vector2(x, z))
+            return null;
+        return gridSlots[i];
+    }
+}
+
+[System.Serializable]
+public class GridVisualizer
+{
+    public GameObject visualizer;
+    public Vector2 gridLocation;
+
+    public GridVisualizer(GameObject gameObject, Vector2 gridLocation)
+    {
+        this.visualizer = gameObject;
+        this.gridLocation = gridLocation;
+    }
+    public GridVisualizer()
+    {
+        visualizer = null;
+        gridLocation = new Vector2(-5, -5);
     }
 }

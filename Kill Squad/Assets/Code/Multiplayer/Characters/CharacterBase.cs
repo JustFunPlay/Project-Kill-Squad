@@ -36,7 +36,7 @@ public class CharacterBase : NetworkBehaviour
 
     [Header("Other Stuff")]
     [SyncVar] protected InGamePlayer owner;
-    public GameObject button;
+    public GameObject[] buttons;
     public TMPro.TextMeshProUGUI speedText;
     public TMPro.TextMeshProUGUI hpText;
     public TMPro.TextMeshProUGUI toHitText;
@@ -48,6 +48,8 @@ public class CharacterBase : NetworkBehaviour
     public TMPro.TextMeshProUGUI apText;
     public TMPro.TextMeshProUGUI critText;
     [SyncVar] public int crit;
+
+    [SerializeField] protected bool canAct = false;
 
     #region Getters/Setters
     public int Speed { get { return turnSpeed; } protected set { turnSpeed = value; } }
@@ -124,6 +126,7 @@ public class CharacterBase : NetworkBehaviour
     {
         owner = player;
         turnSpeed = info.speed;
+        movement = info.movement;
         maxHealth = info.health;
         armorSave = info.armor;
         rangedSkill = info.ranged;
@@ -162,8 +165,9 @@ public class CharacterBase : NetworkBehaviour
     {
         if (owner.isOwned)
         {
-            button.SetActive(true);
-            GetMoveRange();
+            canAct = true;
+            ToggleButtons(true);
+            //GetMoveRange();
         }
     }
     [Command]public void EndTurn()
@@ -174,7 +178,21 @@ public class CharacterBase : NetworkBehaviour
     }
     [ClientRpc]protected void DeactivateTurnUi()
     {
-        button.SetActive(false);
+        canAct = false;
+        ToggleButtons(false);
+    }
+
+    [Client] protected void ToggleButtons(bool setActive)
+    {
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            buttons[i].SetActive(setActive);
+        }
+    }
+
+    [ClientRpc] protected void ContinueTurn()
+    {
+        canAct = false;
     }
     #endregion
 
