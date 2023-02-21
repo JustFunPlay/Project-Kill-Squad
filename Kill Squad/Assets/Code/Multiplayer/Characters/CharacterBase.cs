@@ -38,6 +38,7 @@ public class CharacterBase : NetworkBehaviour
     [SyncVar] protected InGamePlayer owner;
     public GameObject[] buttons;
     public TMPro.TextMeshProUGUI speedText;
+    public TMPro.TextMeshProUGUI movementText;
     public TMPro.TextMeshProUGUI hpText;
     public TMPro.TextMeshProUGUI toHitText;
     public TMPro.TextMeshProUGUI attacksText;
@@ -49,7 +50,12 @@ public class CharacterBase : NetworkBehaviour
     public TMPro.TextMeshProUGUI critText;
     [SyncVar] public int crit;
 
-    [SerializeField] protected bool canAct = false;
+    [Header("Turn management")]
+    [SyncVar] [SerializeField] protected bool canAct = false;
+    [SyncVar] [SerializeField] protected int remainingActions;
+    [SyncVar] [SerializeField] protected Action selectedAction;
+    [SyncVar] [SerializeField] protected ActionVar selectedVariant;
+    protected SyncList<string> performedActions = new SyncList<string>();
 
     #region Getters/Setters
     public int Speed { get { return turnSpeed; } protected set { turnSpeed = value; } }
@@ -63,6 +69,45 @@ public class CharacterBase : NetworkBehaviour
     public int Dodge { get { return dodgeChance; } protected set { dodgeChance = value; } }
     public int DR { get { return damageReduction; } protected set { damageReduction = value; } }
     public InGamePlayer Owner { get { return owner; } }
+    public bool CanAct { get { return canAct; } }
+    public int RemainingActions { get { return remainingActions; } set { remainingActions = value; } }
+    #endregion
+
+    #region lucky checks
+    public bool LuckyRangedAttack()
+    {
+        if (rangedLuck == LuckyRate.All)
+            return true;
+        else if (rangedLuck == LuckyRate.First && luckyShot == true)
+        {
+            luckyShot = false;
+            return true;
+        }
+        return false;
+    }
+    public bool LuckyMeleeAttack()
+    {
+        if (meleeLuck == LuckyRate.All)
+            return true;
+        else if (meleeLuck == LuckyRate.First && luckyMelee == true)
+        {
+            luckyMelee = false;
+            return true;
+        }
+        return false;
+    }
+    public bool LuckyCrit()
+    {
+        if (critLuck == LuckyRate.All)
+            return true;
+        else if (critLuck == LuckyRate.First && luckyCrit == true)
+        {
+            luckyCrit = false;
+            return true;
+        }
+        return false;
+    }
+
     #endregion
 
     #region Start & Stop Callbacks
@@ -143,6 +188,7 @@ public class CharacterBase : NetworkBehaviour
         if (owner.isOwned)
         {
             speedText.text = $"Speed: {Speed}";
+            movementText.text = $"Movement: {movement}";
             hpText.text = $"Health: {currentHealth}";
             toHitText.text = $"To hit: {meleeSkill}";
             attacksText.text = $"Attacks: {meleeAttacks}";
@@ -161,24 +207,37 @@ public class CharacterBase : NetworkBehaviour
             luckyArmor = true;
     }
 
+    [Server] public void PrepareTurn()
+    {
+        remainingActions = 3;
+        canAct = true;
+        performedActions.Clear();
+        SelectAction(Action.Movement, ActionVar.Normal);
+        StartTurn();
+    }
     [ClientRpc] public void StartTurn()
     {
         if (owner.isOwned)
         {
-            canAct = true;
             ToggleButtons(true);
             //GetMoveRange();
         }
     }
-    [Command]public void EndTurn()
+    [Server]protected void EndTurn()
     {
+        if (!canAct)
+            return;
+        canAct = false;
         Progress -= 1;
         StartCoroutine(TurnTracker.instance.ProgressTurns());
         DeactivateTurnUi();
     }
+    [Command]public void FinishTurn()
+    {
+        EndTurn();
+    }
     [ClientRpc]protected void DeactivateTurnUi()
     {
-        canAct = false;
         ToggleButtons(false);
     }
 
@@ -190,18 +249,52 @@ public class CharacterBase : NetworkBehaviour
         }
     }
 
-    [ClientRpc] protected void ContinueTurn()
+    [Server] public void ContinueTurn()
     {
+        canAct = true;
+        SelectAction(Action.Movement, ActionVar.Normal);
+        if (remainingActions < 1)
+        {
+            EndTurn();
+            return;
+        }
+    }
+    [Server] protected void StartAction(int actionCost = 1, string performedAction = null)
+    {
+        remainingActions -= actionCost;
+        performedActions.Add(performedAction);
         canAct = false;
+    }
+    [Server] protected void StartAction(string performedAction)
+    {
+        StartAction(1, performedAction);
+    }
+
+    [Command] public void SelectAction(Action action, ActionVar variant)
+    {
+        this.selectedAction = action;
+        this.selectedVariant = variant;
+    }
+
+    [Server] public virtual void PerformAction(RaycastHit hit, InGamePlayer player)
+    {
+
+    }
+
+    [Server] protected virtual void ReportForCombat(CombatReport report)
+    {
+        Debug.Log($"Total attacks: {report.totalAttackCount}\nHits: {report.attacksHit}\nWounds: {report.armorPierced}\nCrits: {report.critHits}\nTotal Damage: {report.damageDealt}\nKilling blow: {report.killingBlow}");
+        ContinueTurn();
     }
     #endregion
 
     #region Damage & healing
-    [Server] public virtual void ArmorSave(int pen, int crit, bool luckyCrit, int damage, out bool wound, out bool critConfirm, out int damageDealt)
+    [Server] public virtual void ArmorSave(int pen, int crit, bool luckyCrit, int damage, out bool wound, out bool critConfirm, out int damageDealt, out bool killingBlow)
     {
         int armorCheck = Random.Range(0, 10);
         critConfirm = false;
         damageDealt = 0;
+        killingBlow = false;
         if (armorCheck < armorSave + pen)
         {
             wound = false;
@@ -234,16 +327,20 @@ public class CharacterBase : NetworkBehaviour
                 damage *= 2;
             }
         }
-        TakeDamage(damage, out damageDealt);
+        TakeDamage(damage, out damageDealt, out killingBlow);
     }
-    [Server] public virtual void TakeDamage(int damage, out int recievedDamage)
+    [Server] public virtual void TakeDamage(int damage, out int recievedDamage, out bool isKilled)
     {
         damage = Mathf.Max(damage - damageReduction, 1);
         currentHealth -= damage;
         recievedDamage = damage;
+        isKilled = false;
         UpdateUI();
         if (currentHealth <= 0)
+        {
+            isKilled = true;
             OnDeath();
+        }
     }
     [Server] protected virtual void OnDeath()
     {
@@ -261,50 +358,6 @@ public class CharacterBase : NetworkBehaviour
     {
         GridCombatSystem.instance.VisualizeMoveDistance(this);
     }
-
-    [Command] public void AttackRandomEnemy()
-    {
-        List<CharacterBase> availableTargets = new List<CharacterBase>();
-        foreach (CharacterBase character in TurnTracker.instance.characters)
-        {
-            if (character.owner != owner)
-                availableTargets.Add(character);
-        }
-        if (availableTargets.Count == 0)
-            return;
-        CharacterBase target = availableTargets[Random.Range(0, availableTargets.Count)];
-        StartCoroutine(AttackSequence(target));
-    }
-    [Server] protected IEnumerator AttackSequence(CharacterBase target)
-    {
-        for (int i = 0; i < meleeAttacks; i++)
-        {
-            Attack(meleeSkill, luckyMelee, ap, crit, luckyCrit, damage, target);
-            yield return new WaitForSeconds(0.15f);
-        }
-    }
-
-    [Server] protected void Attack(int accuracy, bool luckyAttack, int penetration, int crit, bool luckyCrit, int damage, CharacterBase target)
-    {
-        int hitRoll = Random.Range(0, 10);
-        bool wound = false;
-        bool critConfirm = false;
-        int damageDealt = 0; ;
-        if (hitRoll < accuracy - target.dodgeChance)
-        {
-            target.ArmorSave(penetration, crit, luckyCrit, damage, out wound, out critConfirm, out damageDealt);
-            return;
-        }
-        else if (luckyAttack)
-        {
-            hitRoll = Random.Range(0, 10);
-            if (hitRoll < accuracy - target.dodgeChance)
-            {
-                target.ArmorSave(penetration, crit, luckyCrit, damage, out wound, out critConfirm, out damageDealt);
-                return;
-            }
-        }
-    }
 }
 
 public enum LuckyRate
@@ -312,4 +365,22 @@ public enum LuckyRate
     Never,
     First,
     All
+}
+
+public enum Action
+{
+    Movement,
+    Action1,
+    Action2,
+    Action3,
+    Action4,
+    Action5,
+    Action6,
+    Ultimate
+}
+public enum ActionVar
+{
+    Normal,
+    Variant1,
+    Variant2
 }

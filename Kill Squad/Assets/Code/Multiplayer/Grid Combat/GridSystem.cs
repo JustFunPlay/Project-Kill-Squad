@@ -50,7 +50,7 @@ public class GridSystem<TGridObject> : SyncObject
 
     public Vector3 GetWorldPosition(int x, int z)
     {
-        return new Vector3(x, 0, z) * cellSize + originPosition;
+        return new Vector3(x, 0, z) * cellSize + originPosition + new Vector3(cellSize * 0.5f, 0, cellSize * 0.5f);
     }
     public void GetXZ(Vector3 worldPosition, out int x, out int z)
     {

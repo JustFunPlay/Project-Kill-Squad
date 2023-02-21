@@ -106,11 +106,10 @@ public class TurnTracker : NetworkBehaviour
             {
                 //NetworkIdentity id = characters[i].GetComponent<NetworkIdentity>();
                 activeCharacter = characters[i];
-                StartTurn(i);
+                activeCharacter.PrepareTurn();
                 return false;
             }
         }
         return true;
     }
-    private void StartTurn(int index) => characters[index].StartTurn();
 }

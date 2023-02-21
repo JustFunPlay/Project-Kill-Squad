@@ -26,10 +26,6 @@ public class Pathfinding : NetworkBehaviour
         {
             vectorPath.Add(grid.GetWorldPosition(gridNode.X, gridNode.Z));
         }
-        for (int i = 0; i < vectorPath.Count; i++)
-        {
-            vectorPath[i] += new Vector3(grid.GetCellSize() * 0.5f, 0, grid.GetCellSize() * 0.5f);
-        }
         return vectorPath;
     }
 
@@ -72,7 +68,7 @@ public class Pathfinding : NetworkBehaviour
                 if (!neighborNode.isWalkable)
                     closedList.Add(neighborNode);
                 int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighborNode);
-                Debug.Log($"tentative cost: {tentativeGCost}, actual cost: {neighborNode.gCost}");
+                //Debug.Log($"tentative cost: {tentativeGCost}, actual cost: {neighborNode.gCost}");
                 if (tentativeGCost < neighborNode.gCost)
                 {
                     neighborNode.cameFromNode = currentNode;
@@ -84,7 +80,7 @@ public class Pathfinding : NetworkBehaviour
                 }
             }
         }
-        Debug.Log($"Failed to create path\n {closedList.Count} options checked");
+        //Debug.Log($"Failed to create path\n {closedList.Count} options checked");
         return null;
     }
     [Server]private List<GridNode> CalculatePath(GridNode endNode)
@@ -123,7 +119,7 @@ public class Pathfinding : NetworkBehaviour
         {
             neighbors.Add(GetNode(currentnode.X, currentnode.Z + 1));
         }
-        Debug.Log($"{neighbors.Count} neighbors");
+        //Debug.Log($"{neighbors.Count} neighbors");
         return neighbors;
     }
     [Server]private GridNode GetNode(int x, int z)

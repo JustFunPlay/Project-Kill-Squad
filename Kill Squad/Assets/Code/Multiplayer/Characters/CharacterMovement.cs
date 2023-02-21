@@ -66,13 +66,23 @@ public class CharacterMovement : CharacterBase
     public override void OnStopAuthority() { }
 
     #endregion
+    [Server] public override void PerformAction(RaycastHit hit, InGamePlayer player)
+    {
+        if (selectedAction == Action.Movement && canAct)
+        {
+            MoveToNewPostion(hit.point);
+        }
+    }
 
     [Server] public void MoveToNewPostion(Vector3 targetpos)
     {
         List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, targetpos);
         Debug.Log(path);
         if (path != null && path.Count <= movement + 1)
+        {
+            StartAction();
             StartCoroutine(MoveCharacter(path));
+        }
     }
     [Server] private IEnumerator MoveCharacter(List<Vector3> path)
     {
@@ -84,5 +94,6 @@ public class CharacterMovement : CharacterBase
             if (Vector3.Distance(transform.position, path[0]) <= 0.1f)
                 path.RemoveAt(0);
         }
+        ContinueTurn();
     }
 }

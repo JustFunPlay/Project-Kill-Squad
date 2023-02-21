@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using System.Collections;
 
 /*
 	Documentation: https://mirror-networking.gitbook.io/docs/guides/networkbehaviour
@@ -10,16 +9,11 @@ using System.Collections;
 
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
-public class GridCombatSystem : Pathfinding
+public class Commando : CharacterAttacks
 {
-    public static GridCombatSystem instance;
-    [SerializeField] private int gridSizeX, gridSizeZ;
-    [SerializeField] private Vector3 gridOrigin;
-
-    [Header("Visualisation")]
-    [SerializeField] private GameObject gridCube;
-    public SyncList<GridVisualizer> gridSlots = new SyncList<GridVisualizer>();
-
+    [SyncVar] [SerializeField] private ScriptableWeapon primaryWeapon;
+    [SyncVar] [SerializeField] private ScriptableWeapon secondaryWeapon;
+    [SyncVar] [SerializeField] private ScriptableWeapon meleeWeapon;
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -27,14 +21,7 @@ public class GridCombatSystem : Pathfinding
     /// <para>This could be triggered by NetworkServer.Listen() for objects in the scene, or by NetworkServer.Spawn() for objects that are dynamically created.</para>
     /// <para>This will be called for objects on a "host" as well as for object on a dedicated server.</para>
     /// </summary>
-    public override void OnStartServer()
-    {
-        if (!instance)
-            instance = this;
-        else
-            Destroy(this);
-        Invoke("SetupPathFinder", 0.1f);
-    }
+    public override void OnStartServer() { }
 
     /// <summary>
     /// Invoked on the server when the object is unspawned
@@ -81,70 +68,62 @@ public class GridCombatSystem : Pathfinding
 
     #endregion
 
-    [Server] private void SetupPathFinder()
+    [Server] public override void PerformAction(RaycastHit hit, InGamePlayer player)
     {
-        InitializeGrid(gridSizeX, gridSizeZ, gridOrigin);
-        Invoke("SetupGridVisualizer", 0.1f);
-    }
-    [Server]private void SetupGridVisualizer()
-    {
-        for (int x = 0; x < grid.GetWidth(); x++)
+        if (!canAct)
+            return;
+        switch (selectedAction)
         {
-            for (int z = 0; z < grid.GetLength(); z++)
-            {
-                GameObject newVisualizer = Instantiate(gridCube, grid.GetWorldPosition(x, z) + new Vector3(0, 0.1f, 0), Quaternion.identity, transform);
-                NetworkServer.Spawn(newVisualizer);
-                gridSlots.Add(new GridVisualizer(newVisualizer, new Vector2(x, z)));
-                //newVisualizer.SetActive(false);
-            }
+            case Action.Action1:
+                if (performedActions.Contains(primaryWeapon.weaponName))
+                    return;
+                if (primaryWeapon.type == WeaponType.RapidFire && selectedVariant == ActionVar.Variant1)
+                {
+                    if (hit.collider.GetComponent<CharacterBase>() && hit.collider.GetComponent<CharacterBase>().Owner != owner)
+                    {
+                        StartCoroutine(DoubleFire(primaryWeapon, hit.collider.GetComponent<CharacterBase>()));
+                        StartAction(2, primaryWeapon.weaponName);
+                    }
+                    else
+                    {
+                        GridCombatSystem.instance.grid.GetXZ(hit.point, out int x, out int z);
+                        foreach (CharacterBase character in TurnTracker.instance.characters)
+                        {
+                            GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
+                            if (x == characterX && z == characterZ)
+                            {
+                                StartCoroutine(DoubleFire(primaryWeapon, character));
+                                StartAction(2, primaryWeapon.weaponName);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (hit.collider.GetComponent<CharacterBase>() && hit.collider.GetComponent<CharacterBase>().Owner != owner)
+                    {
+                        StartCoroutine(NormalFire(primaryWeapon, hit.collider.GetComponent<CharacterBase>()));
+                        StartAction(primaryWeapon.weaponName);
+                    }
+                    else
+                    {
+                        GridCombatSystem.instance.grid.GetXZ(hit.point, out int x, out int z);
+                        foreach (CharacterBase character in TurnTracker.instance.characters)
+                        {
+                            GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
+                            if (x == characterX && z == characterZ)
+                            {
+                                StartCoroutine(NormalFire(primaryWeapon, character));
+                                StartAction(primaryWeapon.weaponName);
+                            }
+                        }
+                    }
+                }
+                break;
+            default:
+                base.PerformAction(hit, player);
+                break;
         }
-    }
-    
-    [Server] public void VisualizeMoveDistance(CharacterBase character)
-    {
-        //for (int i = 0; i < gridSlots.Count; i++)
-        //{
-        //    gridSlots[i].visualizer.SetActive(false);
-        //}
-        //int maxMove = character.Movement;
-        //grid.GetXZ(character.transform.position, out int charX, out int charZ);
-        //for (int x = 0; x < grid.GetWidth(); x++)
-        //{
-        //    for (int z = 0; z < grid.GetLength(); z++)
-        //    {
-        //        if (grid.GetGridObject(x, z).isWalkable && Findpath(charX, charZ, x, z) != null && Findpath(charX, charZ, x, z).Count <= maxMove)
-        //        {
-        //            GridVisualizer visualizer = GetGridVisualizer(x, z);
-        //            if (visualizer != null)
-        //                visualizer.visualizer.SetActive(true);
-        //        }
-        //    }
-        //}
-    }
 
-    private GridVisualizer GetGridVisualizer(int x, int z)
-    {
-        int i = grid.GetWidth() * z + x;
-        if (gridSlots[i].gridLocation != new Vector2(x, z))
-            return null;
-        return gridSlots[i];
-    }
-}
-
-[System.Serializable]
-public class GridVisualizer
-{
-    public GameObject visualizer;
-    public Vector2 gridLocation;
-
-    public GridVisualizer(GameObject gameObject, Vector2 gridLocation)
-    {
-        this.visualizer = gameObject;
-        this.gridLocation = gridLocation;
-    }
-    public GridVisualizer()
-    {
-        visualizer = null;
-        gridLocation = new Vector2(-5, -5);
     }
 }
