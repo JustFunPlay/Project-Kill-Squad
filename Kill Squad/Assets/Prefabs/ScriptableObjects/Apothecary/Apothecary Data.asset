@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef1b80f92fd1d524dae4ed2ecaaab20d, type: 3}
+  m_Name: Apothecary Data
+  m_EditorClassIdentifier: 
+  physicalCharacter: {fileID: 3555823683757961821, guid: 468946791af016c44af13fbdd096a65a, type: 3}
+  speed: 4
+  movement: 7
+  health: 42
+  armor: 7
+  ranged: 6
+  melee: 6
+  attacks: 3
+  primary: {fileID: 11400000, guid: a468d40f553a91b4b808e1ba225eeaa5, type: 2}
+  sideArm: {fileID: 11400000, guid: f627d3d24b95b1c409f61abe9ce35313, type: 2}
+  meleeWeapon: {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}
+  healValue: {x: 4, y: 10}
+  healCharges: 0

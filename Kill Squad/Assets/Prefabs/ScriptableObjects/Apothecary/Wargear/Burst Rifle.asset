@@ -9,9 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95608235877bd41428be6f0baf33df37, type: 3}
-  m_Name: KillSquad
+  m_Script: {fileID: 11500000, guid: b435321c4c220d94899710a132796a19, type: 3}
+  m_Name: Burst Rifle
   m_EditorClassIdentifier: 
-  squad:
-  - {fileID: 11400000, guid: 185129c466d08324ab93fb93c7096267, type: 2}
-  - {fileID: 11400000, guid: 43e52248f07da5148900a6f5ad95ef6d, type: 2}
+  weaponName: Brust Rifle
+  type: 4
+  attacks: 3
+  range: 15
+  armorPenetration: -3
+  crit: 6
+  damage: 5
+  pointsCost: 0

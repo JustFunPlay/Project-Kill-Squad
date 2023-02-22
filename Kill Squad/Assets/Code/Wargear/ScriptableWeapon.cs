@@ -21,5 +21,6 @@ public enum WeaponType
     RapidFire,
     Pistol,
     Spread,
+    Combat,
     Melee
 }

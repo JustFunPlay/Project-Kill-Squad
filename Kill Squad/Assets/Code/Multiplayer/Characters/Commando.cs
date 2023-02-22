@@ -11,9 +11,23 @@ using Mirror;
 
 public class Commando : CharacterAttacks
 {
+    [Header("Equipment")]
     [SyncVar] [SerializeField] private ScriptableWeapon primaryWeapon;
     [SyncVar] [SerializeField] private ScriptableWeapon secondaryWeapon;
     [SyncVar] [SerializeField] private ScriptableWeapon meleeWeapon;
+    //[SyncVar] [SerializeField] private ScriptableGrenade grenade;
+    [SyncVar] [SerializeField] private int remainingGrenades;
+
+    [Server] public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    {
+        CommandoData comInfo = (CommandoData)info;
+        primaryWeapon = comInfo.primary;
+        secondaryWeapon = comInfo.sideArm;
+        meleeWeapon = comInfo.meleeWeapon;
+        //grenade = comInfo.Grenade;
+        //remainingGrenades = comInfo.extraGrenades ? ;
+        base.SetupCharacter(player, info);
+    }
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -72,6 +86,7 @@ public class Commando : CharacterAttacks
     {
         if (!canAct)
             return;
+        CharacterBase target = null;
         switch (selectedAction)
         {
             case Action.Action1:
@@ -79,45 +94,41 @@ public class Commando : CharacterAttacks
                     return;
                 if (primaryWeapon.type == WeaponType.RapidFire && selectedVariant == ActionVar.Variant1)
                 {
-                    if (hit.collider.GetComponent<CharacterBase>() && hit.collider.GetComponent<CharacterBase>().Owner != owner)
+                    target = CheckValidTarget(hit, primaryWeapon);
+                    if (target)
                     {
-                        StartCoroutine(DoubleFire(primaryWeapon, hit.collider.GetComponent<CharacterBase>()));
+                        StartCoroutine(DoubleFire(primaryWeapon, target));
                         StartAction(2, primaryWeapon.weaponName);
-                    }
-                    else
-                    {
-                        GridCombatSystem.instance.grid.GetXZ(hit.point, out int x, out int z);
-                        foreach (CharacterBase character in TurnTracker.instance.characters)
-                        {
-                            GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
-                            if (x == characterX && z == characterZ)
-                            {
-                                StartCoroutine(DoubleFire(primaryWeapon, character));
-                                StartAction(2, primaryWeapon.weaponName);
-                            }
-                        }
                     }
                 }
                 else
                 {
-                    if (hit.collider.GetComponent<CharacterBase>() && hit.collider.GetComponent<CharacterBase>().Owner != owner)
+                    target = CheckValidTarget(hit, primaryWeapon);
+                    if (target)
                     {
-                        StartCoroutine(NormalFire(primaryWeapon, hit.collider.GetComponent<CharacterBase>()));
+                        StartCoroutine(NormalFire(primaryWeapon, target));
                         StartAction(primaryWeapon.weaponName);
                     }
-                    else
-                    {
-                        GridCombatSystem.instance.grid.GetXZ(hit.point, out int x, out int z);
-                        foreach (CharacterBase character in TurnTracker.instance.characters)
-                        {
-                            GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
-                            if (x == characterX && z == characterZ)
-                            {
-                                StartCoroutine(NormalFire(primaryWeapon, character));
-                                StartAction(primaryWeapon.weaponName);
-                            }
-                        }
-                    }
+                }
+                break;
+            case Action.Action2:
+                if (performedActions.Contains(secondaryWeapon.weaponName))
+                    return;
+                target = CheckValidTarget(hit, secondaryWeapon);
+                if (target)
+                {
+                    StartCoroutine(NormalFire(secondaryWeapon, target));
+                    StartAction(secondaryWeapon.weaponName);
+                }
+                break;
+            case Action.Action3:
+                if (performedActions.Contains(meleeWeapon.weaponName))
+                    return;
+                target = CheckValidTarget(hit, meleeWeapon);
+                if (target)
+                {
+                    StartCoroutine(StandardMelee(meleeWeapon, target));
+                    StartAction(meleeWeapon.weaponName);
                 }
                 break;
             default:

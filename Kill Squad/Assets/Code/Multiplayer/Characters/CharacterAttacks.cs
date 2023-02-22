@@ -49,7 +49,7 @@ public class CharacterAttacks : CharacterMovement
     /// Called when the local player object is being stopped.
     /// <para>This happens before OnStopClient(), as it may be triggered by an ownership message from the server, or because the player object is being destroyed. This is an appropriate place to deactivate components or functionality that should only be active for the local player, such as cameras and input.</para>
     /// </summary>
-    public override void OnStopLocalPlayer() {}
+    public override void OnStopLocalPlayer() { }
 
     /// <summary>
     /// This is invoked on behaviours that have authority, based on context and <see cref="NetworkIdentity.hasAuthority">NetworkIdentity.hasAuthority</see>.
@@ -65,9 +65,50 @@ public class CharacterAttacks : CharacterMovement
     public override void OnStopAuthority() { }
 
     #endregion
+
+    [Server]
+    protected CharacterBase CheckValidTarget(RaycastHit hit, ScriptableWeapon weapon)
+    {
+        CharacterBase target = null;
+        if (hit.collider.GetComponent<CharacterBase>() && hit.collider.GetComponent<CharacterBase>().Owner != owner)
+        {
+            target = hit.collider.GetComponent<CharacterBase>();
+        }
+        else
+        {
+            GridCombatSystem.instance.grid.GetXZ(hit.point, out int gridX, out int gridZ);
+            foreach (CharacterBase character in TurnTracker.instance.characters)
+            {
+                GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
+                if (gridX == characterX && gridZ == characterZ)
+                {
+                    target = character;
+                }
+            }
+        }
+        if (target == null)
+            return null;
+        GridCombatSystem.instance.grid.GetXZ(target.transform.position, out int targetX, out int targetZ);
+        GridCombatSystem.instance.grid.GetXZ(transform.position, out int x, out int z);
+        if (weapon.type == WeaponType.Melee && Mathf.Abs(x - targetX) <= weapon.range && Mathf.Abs(z - targetZ) <= weapon.range)
+        {
+            return target;
+        }
+        else if (weapon.type != WeaponType.Melee)
+        {
+            if (weapon.type != WeaponType.Pistol && Mathf.Abs(x - targetX) <= 1 && Mathf.Abs(z - targetZ) <= 1)
+                return null;
+            List<GridNode> path = GridCombatSystem.instance.FindPath(x, z, targetX, targetZ);
+            if (path != null && path.Count <= weapon.range + 1)
+                return target;
+        }
+        return null;
+    }
+
+
     #region Atacks
     [Server]
-    private void Attack(int accuracy, bool luckyAttack, int penetration, int crit, bool luckyCrit, int damage, CharacterBase target, out CombatReport report)
+    protected void Attack(int accuracy, bool luckyAttack, int penetration, int crit, bool luckyCrit, int damage, CharacterBase target, out CombatReport report)
     {
         int hitRoll = Random.Range(0, 10);
         bool wound = false;
@@ -168,8 +209,50 @@ public class CharacterAttacks : CharacterMovement
         }
         ReportForCombat(report);
     }
+    [Server]
+    protected void SpreadFire(ScriptableWeapon weapon, CharacterBase target)
+    {
+        CombatReport report = new CombatReport();
+        bool isHalfRange = (GridCombatSystem.instance.FindPath(transform.position, target.transform.position).Count * 2 <= weapon.range);
+        for (int i = 0; i < (isHalfRange ? weapon.attacks : weapon.attacks * 2); i++)
+        {
+            report.totalAttackCount++;
+            Attack(Ranged, LuckyRangedAttack(), isHalfRange ? weapon.armorPenetration : weapon.armorPenetration - 2, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
+            report.attacksHit += newReport.attacksHit;
+            report.armorPierced += newReport.armorPierced;
+            report.critHits += newReport.critHits;
+            report.damageDealt += newReport.damageDealt;
+            if (newReport.killingBlow)
+            {
+                report.killingBlow = true;
+                break;
+            }
+        }
+        ReportForCombat(report);
+    }
 
-    #endregion
+    [Server]
+    protected IEnumerator StandardMelee(ScriptableWeapon weapon, CharacterBase target)
+    {
+        CombatReport report = new CombatReport();
+        for (int i = 0; i < Attacks + weapon.attacks; i++)
+        {
+            report.totalAttackCount++;
+            Attack(Melee, LuckyMeleeAttack(), weapon.armorPenetration, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
+            report.attacksHit += newReport.attacksHit;
+            report.armorPierced += newReport.armorPierced;
+            report.critHits += newReport.critHits;
+            report.damageDealt += newReport.damageDealt;
+            if (newReport.killingBlow)
+            {
+                report.killingBlow = true;
+                break;
+            }
+            yield return new WaitForSeconds(0.15f);
+        }
+        ReportForCombat(report);
+        #endregion
+    }
 }
 
 public class CombatReport

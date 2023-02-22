@@ -769,9 +769,9 @@ GameObject:
   - component: {fileID: 2036098854566945661}
   - component: {fileID: 1695501010256268872}
   - component: {fileID: 1231485850734656387}
-  - component: {fileID: 3638235830469308238}
+  - component: {fileID: 3555823683757961821}
   m_Layer: 0
-  m_Name: Character 1
+  m_Name: Apothecary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -839,7 +839,7 @@ MonoBehaviour:
   positionSensitivity: 0.01
   rotationSensitivity: 0.01
   scaleSensitivity: 0.01
---- !u!114 &3638235830469308238
+--- !u!114 &3555823683757961821
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -848,7 +848,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3544094193962635536}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afdfefd09811ac54da5fd6801d3bcf1e, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b148cde091f4a04abf1fdf259a0af90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncDirection: 0
@@ -870,21 +870,27 @@ MonoBehaviour:
   critLuck: 0
   buttons:
   - {fileID: 4696450337001051634}
-  - {fileID: 7024743297825255864}
   speedText: {fileID: 5747278034911546185}
   movementText: {fileID: 5745271581081422608}
   hpText: {fileID: 2664385894025824344}
   toHitText: {fileID: 9177689557717875854}
   attacksText: {fileID: 4620474916995251611}
   damageText: {fileID: 5771635392717625155}
-  damage: 4
+  damage: 0
   armorText: {fileID: 6607626215198298043}
-  ap: -1
+  ap: 0
   apText: {fileID: 2783185177532886319}
   critText: {fileID: 3677656918773534935}
-  crit: 4
+  crit: 0
   canAct: 0
   remainingActions: 0
+  selectedAction: 0
+  selectedVariant: 0
+  primaryWeapon: {fileID: 0}
+  secondaryWeapon: {fileID: 0}
+  meleeWeapon: {fileID: 0}
+  healRange: {x: 0, y: 0}
+  remainingHealCharges: 0
 --- !u!1 &4133163573893420505
 GameObject:
   m_ObjectHideFlags: 0
@@ -1277,9 +1283,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3638235830469308238}
+      - m_Target: {fileID: 3555823683757961821}
         m_TargetAssemblyTypeName: CharacterBase, Assembly-CSharp
-        m_MethodName: EndTurn
+        m_MethodName: FinishTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1546,7 +1552,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3638235830469308238}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CharacterBase, Assembly-CSharp
         m_MethodName: GetMoveRange
         m_Mode: 1

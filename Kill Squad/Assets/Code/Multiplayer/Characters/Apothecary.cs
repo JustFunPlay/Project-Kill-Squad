@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using System.Collections;
 
 /*
 	Documentation: https://mirror-networking.gitbook.io/docs/guides/networkbehaviour
@@ -9,9 +8,26 @@ using System.Collections;
 */
 
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
-[RequireComponent(typeof(NetworkTransform))]
-public class CharacterMovement : CharacterBase
+
+public class Apothecary : CharacterAttacks
 {
+    [SyncVar] [SerializeField] private ScriptableWeapon primaryWeapon;
+    [SyncVar] [SerializeField] private ScriptableWeapon secondaryWeapon;
+    [SyncVar] [SerializeField] private ScriptableWeapon meleeWeapon;
+    [SyncVar] [SerializeField] private Vector2 healRange;
+    [SyncVar] [SerializeField] private int remainingHealCharges;
+
+    [Server]
+    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    {
+        ApothecaryData medicInfo = (ApothecaryData)info;
+        primaryWeapon = medicInfo.primary;
+        secondaryWeapon = medicInfo.sideArm;
+        meleeWeapon = medicInfo.meleeWeapon;
+        healRange = medicInfo.healValue;
+        remainingHealCharges = medicInfo.healCharges;
+        base.SetupCharacter(player, info);
+    }
 
     #region Start & Stop Callbacks
 
@@ -66,34 +82,68 @@ public class CharacterMovement : CharacterBase
     public override void OnStopAuthority() { }
 
     #endregion
-    [Server] public override void PerformAction(RaycastHit hit, InGamePlayer player)
-    {
-        if (selectedAction == Action.Movement && canAct)
-        {
-            MoveToNewPostion(hit.point);
-        }
-    }
 
-    [Server] public void MoveToNewPostion(Vector3 targetpos)
+    public override void PerformAction(RaycastHit hit, InGamePlayer player)
     {
-        List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, targetpos);
-        Debug.Log(path);
-        if (path != null && path.Count <= movement + 1 && path.Count > 1)
+        if (!canAct)
+            return;
+        CharacterBase target = null;
+        switch (selectedAction)
         {
-            StartAction();
-            StartCoroutine(MoveCharacter(path));
+            case Action.Action1:
+                if (performedActions.Contains(primaryWeapon.weaponName))
+                    return;
+                if (primaryWeapon.type == WeaponType.Combat && selectedVariant == ActionVar.Variant1)
+                {
+                    target = CheckValidTarget(hit, primaryWeapon);
+                    if (target)
+                    {
+                        StartCoroutine(DoubleFire(primaryWeapon, target));
+                        StartAction(2, primaryWeapon.weaponName);
+                    }
+                }
+                else if (primaryWeapon.type == WeaponType.Combat && selectedVariant == ActionVar.Variant2)
+                {
+                    target = CheckValidTarget(hit, primaryWeapon);
+                    if (target)
+                    {
+                        StartCoroutine(AimedFire(primaryWeapon, target));
+                        StartAction(primaryWeapon.weaponName);
+                    }
+                }
+                else
+                {
+                    target = CheckValidTarget(hit, primaryWeapon);
+                    if (target)
+                    {
+                        StartCoroutine(NormalFire(primaryWeapon, target));
+                        StartAction(primaryWeapon.weaponName);
+                    }
+                }
+                break;
+            case Action.Action2:
+                if (performedActions.Contains(secondaryWeapon.weaponName))
+                    return;
+                target = CheckValidTarget(hit, secondaryWeapon);
+                if (target)
+                {
+                    StartAction(secondaryWeapon.weaponName);
+                    SpreadFire(secondaryWeapon, target);
+                }
+                break;
+            case Action.Action3:
+                if (performedActions.Contains(meleeWeapon.weaponName))
+                    return;
+                target = CheckValidTarget(hit, meleeWeapon);
+                if (target)
+                {
+                    StartCoroutine(StandardMelee(meleeWeapon, target));
+                    StartAction(meleeWeapon.weaponName);
+                }
+                break;
+            default:
+                base.PerformAction(hit, player);
+                break;
         }
-    }
-    [Server] private IEnumerator MoveCharacter(List<Vector3> path)
-    {
-        while (path.Count > 0)
-        {
-            transform.LookAt(path[0], Vector3.up);
-            transform.Translate(0, 0, 0.2f);
-            yield return new WaitForSeconds(0.05f);
-            if (Vector3.Distance(transform.position, path[0]) <= 0.1f)
-                path.RemoveAt(0);
-        }
-        ContinueTurn();
     }
 }

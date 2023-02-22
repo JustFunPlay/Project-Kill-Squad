@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fd573b71268948499f289d508d2402c, type: 3}
-  m_Name: New Character Info
+  m_Script: {fileID: 11500000, guid: c1f05e34b40da1446b176211229de4f6, type: 3}
+  m_Name: New Commando Info
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 3423450269583213764, guid: 526152e1ca2c8f5479fac8b42d9b7e05, type: 3}
   speed: 5
@@ -19,4 +19,8 @@ MonoBehaviour:
   armor: 6
   ranged: 6
   melee: 6
-  attacks: 5
+  attacks: 3
+  primary: {fileID: 11400000, guid: 023a16c42ca434e409dacba9f78ba604, type: 2}
+  sideArm: {fileID: 11400000, guid: 021cd313524f94e49936d191cb8fbda5, type: 2}
+  meleeWeapon: {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}
+  extraGrenades: 0

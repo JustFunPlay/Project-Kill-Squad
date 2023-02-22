@@ -18,7 +18,7 @@ public class Pathfinding : NetworkBehaviour
     {
         grid.GetXZ(startPos, out int startX, out int startZ);
         grid.GetXZ(endPos, out int endX, out int endZ);
-        List<GridNode> path = Findpath(startX, startZ, endX, endZ);
+        List<GridNode> path = FindPath(startX, startZ, endX, endZ);
         if (path == null)
             return null;
         List<Vector3> vectorPath = new List<Vector3>();
@@ -29,7 +29,7 @@ public class Pathfinding : NetworkBehaviour
         return vectorPath;
     }
 
-    [Server]public List<GridNode> Findpath(int startX, int startZ, int endX, int endZ)
+    [Server]public List<GridNode> FindPath(int startX, int startZ, int endX, int endZ)
     {
         GridNode startNode = grid.GetGridObject(startX, startZ);
         GridNode endNode = grid.GetGridObject(endX, endZ);
