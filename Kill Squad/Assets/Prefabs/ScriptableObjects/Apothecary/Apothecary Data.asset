@@ -22,6 +22,6 @@ MonoBehaviour:
   attacks: 3
   primary: {fileID: 11400000, guid: a468d40f553a91b4b808e1ba225eeaa5, type: 2}
   sideArm: {fileID: 11400000, guid: f627d3d24b95b1c409f61abe9ce35313, type: 2}
-  meleeWeapon: {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}
+  meleeWeapon: {fileID: 11400000, guid: 3fd1e48e503ac604dadf3712057fe630, type: 2}
   healValue: {x: 4, y: 10}
   healCharges: 0

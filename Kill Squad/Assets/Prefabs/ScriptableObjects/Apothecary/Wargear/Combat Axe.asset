@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fd573b71268948499f289d508d2402c, type: 3}
-  m_Name: New Character Info 1
+  m_Script: {fileID: 11500000, guid: b435321c4c220d94899710a132796a19, type: 3}
+  m_Name: Combat Axe
   m_EditorClassIdentifier: 
-  physicalCharacter: {fileID: 3638235830469308238, guid: 468946791af016c44af13fbdd096a65a, type: 3}
-  speed: 7
-  movement: 6
-  health: 40
-  armor: 5
-  ranged: 5
-  melee: 7
-  attacks: 8
+  weaponName: Combat Axe
+  type: 5
+  attacks: 0
+  range: 1
+  armorPenetration: -4
+  crit: 2
+  damage: 2
+  pointsCost: 0
