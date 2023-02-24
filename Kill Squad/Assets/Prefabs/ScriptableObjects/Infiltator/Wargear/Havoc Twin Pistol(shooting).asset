@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b435321c4c220d94899710a132796a19, type: 3}
-  m_Name: Combat Shotgun
+  m_Name: Havoc Twin Pistol(shooting)
   m_EditorClassIdentifier: 
-  weaponName: Combat Shotgun
-  type: 4
-  attacks: 5
-  range: 6
-  armorPenetration: -3
-  crit: 4
+  weaponName: Havoc Twin Pistol (Shooting)
+  type: 3
+  attacks: 15
+  range: 10
+  armorPenetration: 0
+  crit: 0
   damage: 2
   pointsCost: 0

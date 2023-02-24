@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using System.Collections;
+using UnityEngine.UI;
 /*
 	Documentation: https://mirror-networking.gitbook.io/docs/guides/networkbehaviour
 	API Reference: https://mirror-networking.com/docs/api/Mirror.NetworkBehaviour.html
@@ -49,6 +50,7 @@ public class CharacterBase : NetworkBehaviour
     public TMPro.TextMeshProUGUI apText;
     public TMPro.TextMeshProUGUI critText;
     [SyncVar] public int crit;
+    [SerializeField] private Slider hpSlider;
 
     [Header("Turn management")]
     [SyncVar] [SerializeField] protected bool canAct = false;
@@ -56,6 +58,8 @@ public class CharacterBase : NetworkBehaviour
     [SyncVar] [SerializeField] protected Action selectedAction;
     [SyncVar] [SerializeField] protected ActionVar selectedVariant;
     protected SyncList<string> performedActions = new SyncList<string>();
+
+
 
     #region Getters/Setters
     public int Speed { get { return turnSpeed; } protected set { turnSpeed = value; } }
@@ -182,6 +186,7 @@ public class CharacterBase : NetworkBehaviour
         if (armorLuck != LuckyRate.Never)
             luckyArmor = true;
         Invoke("UpdateUI", 0.5f);
+        Invoke("UpdateHpBar", 0.5f);
     }
     [ClientRpc] protected void UpdateUI()
     {
@@ -336,6 +341,7 @@ public class CharacterBase : NetworkBehaviour
         recievedDamage = damage;
         isKilled = false;
         UpdateUI();
+        UpdateHpBar();
         if (currentHealth <= 0)
         {
             isKilled = true;
@@ -351,6 +357,17 @@ public class CharacterBase : NetworkBehaviour
         healingDone = Mathf.Min(maxHealth - currentHealth, healValue);
         currentHealth = Mathf.Min(currentHealth + healValue, maxHealth);
         UpdateUI();
+        UpdateHpBar();
+    }
+
+    [ClientRpc] private void UpdateHpBar()
+    {
+        hpSlider.value = currentHealth;
+        hpSlider.maxValue = maxHealth;
+        if (isOwned)
+            hpSlider.fillRect.GetComponent<Image>().color = Color.green;
+        else
+            hpSlider.fillRect.GetComponent<Image>().color = Color.red;
     }
     #endregion
 

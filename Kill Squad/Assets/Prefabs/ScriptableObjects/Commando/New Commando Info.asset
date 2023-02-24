@@ -19,7 +19,7 @@ MonoBehaviour:
   armor: 6
   ranged: 6
   melee: 6
-  attacks: 3
+  attacks: 4
   primary: {fileID: 11400000, guid: 023a16c42ca434e409dacba9f78ba604, type: 2}
   sideArm: {fileID: 11400000, guid: 021cd313524f94e49936d191cb8fbda5, type: 2}
   meleeWeapon: {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}

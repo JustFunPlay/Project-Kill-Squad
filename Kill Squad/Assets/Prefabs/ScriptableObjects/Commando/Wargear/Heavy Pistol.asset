@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Heavy Pistol
   m_EditorClassIdentifier: 
   weaponName: Heavy Pistol
-  type: 2
+  type: 3
   attacks: 2
   range: 8
   armorPenetration: -1

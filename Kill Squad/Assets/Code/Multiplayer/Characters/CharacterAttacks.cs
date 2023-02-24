@@ -86,11 +86,11 @@ public class CharacterAttacks : CharacterMovement
                 }
             }
         }
-        if (target == null)
+        if (target == null || target.Owner == owner)
             return null;
         GridCombatSystem.instance.grid.GetXZ(target.transform.position, out int targetX, out int targetZ);
         GridCombatSystem.instance.grid.GetXZ(transform.position, out int x, out int z);
-        if (weapon.type == WeaponType.Melee && Mathf.Abs(x - targetX) <= weapon.range && Mathf.Abs(z - targetZ) <= weapon.range)
+        if ((weapon.type == WeaponType.Melee || weapon.type == WeaponType.Heavy || weapon.type == WeaponType.Swift) && Mathf.Abs(x - targetX) <= weapon.range && Mathf.Abs(z - targetZ) <= weapon.range)
         {
             return target;
         }
@@ -213,11 +213,11 @@ public class CharacterAttacks : CharacterMovement
     protected void SpreadFire(ScriptableWeapon weapon, CharacterBase target)
     {
         CombatReport report = new CombatReport();
-        bool isHalfRange = (GridCombatSystem.instance.FindPath(transform.position, target.transform.position).Count * 2 <= weapon.range);
-        for (int i = 0; i < (isHalfRange ? weapon.attacks : weapon.attacks * 2); i++)
+        bool isHalfRange = (GridCombatSystem.instance.FindPath(transform.position, target.transform.position).Count - 1) * 2 <= weapon.range;
+        for (int i = 0; i < (isHalfRange ? weapon.attacks * 2 : weapon.attacks); i++)
         {
             report.totalAttackCount++;
-            Attack(Ranged, LuckyRangedAttack(), isHalfRange ? weapon.armorPenetration : weapon.armorPenetration - 2, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
+            Attack(Ranged, LuckyRangedAttack(), isHalfRange ? weapon.armorPenetration - 2 : weapon.armorPenetration, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
             report.attacksHit += newReport.attacksHit;
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
@@ -235,7 +235,7 @@ public class CharacterAttacks : CharacterMovement
     protected IEnumerator StandardMelee(ScriptableWeapon weapon, CharacterBase target)
     {
         CombatReport report = new CombatReport();
-        for (int i = 0; i < Attacks + weapon.attacks; i++)
+        for (int i = 0; i < (weapon.type == WeaponType.Swift ? Attacks * 2 : Attacks + weapon.attacks); i++)
         {
             report.totalAttackCount++;
             Attack(Melee, LuckyMeleeAttack(), weapon.armorPenetration, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
@@ -251,8 +251,29 @@ public class CharacterAttacks : CharacterMovement
             yield return new WaitForSeconds(0.15f);
         }
         ReportForCombat(report);
-        #endregion
     }
+    [Server]
+    protected IEnumerator HeavyMelee(ScriptableWeapon weapon, CharacterBase target)
+    {
+        CombatReport report = new CombatReport();
+        for (int i = 0; i < Attacks + weapon.attacks; i++)
+        {
+            report.totalAttackCount++;
+            Attack(Melee, LuckyMeleeAttack(), weapon.armorPenetration - 2, weapon.crit, LuckyCrit(), (int)(weapon.damage * 1.5f), target, out CombatReport newReport);
+            report.attacksHit += newReport.attacksHit;
+            report.armorPierced += newReport.armorPierced;
+            report.critHits += newReport.critHits;
+            report.damageDealt += newReport.damageDealt;
+            if (newReport.killingBlow)
+            {
+                report.killingBlow = true;
+                break;
+            }
+            yield return new WaitForSeconds(0.15f);
+        }
+        ReportForCombat(report);
+    }
+    #endregion
 }
 
 public class CombatReport

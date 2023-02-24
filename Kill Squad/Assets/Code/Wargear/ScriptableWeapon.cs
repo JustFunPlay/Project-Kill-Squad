@@ -19,8 +19,11 @@ public enum WeaponType
 {
     Assault,
     RapidFire,
+    Precision,
     Pistol,
     Spread,
     Combat,
-    Melee
+    Melee,
+    Heavy,
+    Swift
 }

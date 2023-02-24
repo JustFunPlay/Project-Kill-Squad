@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Burst Rifle
   m_EditorClassIdentifier: 
   weaponName: Brust Rifle
-  type: 4
+  type: 5
   attacks: 3
   range: 15
   armorPenetration: -3

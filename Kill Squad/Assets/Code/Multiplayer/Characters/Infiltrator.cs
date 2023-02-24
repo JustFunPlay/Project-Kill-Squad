@@ -9,26 +9,20 @@ using Mirror;
 
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
-public class Apothecary : CharacterAttacks
+public class Infiltrator : CharacterAttacks
 {
-    [SyncVar] [SerializeField] private ScriptableWeapon primaryWeapon;
-    [SyncVar] [SerializeField] private ScriptableWeapon secondaryWeapon;
+    [Header("Equipment")]
+    [SyncVar] [SerializeField] private ScriptableWeapon pistolWeapon;
     [SyncVar] [SerializeField] private ScriptableWeapon meleeWeapon;
-    [SyncVar] [SerializeField] private Vector2 healRange;
-    [SyncVar] [SerializeField] private int remainingHealCharges;
 
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
-        ApothecaryData medicInfo = (ApothecaryData)info;
-        primaryWeapon = medicInfo.primary;
-        secondaryWeapon = medicInfo.sideArm;
-        meleeWeapon = medicInfo.meleeWeapon;
-        healRange = medicInfo.healValue;
-        remainingHealCharges = medicInfo.healCharges;
+        InfiltratorData infilInfo = (InfiltratorData)info;
+        pistolWeapon = infilInfo.primary;
+        meleeWeapon = infilInfo.meleeWeapon;
         base.SetupCharacter(player, info);
     }
-
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -82,68 +76,4 @@ public class Apothecary : CharacterAttacks
     public override void OnStopAuthority() { }
 
     #endregion
-
-    public override void PerformAction(RaycastHit hit, InGamePlayer player)
-    {
-        if (!canAct)
-            return;
-        CharacterBase target = null;
-        switch (selectedAction)
-        {
-            case Action.Action1:
-                if (performedActions.Contains(primaryWeapon.weaponName))
-                    return;
-                if (primaryWeapon.type == WeaponType.Combat && selectedVariant == ActionVar.Variant1)
-                {
-                    target = CheckValidTarget(hit, primaryWeapon);
-                    if (target)
-                    {
-                        StartCoroutine(DoubleFire(primaryWeapon, target));
-                        StartAction(2, primaryWeapon.weaponName);
-                    }
-                }
-                else if (primaryWeapon.type == WeaponType.Combat && selectedVariant == ActionVar.Variant2)
-                {
-                    target = CheckValidTarget(hit, primaryWeapon);
-                    if (target)
-                    {
-                        StartCoroutine(AimedFire(primaryWeapon, target));
-                        StartAction(primaryWeapon.weaponName);
-                    }
-                }
-                else
-                {
-                    target = CheckValidTarget(hit, primaryWeapon);
-                    if (target)
-                    {
-                        StartCoroutine(NormalFire(primaryWeapon, target));
-                        StartAction(primaryWeapon.weaponName);
-                    }
-                }
-                break;
-            case Action.Action2:
-                if (performedActions.Contains(secondaryWeapon.weaponName))
-                    return;
-                target = CheckValidTarget(hit, secondaryWeapon);
-                if (target)
-                {
-                    //StartAction(secondaryWeapon.weaponName);
-                    SpreadFire(secondaryWeapon, target);
-                }
-                break;
-            case Action.Action3:
-                if (performedActions.Contains(meleeWeapon.weaponName))
-                    return;
-                target = CheckValidTarget(hit, meleeWeapon);
-                if (target)
-                {
-                    StartCoroutine(StandardMelee(meleeWeapon, target));
-                    StartAction(meleeWeapon.weaponName);
-                }
-                break;
-            default:
-                base.PerformAction(hit, player);
-                break;
-        }
-    }
 }
