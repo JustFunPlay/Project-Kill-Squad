@@ -51,7 +51,7 @@ public class InGamePlayer : NetworkBehaviour
     /// </summary>
     public override void OnStartLocalPlayer()
     {
-        CmdSetUpSquad();
+        Invoke("CmdSetUpSquad", 0.1f);
         CmdSetName();
     }
 
@@ -78,12 +78,7 @@ public class InGamePlayer : NetworkBehaviour
 
     [Command] private void CmdSetUpSquad()
     {
-        foreach (CharacterInfoBase characterInfo in killSquad.squad)
-        {
-            CharacterBase character = Instantiate(characterInfo.physicalCharacter);
-            NetworkServer.Spawn(character.gameObject, gameObject);
-            character.SetupCharacter(this, characterInfo);
-        }
+        GridCombatSystem.instance.SetupTeam(killSquad, this);
     }
     [Command] private void CmdSetName()
     {

@@ -15,6 +15,9 @@ public class GridCombatSystem : Pathfinding
     public static GridCombatSystem instance;
     [SerializeField] private int gridSizeX, gridSizeZ;
     [SerializeField] private Vector3 gridOrigin;
+    [SyncVar] private bool nextTeam;
+    [SerializeField] private Vector2 attackerGridSpawn;
+    [SerializeField] private Vector2 defenderGridSpawn;
 
     [Header("Visualisation")]
     [SerializeField] private GameObject gridCube;
@@ -128,6 +131,28 @@ public class GridCombatSystem : Pathfinding
         if (gridSlots[i].gridLocation != new Vector2(x, z))
             return null;
         return gridSlots[i];
+    }
+
+    [Server]
+    public void SetupTeam(KillSquad squad, InGamePlayer player)
+    {
+        if (!nextTeam)
+        {
+            for (int i = 0; i < squad.squad.Count; i++)
+            {
+                CharacterBase character = Instantiate(squad.squad[i].physicalCharacter, grid.GetWorldPosition((int)attackerGridSpawn.x + i, (int)attackerGridSpawn.y), Quaternion.identity);
+                NetworkServer.Spawn(character.gameObject, player.gameObject);
+                character.SetupCharacter(player, squad.squad[i]);
+            }
+            nextTeam = true;
+            return;
+        }
+        for (int i = 0; i < squad.squad.Count; i++)
+        {
+            CharacterBase character = Instantiate(squad.squad[i].physicalCharacter, grid.GetWorldPosition((int)defenderGridSpawn.x - i, (int)defenderGridSpawn.y), Quaternion.identity);
+            NetworkServer.Spawn(character.gameObject, player.gameObject);
+            character.SetupCharacter(player, squad.squad[i]);
+        }
     }
 }
 

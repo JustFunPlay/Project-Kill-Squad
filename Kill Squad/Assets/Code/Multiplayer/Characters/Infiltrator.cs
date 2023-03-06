@@ -11,16 +11,13 @@ using Mirror;
 
 public class Infiltrator : CharacterAttacks
 {
-    [Header("Equipment")]
-    [SyncVar] [SerializeField] private ScriptableWeapon pistolWeapon;
-    [SyncVar] [SerializeField] private ScriptableWeapon meleeWeapon;
 
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
-        InfiltratorData infilInfo = (InfiltratorData)info;
-        pistolWeapon = infilInfo.primary;
-        meleeWeapon = infilInfo.meleeWeapon;
+        equipedWeapons.Clear();
+        equipedWeapons.AddRange(info.equipedWeapons);
+        //InfiltratorData infilInfo = (InfiltratorData)info;
         base.SetupCharacter(player, info);
     }
     #region Start & Stop Callbacks

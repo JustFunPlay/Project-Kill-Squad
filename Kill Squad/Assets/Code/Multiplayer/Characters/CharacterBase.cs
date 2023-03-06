@@ -332,11 +332,12 @@ public class CharacterBase : NetworkBehaviour
                 damage *= 2;
             }
         }
-        TakeDamage(damage, out damageDealt, out killingBlow);
+        TakeDamage(damage, false, out damageDealt, out killingBlow);
     }
-    [Server] public virtual void TakeDamage(int damage, out int recievedDamage, out bool isKilled)
+    [Server] public virtual void TakeDamage(int damage, bool ignoresDR, out int recievedDamage, out bool isKilled)
     {
-        damage = Mathf.Max(damage - damageReduction, 1);
+        if (!ignoresDR)
+            damage = Mathf.Max(damage - damageReduction, 1);
         currentHealth -= damage;
         recievedDamage = damage;
         isKilled = false;

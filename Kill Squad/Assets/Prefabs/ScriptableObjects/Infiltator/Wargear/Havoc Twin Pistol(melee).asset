@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Havoc Twin Pistol (Melee)
   type: 8
-  attacks: 4
+  attacks: 0
   range: 1
   armorPenetration: -1
   crit: 4

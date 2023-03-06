@@ -12,6 +12,8 @@ using System.Collections;
 
 public class CharacterAttacks : CharacterMovement
 {
+    public SyncList<ScriptableWeapon> equipedWeapons = new SyncList<ScriptableWeapon>();
+
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -270,6 +272,35 @@ public class CharacterAttacks : CharacterMovement
                 break;
             }
             yield return new WaitForSeconds(0.15f);
+        }
+        ReportForCombat(report);
+    }
+
+    [Server]
+    protected void GrenadeThrow(ScriptableGrenade grenade, int xLocation, int zLocation)
+    {
+        CombatReport report = new CombatReport();
+        foreach (CharacterBase character in TurnTracker.instance.characters)
+        {
+            GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
+            if (Mathf.Abs(characterX - xLocation) <= 1 && Mathf.Abs(characterZ - zLocation) <= 1)
+            {
+                int count = Random.Range((int)grenade.attacks.x, (int)grenade.attacks.y);
+                for (int i = 0; i < count; i++)
+                {
+                    report.totalAttackCount++;
+                    Attack(Ranged, false, grenade.armorPenetration, grenade.crit, LuckyCrit(), grenade.damage, character, out CombatReport newReport);
+                    report.attacksHit += newReport.attacksHit;
+                    report.armorPierced += newReport.armorPierced;
+                    report.critHits += newReport.critHits;
+                    report.damageDealt += newReport.damageDealt;
+                    if (newReport.killingBlow)
+                    {
+                        report.killingBlow = true;
+                        break;
+                    }
+                }
+            }
         }
         ReportForCombat(report);
     }

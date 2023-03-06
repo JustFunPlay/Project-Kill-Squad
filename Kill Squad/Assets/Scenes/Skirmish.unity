@@ -594,8 +594,9 @@ MonoBehaviour:
   gridSizeX: 50
   gridSizeZ: 50
   gridOrigin: {x: -50, y: 0, z: -50}
+  attackerGridSpawn: {x: 20, y: 25}
+  defenderGridSpawn: {x: 30, y: 35}
   gridCube: {fileID: 6052704675058433591, guid: 8bdd85f288a3c094a94653b24a8e4df4, type: 3}
-  gridSlots: []
 --- !u!114 &1954461991
 MonoBehaviour:
   m_ObjectHideFlags: 0

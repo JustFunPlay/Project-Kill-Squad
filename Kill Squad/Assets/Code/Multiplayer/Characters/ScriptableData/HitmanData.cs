@@ -6,8 +6,5 @@ using UnityEngine;
 
 public class HitmanData : CharacterInfoBase
 {
-    [Header("Equipment")]
-    public ScriptableWeapon primary;
-    public ScriptableWeapon sideArm;
-    public ScriptableWeapon meleeWeapon;
+
 }

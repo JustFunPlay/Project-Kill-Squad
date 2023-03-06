@@ -6,10 +6,6 @@ using UnityEngine;
 
 public class ApothecaryData : CharacterInfoBase
 {
-    [Header("Equipment")]
-    public ScriptableWeapon primary;
-    public ScriptableWeapon sideArm;
-    public ScriptableWeapon meleeWeapon;
     public Vector2 healValue;
     public int healCharges;
 }

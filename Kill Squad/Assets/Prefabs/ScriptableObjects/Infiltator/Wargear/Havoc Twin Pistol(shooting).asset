@@ -19,4 +19,4 @@ MonoBehaviour:
   armorPenetration: 0
   crit: 0
   damage: 2
-  pointsCost: 0
+  pointsCost: 15

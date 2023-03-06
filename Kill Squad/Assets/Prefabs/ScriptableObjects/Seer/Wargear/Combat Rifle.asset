@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b435321c4c220d94899710a132796a19, type: 3}
-  m_Name: Sniper Rifle
+  m_Name: Combat Rifle
   m_EditorClassIdentifier: 
-  weaponName: Sniper Rifle
+  weaponName: Combat Rifle
   type: 0
-  attacks: 1
-  range: 25
-  armorPenetration: -5
-  crit: 7
-  damage: 9
+  attacks: 5
+  range: 18
+  armorPenetration: -2
+  crit: 3
+  damage: 4
   pointsCost: 0

@@ -18,5 +18,5 @@ MonoBehaviour:
   range: 20
   armorPenetration: -4
   crit: 5
-  damage: 5
+  damage: 7
   pointsCost: 10

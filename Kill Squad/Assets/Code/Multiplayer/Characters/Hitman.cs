@@ -11,18 +11,13 @@ using Mirror;
 
 public class Hitman : CharacterAttacks
 {
-    [Header("Equipment")]
-    [SyncVar] [SerializeField] private ScriptableWeapon primaryWeapon;
-    [SyncVar] [SerializeField] private ScriptableWeapon secondaryWeapon;
-    [SyncVar] [SerializeField] private ScriptableWeapon meleeWeapon;
 
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
-        HitmanData hitInfo = (HitmanData)info;
-        primaryWeapon = hitInfo.primary;
-        secondaryWeapon = hitInfo.sideArm;
-        meleeWeapon = hitInfo.meleeWeapon;
+        equipedWeapons.Clear();
+        equipedWeapons.AddRange(info.equipedWeapons);
+        //HitmanData hitInfo = (HitmanData)info;
         base.SetupCharacter(player, info);
     }
     #region Start & Stop Callbacks

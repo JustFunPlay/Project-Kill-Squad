@@ -7,9 +7,6 @@ using UnityEngine;
 public class CommandoData : CharacterInfoBase
 {
     [Header("Equipment")]
-    public ScriptableWeapon primary;
-    public ScriptableWeapon sideArm;
-    public ScriptableWeapon meleeWeapon;
-    //public ScriptableGrenade grenade;
+    public ScriptableGrenade grenade;
     public bool extraGrenades;
 }

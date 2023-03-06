@@ -9,14 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b435321c4c220d94899710a132796a19, type: 3}
-  m_Name: Sniper Rifle
+  m_Script: {fileID: 11500000, guid: 207e971751590554aba476df25f3905e, type: 3}
+  m_Name: Blast Grenade
   m_EditorClassIdentifier: 
-  weaponName: Sniper Rifle
-  type: 0
-  attacks: 1
-  range: 25
-  armorPenetration: -5
-  crit: 7
-  damage: 9
-  pointsCost: 0
+  weaponName: Blast Grenade
+  attacks: {x: 2, y: 6}
+  range: 10
+  armorPenetration: -4
+  crit: 1
+  damage: 10
+  pointsCost: 5
+  count: 2
+  extraCost: 15
+  increasedCount: 4

@@ -12,20 +12,16 @@ using Mirror;
 public class Commando : CharacterAttacks
 {
     [Header("Equipment")]
-    [SyncVar] [SerializeField] private ScriptableWeapon primaryWeapon;
-    [SyncVar] [SerializeField] private ScriptableWeapon secondaryWeapon;
-    [SyncVar] [SerializeField] private ScriptableWeapon meleeWeapon;
-    //[SyncVar] [SerializeField] private ScriptableGrenade grenade;
+    [SyncVar] [SerializeField] private ScriptableGrenade grenade;
     [SyncVar] [SerializeField] private int remainingGrenades;
 
     [Server] public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
+        equipedWeapons.Clear();
+        equipedWeapons.AddRange(info.equipedWeapons);
         CommandoData comInfo = (CommandoData)info;
-        primaryWeapon = comInfo.primary;
-        secondaryWeapon = comInfo.sideArm;
-        meleeWeapon = comInfo.meleeWeapon;
-        //grenade = comInfo.Grenade;
-        //remainingGrenades = comInfo.extraGrenades ? ;
+        grenade = comInfo.grenade;
+        remainingGrenades = comInfo.extraGrenades ? comInfo.grenade.count : comInfo.grenade.increasedCount;
         base.SetupCharacter(player, info);
     }
     #region Start & Stop Callbacks
@@ -90,45 +86,45 @@ public class Commando : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(primaryWeapon.weaponName))
+                if (performedActions.Contains(equipedWeapons[0].weaponName))
                     return;
-                if (primaryWeapon.type == WeaponType.RapidFire && selectedVariant == ActionVar.Variant1)
+                if (equipedWeapons[0].type == WeaponType.RapidFire && selectedVariant == ActionVar.Variant1)
                 {
-                    target = CheckValidTarget(hit, primaryWeapon);
+                    target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)
                     {
-                        StartCoroutine(DoubleFire(primaryWeapon, target));
-                        StartAction(2, primaryWeapon.weaponName);
+                        StartCoroutine(DoubleFire(equipedWeapons[0], target));
+                        StartAction(2, equipedWeapons[0].weaponName);
                     }
                 }
                 else
                 {
-                    target = CheckValidTarget(hit, primaryWeapon);
+                    target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)
                     {
-                        StartCoroutine(NormalFire(primaryWeapon, target));
-                        StartAction(primaryWeapon.weaponName);
+                        StartCoroutine(NormalFire(equipedWeapons[0], target));
+                        StartAction(equipedWeapons[0].weaponName);
                     }
                 }
                 break;
             case Action.Action2:
-                if (performedActions.Contains(secondaryWeapon.weaponName))
+                if (performedActions.Contains(equipedWeapons[1].weaponName))
                     return;
-                target = CheckValidTarget(hit, secondaryWeapon);
+                target = CheckValidTarget(hit, equipedWeapons[1]);
                 if (target)
                 {
-                    StartCoroutine(NormalFire(secondaryWeapon, target));
-                    StartAction(secondaryWeapon.weaponName);
+                    StartCoroutine(NormalFire(equipedWeapons[1], target));
+                    StartAction(equipedWeapons[1].weaponName);
                 }
                 break;
             case Action.Action3:
-                if (performedActions.Contains(meleeWeapon.weaponName))
+                if (performedActions.Contains(equipedWeapons[2].weaponName))
                     return;
-                target = CheckValidTarget(hit, meleeWeapon);
+                target = CheckValidTarget(hit, equipedWeapons[2]);
                 if (target)
                 {
-                    StartCoroutine(StandardMelee(meleeWeapon, target));
-                    StartAction(meleeWeapon.weaponName);
+                    StartCoroutine(StandardMelee(equipedWeapons[2], target));
+                    StartAction(equipedWeapons[2].weaponName);
                 }
                 break;
             default:

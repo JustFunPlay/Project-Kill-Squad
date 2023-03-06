@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: New Seer Info
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 0}
-  speed: 0
-  movement: 0
-  health: 0
-  armor: 0
-  ranged: 0
-  melee: 0
-  attacks: 0
+  speed: 5
+  movement: 6
+  health: 60
+  armor: 5
+  ranged: 5
+  melee: 5
+  attacks: 3
+  equipedWeapons:
+  - {fileID: 11400000, guid: fc6c1c2fee90cff4891984f600e95697, type: 2}
+  - {fileID: 11400000, guid: b297c12e1194e6b47b50561028208551, type: 2}

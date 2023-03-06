@@ -6,7 +6,5 @@ using UnityEngine;
 
 public class InfiltratorData : CharacterInfoBase
 {
-    [Header("Equipment")]
-    public ScriptableWeapon primary;
-    public ScriptableWeapon meleeWeapon;
+
 }
