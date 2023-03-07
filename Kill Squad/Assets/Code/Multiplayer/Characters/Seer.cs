@@ -64,4 +64,50 @@ public class Seer : CharacterAttacks
     public override void OnStopAuthority() { }
 
     #endregion
+
+    [Server]
+    public override void PerformAction(RaycastHit hit, InGamePlayer player)
+    {
+        if (!canAct)
+            return;
+        CharacterBase target = null;
+        switch (selectedAction)
+        {
+            case Action.Action1:
+                if (performedActions.Contains(equipedWeapons[0].weaponName))
+                    return;
+                target = CheckValidTarget(hit, equipedWeapons[0]);
+                if (target)
+                {
+                    StartCoroutine(NormalFire(equipedWeapons[0], target));
+                    StartAction(equipedWeapons[0].weaponName);
+                }
+                break;
+            case Action.Action2:
+                if (performedActions.Contains(equipedWeapons[1].weaponName))
+                    return;
+                if (equipedWeapons[1].type == WeaponType.Heavy && selectedVariant == ActionVar.Variant1)
+                {
+                    target = CheckValidTarget(hit, equipedWeapons[0]);
+                    if (target)
+                    {
+                        StartCoroutine(HeavyMelee(equipedWeapons[0], target));
+                        StartAction(equipedWeapons[0].weaponName);
+                    }
+                }
+                else
+                {
+                    target = CheckValidTarget(hit, equipedWeapons[1]);
+                    if (target)
+                    {
+                        StartCoroutine(StandardMelee(equipedWeapons[1], target));
+                        StartAction(equipedWeapons[1].weaponName);
+                    }
+                }
+                break;
+            default:
+                base.PerformAction(hit, player);
+                break;
+        }
+    }
 }

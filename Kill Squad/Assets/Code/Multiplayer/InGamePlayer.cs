@@ -16,6 +16,10 @@ public class InGamePlayer : NetworkBehaviour
     [SyncVar] private string playerName;
     public KillSquad killSquad;
 
+    Vector2 moveVector;
+    [SerializeField] float moveSpeed;
+    float rotateDir;
+
     public string PlayerName { get { return playerName; } }
 
     #region Start & Stop Callbacks
@@ -103,5 +107,19 @@ public class InGamePlayer : NetworkBehaviour
                 activeCharacter.PerformAction(hit, player);
             }
         }
+    }
+
+    [Client] public void MovePlayer(InputAction.CallbackContext callbackContext)
+    {
+        moveVector = callbackContext.ReadValue<Vector2>();
+    }
+    [Client] public void RotatePlayer(InputAction.CallbackContext callbackContext)
+    {
+        rotateDir = callbackContext.ReadValue<float>();
+    }
+    private void Update()
+    {
+        transform.Translate(moveVector.x * moveSpeed * Time.deltaTime, 0, moveVector.y * moveSpeed * Time.deltaTime);
+        transform.Rotate(0, rotateDir, 0);
     }
 }

@@ -143,6 +143,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   killSquad: {fileID: 11400000, guid: 65ec0f664ecba9e419260d73a17fac19, type: 2}
+  moveSpeed: 10
 --- !u!114 &9158309464153799676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +185,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 3b5a6965-f313-4019-bdf3-864fab0506f7
     m_ActionName: New action map/LMB[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7090007459527378745}
+        m_TargetAssemblyTypeName: InGamePlayer, Assembly-CSharp
+        m_MethodName: MovePlayer
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e545f477-c6c4-4c80-8166-b670166bf437
+    m_ActionName: New action map/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7090007459527378745}
+        m_TargetAssemblyTypeName: InGamePlayer, Assembly-CSharp
+        m_MethodName: RotatePlayer
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 70babc27-aed6-4000-94d9-6153df00acc7
+    m_ActionName: New action map/Rotate[/Keyboard/rightArrow,/Keyboard/leftArrow]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: New action map

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34890a82e9898274e81300529d9eeabe, type: 3}
   m_Name: New Seer Info
   m_EditorClassIdentifier: 
-  physicalCharacter: {fileID: 0}
+  physicalCharacter: {fileID: 387466440081277886, guid: 134ccead41d4d624c9c476381ad61738, type: 3}
   speed: 5
   movement: 6
   health: 60

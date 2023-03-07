@@ -83,6 +83,7 @@ public class TurnTracker : NetworkBehaviour
     [Server]public IEnumerator ProgressTurns()
     {
         activeCharacter = null;
+        
         yield return new WaitForSeconds(1f);
         progressing = CheckForTurn();
         while (characters.Count > 0 && progressing == true)
@@ -111,5 +112,15 @@ public class TurnTracker : NetworkBehaviour
             }
         }
         return true;
+    }
+
+    [Server] public void CheckForGameEnd(InGamePlayer fallenOwner)
+    {
+        for (int i = 0; i < characters.Count; i++)
+        {
+            if (characters[i].Owner == fallenOwner)
+                return;
+        }
+        NetworkManager.singleton.ServerChangeScene(NetworkManager.singleton.onlineScene);
     }
 }

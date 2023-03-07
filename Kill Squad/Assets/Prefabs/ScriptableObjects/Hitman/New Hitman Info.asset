@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f80b5502e1ff3d845a90f7c944f198ad, type: 3}
   m_Name: New Hitman Info
   m_EditorClassIdentifier: 
-  physicalCharacter: {fileID: 0}
+  physicalCharacter: {fileID: 7725001508692832866, guid: b968e2042987e474a84ab7796df03486, type: 3}
   speed: 6
   movement: 6
   health: 48

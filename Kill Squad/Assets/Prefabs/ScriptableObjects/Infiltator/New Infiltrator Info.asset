@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79c4ff16cc31154e85fcb8c2be2530a, type: 3}
   m_Name: New Infiltrator Info
   m_EditorClassIdentifier: 
-  physicalCharacter: {fileID: 0}
+  physicalCharacter: {fileID: 8827378593658907782, guid: f4274d7171fce3647bb7fdcc803afa9a, type: 3}
   speed: 8
   movement: 7
   health: 40

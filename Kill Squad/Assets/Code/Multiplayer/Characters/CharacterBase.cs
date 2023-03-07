@@ -41,15 +41,6 @@ public class CharacterBase : NetworkBehaviour
     public TMPro.TextMeshProUGUI speedText;
     public TMPro.TextMeshProUGUI movementText;
     public TMPro.TextMeshProUGUI hpText;
-    public TMPro.TextMeshProUGUI toHitText;
-    public TMPro.TextMeshProUGUI attacksText;
-    public TMPro.TextMeshProUGUI damageText;
-    [SyncVar] public int damage;
-    public TMPro.TextMeshProUGUI armorText;
-    [SyncVar] public int ap;
-    public TMPro.TextMeshProUGUI apText;
-    public TMPro.TextMeshProUGUI critText;
-    [SyncVar] public int crit;
     [SerializeField] private Slider hpSlider;
 
     [Header("Turn management")]
@@ -195,12 +186,6 @@ public class CharacterBase : NetworkBehaviour
             speedText.text = $"Speed: {Speed}";
             movementText.text = $"Movement: {movement}";
             hpText.text = $"Health: {currentHealth}";
-            toHitText.text = $"To hit: {meleeSkill}";
-            attacksText.text = $"Attacks: {meleeAttacks}";
-            damageText.text = $"Damage: {damage}";
-            armorText.text = $"Armor: {armorSave}";
-            apText.text = $"Armor penetration: {ap}";
-            critText.text = $"Crit: {crit}";
         }
     }
 
@@ -352,6 +337,7 @@ public class CharacterBase : NetworkBehaviour
     [Server] protected virtual void OnDeath()
     {
         TurnTracker.instance.characters.Remove(this);
+        TurnTracker.instance.CheckForGameEnd(Owner);
     }
     [Server] public void GetHealed(int healValue, out int healingDone)
     {

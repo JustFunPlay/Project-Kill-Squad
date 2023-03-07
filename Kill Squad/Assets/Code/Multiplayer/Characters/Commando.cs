@@ -127,6 +127,18 @@ public class Commando : CharacterAttacks
                     StartAction(equipedWeapons[2].weaponName);
                 }
                 break;
+            case Action.Action4:
+                if (performedActions.Contains(grenade.weaponName) || remainingGrenades <= 0)
+                    return;
+                List<Vector3> grenadePath = GridCombatSystem.instance.FindPath(transform.position, hit.point);
+                if (grenadePath != null && grenadePath.Count <= grenade.range + 1)
+                {
+                    remainingGrenades -= 1;
+                    GridCombatSystem.instance.grid.GetXZ(hit.point, out int x, out int z);
+                    StartAction(grenade.weaponName);
+                    GrenadeThrow(grenade, x, z);
+                }
+                break;
             default:
                 base.PerformAction(hit, player);
                 break;
