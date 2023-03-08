@@ -38,9 +38,6 @@ public class CharacterBase : NetworkBehaviour
     [Header("Other Stuff")]
     [SyncVar] protected InGamePlayer owner;
     public GameObject[] buttons;
-    public TMPro.TextMeshProUGUI speedText;
-    public TMPro.TextMeshProUGUI movementText;
-    public TMPro.TextMeshProUGUI hpText;
     [SerializeField] private Slider hpSlider;
 
     [Header("Turn management")]
@@ -176,17 +173,7 @@ public class CharacterBase : NetworkBehaviour
         TurnTracker.instance.characters.Add(this);
         if (armorLuck != LuckyRate.Never)
             luckyArmor = true;
-        Invoke("UpdateUI", 0.5f);
         Invoke("UpdateHpBar", 0.5f);
-    }
-    [ClientRpc] protected void UpdateUI()
-    {
-        if (owner.isOwned)
-        {
-            speedText.text = $"Speed: {Speed}";
-            movementText.text = $"Movement: {movement}";
-            hpText.text = $"Health: {currentHealth}";
-        }
     }
 
     #region Turns and actions
@@ -326,7 +313,6 @@ public class CharacterBase : NetworkBehaviour
         currentHealth -= damage;
         recievedDamage = damage;
         isKilled = false;
-        UpdateUI();
         UpdateHpBar();
         if (currentHealth <= 0)
         {
@@ -343,7 +329,6 @@ public class CharacterBase : NetworkBehaviour
     {
         healingDone = Mathf.Min(maxHealth - currentHealth, healValue);
         currentHealth = Mathf.Min(currentHealth + healValue, maxHealth);
-        UpdateUI();
         UpdateHpBar();
     }
 

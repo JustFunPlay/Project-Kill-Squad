@@ -18,6 +18,7 @@ public class GridCombatSystem : Pathfinding
     [SyncVar] private bool nextTeam;
     [SerializeField] private Vector2 attackerGridSpawn;
     [SerializeField] private Vector2 defenderGridSpawn;
+    [SerializeField] private LayerMask obstacleLayer;
 
     [Header("Visualisation")]
     [SerializeField] private GameObject gridCube;
@@ -95,10 +96,11 @@ public class GridCombatSystem : Pathfinding
         {
             for (int z = 0; z < grid.GetLength(); z++)
             {
+                if (Physics.Raycast(grid.GetWorldPosition(x, z) + Vector3.down, Vector3.up, 4, obstacleLayer))
+                    grid.GetGridObject(x, z).isWalkable = false;
                 GameObject newVisualizer = Instantiate(gridCube, grid.GetWorldPosition(x, z) + new Vector3(0, 0.1f, 0), Quaternion.identity, transform);
                 NetworkServer.Spawn(newVisualizer);
                 gridSlots.Add(new GridVisualizer(newVisualizer, new Vector2(x, z)));
-                //newVisualizer.SetActive(false);
             }
         }
     }

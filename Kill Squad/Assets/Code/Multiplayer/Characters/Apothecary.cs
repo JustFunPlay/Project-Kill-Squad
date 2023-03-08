@@ -138,6 +138,39 @@ public class Apothecary : CharacterAttacks
                     StartAction(equipedWeapons[2].weaponName);
                 }
                 break;
+            case Action.Action4:
+                if (performedActions.Contains("Medkit") || remainingHealCharges <= 0)
+                    return;
+                if (hit.collider.GetComponent<CharacterBase>() && hit.collider.GetComponent<CharacterBase>().Owner == owner)
+                {
+                    target = hit.collider.GetComponent<CharacterBase>();
+                }
+                else
+                {
+                    GridCombatSystem.instance.grid.GetXZ(hit.point, out int gridX, out int gridZ);
+                    foreach (CharacterBase character in TurnTracker.instance.characters)
+                    {
+                        GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
+                        if (gridX == characterX && gridZ == characterZ)
+                        {
+                            target = character;
+                        }
+                    }
+                }
+                if (target == null || target.Owner != owner)
+                    return;
+                GridCombatSystem.instance.grid.GetXZ(target.transform.position, out int targetX, out int targetZ);
+                GridCombatSystem.instance.grid.GetXZ(transform.position, out int x, out int z);
+                List<GridNode> path = GridCombatSystem.instance.FindPath(x, z, targetX, targetZ);
+                if (path != null && path.Count <= 3)
+                {
+                    StartAction("Medkit");
+                    int healvalue = Random.Range((int)healRange.x, (int)healRange.y);
+                    target.GetHealed(healvalue, out int healingDone);
+                    remainingHealCharges--;
+                    ContinueTurn();
+                }
+                break;
             default:
                 base.PerformAction(hit, player);
                 break;

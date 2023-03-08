@@ -66,7 +66,10 @@ public class Pathfinding : NetworkBehaviour
                 if (closedList.Contains(neighborNode))
                     continue;
                 if (!neighborNode.isWalkable)
+                {
                     closedList.Add(neighborNode);
+                    continue;
+                }
                 int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighborNode);
                 //Debug.Log($"tentative cost: {tentativeGCost}, actual cost: {neighborNode.gCost}");
                 if (tentativeGCost < neighborNode.gCost)
