@@ -88,8 +88,8 @@ public class Infiltrator : CharacterAttacks
                 target = CheckValidTarget(hit, equipedWeapons[0]);
                 if (target)
                 {
-                    StartCoroutine(NormalFire(equipedWeapons[0], target));
                     StartAction(equipedWeapons[0].weaponName);
+                    StartCoroutine(NormalFire(equipedWeapons[0], target));
                 }
                 break;
             case Action.Action2:
@@ -98,8 +98,8 @@ public class Infiltrator : CharacterAttacks
                 target = CheckValidTarget(hit, equipedWeapons[1]);
                 if (target)
                 {
-                    StartCoroutine(StandardMelee(equipedWeapons[1], target));
                     StartAction(equipedWeapons[1].weaponName);
+                    StartCoroutine(StandardMelee(equipedWeapons[1], target));
                 }
                 break;
             default:

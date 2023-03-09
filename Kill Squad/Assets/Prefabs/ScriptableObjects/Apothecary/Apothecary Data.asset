@@ -25,4 +25,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f627d3d24b95b1c409f61abe9ce35313, type: 2}
   - {fileID: 11400000, guid: 3fd1e48e503ac604dadf3712057fe630, type: 2}
   healValue: {x: 4, y: 10}
-  healCharges: 0
+  healCharges: 10

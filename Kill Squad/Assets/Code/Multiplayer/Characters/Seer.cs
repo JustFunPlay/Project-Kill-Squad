@@ -11,6 +11,29 @@ using Mirror;
 
 public class Seer : CharacterAttacks
 {
+    [Header("Psychic stuff")]
+    [SyncVar] [SerializeField] private int maxPsychicPoints;
+    [SyncVar] [SerializeField] private int currentPsychicPoints;
+    [SyncVar] [SerializeField] private Vector2 psychicGeneration;
+
+    [SyncVar] [SerializeField] private bool hasRunicArmor;
+    [SerializeField] private TMPro.TextMeshProUGUI ppCounter;
+
+
+    [Server]
+    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    {
+        equipedWeapons.Clear();
+        equipedWeapons.AddRange(info.equipedWeapons);
+        SeerData seerInfo = (SeerData)info;
+        currentPsychicPoints = maxPsychicPoints = seerInfo.psychicPoints;
+        psychicGeneration = seerInfo.psychicGeneration;
+        hasRunicArmor = seerInfo.hasRunicArmor;
+        UpdatePsychicPoints();
+        UpdatePsychicPoints();
+        base.SetupCharacter(player, info);
+    }
+
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -79,8 +102,8 @@ public class Seer : CharacterAttacks
                 target = CheckValidTarget(hit, equipedWeapons[0]);
                 if (target)
                 {
-                    StartCoroutine(NormalFire(equipedWeapons[0], target));
                     StartAction(equipedWeapons[0].weaponName);
+                    StartCoroutine(NormalFire(equipedWeapons[0], target));
                 }
                 break;
             case Action.Action2:
@@ -88,11 +111,11 @@ public class Seer : CharacterAttacks
                     return;
                 if (equipedWeapons[1].type == WeaponType.Heavy && selectedVariant == ActionVar.Variant1)
                 {
-                    target = CheckValidTarget(hit, equipedWeapons[0]);
+                    target = CheckValidTarget(hit, equipedWeapons[1]);
                     if (target)
                     {
-                        StartCoroutine(HeavyMelee(equipedWeapons[0], target));
-                        StartAction(equipedWeapons[0].weaponName);
+                        StartAction(equipedWeapons[1].weaponName);
+                        StartCoroutine(HeavyMelee(equipedWeapons[1], target));
                     }
                 }
                 else
@@ -100,14 +123,24 @@ public class Seer : CharacterAttacks
                     target = CheckValidTarget(hit, equipedWeapons[1]);
                     if (target)
                     {
-                        StartCoroutine(StandardMelee(equipedWeapons[1], target));
                         StartAction(equipedWeapons[1].weaponName);
+                        StartCoroutine(StandardMelee(equipedWeapons[1], target));
                     }
                 }
+                break;
+            case Action.Action3:
+                if (currentPsychicPoints == maxPsychicPoints)
+                    return;
+                currentPsychicPoints = Mathf.Min(currentPsychicPoints + Random.Range((int)psychicGeneration.x, (int)psychicGeneration.y), maxPsychicPoints);
+                UpdatePsychicPoints();
                 break;
             default:
                 base.PerformAction(hit, player);
                 break;
         }
+    }
+    [ClientRpc] private void UpdatePsychicPoints()
+    {
+        ppCounter.text = $"Psychic points:\n[{currentPsychicPoints}/{maxPsychicPoints}]";
     }
 }

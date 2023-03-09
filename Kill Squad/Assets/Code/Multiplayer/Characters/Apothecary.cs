@@ -14,6 +14,7 @@ public class Apothecary : CharacterAttacks
     [Header("Equipment")]
     [SyncVar] [SerializeField] private Vector2 healRange;
     [SyncVar] [SerializeField] private int remainingHealCharges;
+    [SerializeField] private TMPro.TextMeshProUGUI chargeCounter;
 
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
@@ -23,6 +24,7 @@ public class Apothecary : CharacterAttacks
         ApothecaryData medicInfo = (ApothecaryData)info;
         healRange = medicInfo.healValue;
         remainingHealCharges = medicInfo.healCharges;
+        UpdateHealCharges();
         base.SetupCharacter(player, info);
     }
 
@@ -95,8 +97,8 @@ public class Apothecary : CharacterAttacks
                     target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)
                     {
-                        StartCoroutine(DoubleFire(equipedWeapons[0], target));
                         StartAction(2, equipedWeapons[0].weaponName);
+                        StartCoroutine(DoubleFire(equipedWeapons[0], target));
                     }
                 }
                 else if (equipedWeapons[0].type == WeaponType.Combat && selectedVariant == ActionVar.Variant2)
@@ -104,8 +106,8 @@ public class Apothecary : CharacterAttacks
                     target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)
                     {
+                        StartAction(2, equipedWeapons[0].weaponName);
                         StartCoroutine(AimedFire(equipedWeapons[0], target));
-                        StartAction(equipedWeapons[0].weaponName);
                     }
                 }
                 else
@@ -113,8 +115,8 @@ public class Apothecary : CharacterAttacks
                     target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)
                     {
-                        StartCoroutine(NormalFire(equipedWeapons[0], target));
                         StartAction(equipedWeapons[0].weaponName);
+                        StartCoroutine(NormalFire(equipedWeapons[0], target));
                     }
                 }
                 break;
@@ -134,8 +136,8 @@ public class Apothecary : CharacterAttacks
                 target = CheckValidTarget(hit, equipedWeapons[2]);
                 if (target)
                 {
-                    StartCoroutine(StandardMelee(equipedWeapons[2], target));
                     StartAction(equipedWeapons[2].weaponName);
+                    StartCoroutine(StandardMelee(equipedWeapons[2], target));
                 }
                 break;
             case Action.Action4:
@@ -168,6 +170,7 @@ public class Apothecary : CharacterAttacks
                     int healvalue = Random.Range((int)healRange.x, (int)healRange.y);
                     target.GetHealed(healvalue, out int healingDone);
                     remainingHealCharges--;
+                    UpdateHealCharges();
                     ContinueTurn();
                 }
                 break;
@@ -175,5 +178,10 @@ public class Apothecary : CharacterAttacks
                 base.PerformAction(hit, player);
                 break;
         }
+    }
+
+    [ClientRpc] private void UpdateHealCharges()
+    {
+        chargeCounter.text = $"Charges: {remainingHealCharges}";
     }
 }

@@ -90,8 +90,8 @@ public class Hitman : CharacterAttacks
                     target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)
                     {
-                        StartCoroutine(AimedFire(equipedWeapons[0], target));
                         StartAction(2, equipedWeapons[0].weaponName);
+                        StartCoroutine(AimedFire(equipedWeapons[0], target));
                     }
                 }
                 else
@@ -99,8 +99,8 @@ public class Hitman : CharacterAttacks
                     target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)
                     {
-                        StartCoroutine(NormalFire(equipedWeapons[0], target));
                         StartAction(equipedWeapons[0].weaponName);
+                        StartCoroutine(NormalFire(equipedWeapons[0], target));
                     }
                 }
                 break;
@@ -110,8 +110,8 @@ public class Hitman : CharacterAttacks
                 target = CheckValidTarget(hit, equipedWeapons[1]);
                 if (target)
                 {
-                    StartCoroutine(NormalFire(equipedWeapons[1], target));
                     StartAction(equipedWeapons[1].weaponName);
+                    StartCoroutine(NormalFire(equipedWeapons[1], target));
                 }
                 break;
             case Action.Action3:
@@ -120,8 +120,8 @@ public class Hitman : CharacterAttacks
                 target = CheckValidTarget(hit, equipedWeapons[2]);
                 if (target)
                 {
-                    StartCoroutine(StandardMelee(equipedWeapons[2], target));
                     StartAction(equipedWeapons[2].weaponName);
+                    StartCoroutine(StandardMelee(equipedWeapons[2], target));
                 }
                 break;
             default:

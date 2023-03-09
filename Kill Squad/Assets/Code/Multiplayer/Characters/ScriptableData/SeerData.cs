@@ -6,5 +6,7 @@ using UnityEngine;
 
 public class SeerData : CharacterInfoBase
 {
-
+    public int psychicPoints;
+    public Vector2 psychicGeneration;
+    public bool hasRunicArmor;
 }
