@@ -83,12 +83,15 @@ public class Infiltrator : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(equipedWeapons[0].weaponName))
+                if (performedActions.Contains(equipedWeapons[0].weaponName) && performedActions.Contains($"{ equipedWeapons[0].weaponName}2"))
                     return;
                 target = CheckValidTarget(hit, equipedWeapons[0]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[0].weaponName);
+                    if (performedActions.Contains(equipedWeapons[0].weaponName))
+                        StartAction($"{ equipedWeapons[0].weaponName}2");
+                    else
+                        StartAction(equipedWeapons[0].weaponName);
                     StartCoroutine(NormalFire(equipedWeapons[0], target));
                 }
                 break;

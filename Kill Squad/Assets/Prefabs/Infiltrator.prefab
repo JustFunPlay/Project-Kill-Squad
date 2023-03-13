@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Pistol
+  m_text: Pistol 2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1093,8 +1093,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 973397313ea57be429dbd6ac2e810d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  action: 2
-  variation: 0
+  action: 1
+  variation: 1
 --- !u!1 &4206726296940908552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1356,6 +1356,9 @@ MonoBehaviour:
   rangedLuck: 0
   meleeLuck: 0
   critLuck: 0
+  damageBoost: 0
+  critBoost: 0
+  apBoost: 0
   buttons:
   - {fileID: 1664981492180643341}
   - {fileID: 3929316166557332179}

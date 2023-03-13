@@ -164,6 +164,7 @@ public class Hitman : CharacterAttacks
                 if (target == null || target.Owner == owner)
                     return;
                 StartAction();
+                currentCrits = 0;
                 Attack(Ranged + 10, false, -10, 19, false, ultDamage, target, out CombatReport newReport);
                 ReportForCombat(newReport);
                 break;

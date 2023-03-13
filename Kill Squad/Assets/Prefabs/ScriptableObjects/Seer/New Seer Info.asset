@@ -22,7 +22,7 @@ MonoBehaviour:
   attacks: 3
   equipedWeapons:
   - {fileID: 11400000, guid: fc6c1c2fee90cff4891984f600e95697, type: 2}
-  - {fileID: 11400000, guid: b297c12e1194e6b47b50561028208551, type: 2}
+  - {fileID: 11400000, guid: ea2efbb9be78cae448bc8744e50b4862, type: 2}
   psychicPoints: 40
   psychicGeneration: {x: 5, y: 12}
   hasRunicArmor: 1

@@ -34,11 +34,15 @@ public class CharacterBase : NetworkBehaviour
     [SyncVar] [SerializeField] protected LuckyRate rangedLuck;
     [SyncVar] [SerializeField] protected LuckyRate meleeLuck;
     [SyncVar] [SerializeField] protected LuckyRate critLuck;
+    [SyncVar] [SerializeField] protected int damageBoost;
+    [SyncVar] [SerializeField] protected int critBoost;
+    [SyncVar] [SerializeField] protected int apBoost;
 
     [Header("Other Stuff")]
     [SyncVar] protected InGamePlayer owner;
     public GameObject[] buttons;
     [SerializeField] private Slider hpSlider;
+    public SyncList<BuffCounter> buffs = new SyncList<BuffCounter>();
 
     [Header("Turn management")]
     [SyncVar] [SerializeField] protected bool canAct = false;
@@ -206,6 +210,7 @@ public class CharacterBase : NetworkBehaviour
             return;
         canAct = false;
         Progress -= 1;
+        CheckBuffStatus();
         StartCoroutine(TurnTracker.instance.ProgressTurns());
         DeactivateTurnUi();
     }
@@ -347,6 +352,146 @@ public class CharacterBase : NetworkBehaviour
     {
         GridCombatSystem.instance.VisualizeMoveDistance(this);
     }
+
+    #region Buffs
+    [Server] public void RecieveBuff(StatChange buff, int ammount, int duration, bool additve)
+    {
+        BuffCounter newBuff = new BuffCounter(buff, ammount, duration);
+        if (additve)
+        {
+            SetupBuff(newBuff);
+            return;
+        }
+        foreach (BuffCounter activeBuff in buffs)
+        {
+            if (activeBuff.Stat == buff && activeBuff.Ammount == ammount)
+            {
+                activeBuff.duration = duration;
+                return;
+            }
+        }
+        SetupBuff(newBuff);
+    }
+
+    [Server] private void SetupBuff(BuffCounter buff)
+    {
+        buffs.Add(buff);
+        switch (buff.Stat)
+        {
+            case StatChange.Ap:
+                apBoost += buff.Ammount;
+                break;
+            case StatChange.Armor:
+                armorSave += buff.Ammount;
+                break;
+            case StatChange.Attacks:
+                meleeAttacks += buff.Ammount;
+                break;
+            case StatChange.Crit:
+                critBoost += buff.Ammount;
+                break;
+            case StatChange.Damage:
+                damageBoost += buff.Ammount;
+                break;
+            case StatChange.Dodge:
+                dodgeChance += buff.Ammount;
+                break;
+            case StatChange.Dr:
+                damageReduction += buff.Ammount;
+                break;
+            case StatChange.Melee:
+                meleeSkill += buff.Ammount;
+                break;
+            case StatChange.Movement:
+                movement += buff.Ammount;
+                break;
+            case StatChange.Ranged:
+                rangedSkill += buff.Ammount;
+                break;
+            case StatChange.Speed:
+                turnSpeed += buff.Ammount;
+                break;
+            default:
+                Debug.LogError("Failed to implement (de)buff");
+                break;
+        }
+    }
+
+    [Server] private void CheckBuffStatus()
+    {
+        for (int i = 0; i < buffs.Count; i++)
+        {
+            buffs[i].duration--;
+            if (buffs[i].duration <= 0)
+            {
+                switch (buffs[i].Stat)
+                {
+                    case StatChange.Ap:
+                        apBoost -= buffs[i].Ammount;
+                        break;
+                    case StatChange.Armor:
+                        armorSave -= buffs[i].Ammount;
+                        break;
+                    case StatChange.Attacks:
+                        meleeAttacks -= buffs[i].Ammount;
+                        break;
+                    case StatChange.Crit:
+                        critBoost -= buffs[i].Ammount;
+                        break;
+                    case StatChange.Damage:
+                        damageBoost -= buffs[i].Ammount;
+                        break;
+                    case StatChange.Dodge:
+                        dodgeChance -= buffs[i].Ammount;
+                        break;
+                    case StatChange.Dr:
+                        damageReduction -= buffs[i].Ammount;
+                        break;
+                    case StatChange.Melee:
+                        meleeSkill -= buffs[i].Ammount;
+                        break;
+                    case StatChange.Movement:
+                        movement -= buffs[i].Ammount;
+                        break;
+                    case StatChange.Ranged:
+                        rangedSkill -= buffs[i].Ammount;
+                        break;
+                    case StatChange.Speed:
+                        turnSpeed -= buffs[i].Ammount;
+                        break;
+                    default:
+                        Debug.LogError("Failed to disable (de)buff");
+                        break;
+                }
+                buffs.RemoveAt(i);
+                i--;
+            }
+        }
+    }
+    #endregion
+}
+
+public class BuffCounter
+{
+    private StatChange stat;
+    private int change;
+    public int duration;
+
+    public StatChange Stat { get { return stat; } }
+    public int Ammount { get { return change; } }
+    
+    public BuffCounter(StatChange stat, int ammount, int duration)
+    {
+        this.stat = stat;
+        change = ammount;
+        this.duration = duration;
+    }
+    public BuffCounter()
+    {
+        stat = StatChange.Ap;
+        change = 0;
+        duration = 0;
+    }
 }
 
 public enum LuckyRate
@@ -372,4 +517,19 @@ public enum ActionVar
     Normal,
     Variant1,
     Variant2
+}
+
+public enum StatChange
+{
+    Speed,
+    Movement,
+    Armor,
+    Ranged,
+    Melee,
+    Attacks,
+    Dr,
+    Dodge,
+    Ap,
+    Damage,
+    Crit
 }
