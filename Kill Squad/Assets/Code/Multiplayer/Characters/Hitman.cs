@@ -11,15 +11,33 @@ using Mirror;
 
 public class Hitman : CharacterAttacks
 {
+    [Header("Ult")]
+    [SyncVar] [SerializeField] private int ultDamage;
+    [SyncVar] [SerializeField] private int requiredCrits;
+    [SyncVar] [SerializeField] private int currentCrits;
+    [SerializeField] private TMPro.TextMeshProUGUI ultProgress;
 
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
         equipedWeapons.Clear();
         equipedWeapons.AddRange(info.equipedWeapons);
-        //HitmanData hitInfo = (HitmanData)info;
+        HitmanData hitInfo = (HitmanData)info;
+        ultDamage = hitInfo.ultDamage;
+        requiredCrits = hitInfo.requiredCrits;
+        currentCrits = 0;
+        UpdateUltProgress();
         base.SetupCharacter(player, info);
     }
+
+    [Server]
+    protected override void ReportForCombat(CombatReport report)
+    {
+        currentCrits += report.critHits;
+        UpdateUltProgress();
+        base.ReportForCombat(report);
+    }
+
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -124,9 +142,39 @@ public class Hitman : CharacterAttacks
                     StartCoroutine(StandardMelee(equipedWeapons[2], target));
                 }
                 break;
+            case Action.Ultimate:
+                if (currentCrits < requiredCrits)
+                    return;
+                if (hit.collider.GetComponent<CharacterBase>() && hit.collider.GetComponent<CharacterBase>().Owner != owner)
+                {
+                    target = hit.collider.GetComponent<CharacterBase>();
+                }
+                else
+                {
+                    GridCombatSystem.instance.grid.GetXZ(hit.point, out int gridX, out int gridZ);
+                    foreach (CharacterBase character in TurnTracker.instance.characters)
+                    {
+                        GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
+                        if (gridX == characterX && gridZ == characterZ)
+                        {
+                            target = character;
+                        }
+                    }
+                }
+                if (target == null || target.Owner == owner)
+                    return;
+                StartAction();
+                Attack(Ranged + 10, false, -10, 19, false, ultDamage, target, out CombatReport newReport);
+                ReportForCombat(newReport);
+                break;
             default:
                 base.PerformAction(hit, player);
                 break;
         }
+    }
+
+    [ClientRpc] private void UpdateUltProgress()
+    {
+        ultProgress.text = $"Progress:\n[{Mathf.Min(currentCrits, requiredCrits)}/{requiredCrits}]";
     }
 }

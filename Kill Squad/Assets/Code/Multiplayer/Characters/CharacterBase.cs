@@ -177,7 +177,7 @@ public class CharacterBase : NetworkBehaviour
     }
 
     #region Turns and actions
-    [Server] public void ProgressTurn()
+    [Server] public virtual void ProgressTurn()
     {
         turnProgress += Speed / (25f + Speed);
         if (armorLuck == LuckyRate.First)
@@ -200,7 +200,7 @@ public class CharacterBase : NetworkBehaviour
             //GetMoveRange();
         }
     }
-    [Server]protected void EndTurn()
+    [Server]protected virtual void EndTurn()
     {
         if (!canAct)
             return;

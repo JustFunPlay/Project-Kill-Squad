@@ -15,6 +15,14 @@ public class Commando : CharacterAttacks
     [SyncVar] [SerializeField] private ScriptableGrenade grenade;
     [SyncVar] [SerializeField] private int remainingGrenades;
 
+    [Header("Ult")]
+    [SyncVar] [SerializeField] private int minUltHits;
+    [SyncVar] [SerializeField] private int maxUltHits;
+    [SyncVar] [SerializeField] private int ultAp;
+    [SyncVar] [SerializeField] private int ultDamage;
+    [SyncVar] [SerializeField] private int requiredDamageDealt;
+    [SyncVar] [SerializeField] private int damageDealt;
+
     [Server] public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
         equipedWeapons.Clear();
@@ -22,6 +30,7 @@ public class Commando : CharacterAttacks
         CommandoData comInfo = (CommandoData)info;
         grenade = comInfo.grenade;
         remainingGrenades = comInfo.extraGrenades ? comInfo.grenade.count : comInfo.grenade.increasedCount;
+
         base.SetupCharacter(player, info);
     }
     #region Start & Stop Callbacks
@@ -138,6 +147,9 @@ public class Commando : CharacterAttacks
                     StartAction(grenade.weaponName);
                     GrenadeThrow(grenade, x, z);
                 }
+                break;
+            case Action.Ultimate:
+                //if ()
                 break;
             default:
                 base.PerformAction(hit, player);

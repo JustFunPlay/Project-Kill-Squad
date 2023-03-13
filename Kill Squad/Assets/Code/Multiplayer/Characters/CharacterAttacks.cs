@@ -297,7 +297,7 @@ public class CharacterAttacks : CharacterMovement
                     if (newReport.killingBlow)
                     {
                         report.killingBlow = true;
-                        break;
+                        i = count;
                     }
                 }
             }

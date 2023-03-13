@@ -17,6 +17,7 @@ public class Seer : CharacterAttacks
     [SyncVar] [SerializeField] private Vector2 psychicGeneration;
 
     [SyncVar] [SerializeField] private bool hasRunicArmor;
+    [SyncVar] [SerializeField] private bool runicArmorActve;
     [SerializeField] private TMPro.TextMeshProUGUI ppCounter;
 
 
@@ -34,6 +35,18 @@ public class Seer : CharacterAttacks
         base.SetupCharacter(player, info);
     }
 
+    [Server] public override void ProgressTurn()
+    {
+        CheckRunicArmor();
+        base.ProgressTurn();
+    }
+    protected override void EndTurn()
+    {
+        if (!canAct)
+            return;
+        CheckRunicArmor();
+        base.EndTurn();
+    }
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -109,11 +122,13 @@ public class Seer : CharacterAttacks
             case Action.Action2:
                 if (performedActions.Contains(equipedWeapons[1].weaponName))
                     return;
-                if (equipedWeapons[1].type == WeaponType.Heavy && selectedVariant == ActionVar.Variant1)
+                if (equipedWeapons[1].type == WeaponType.Heavy && selectedVariant == ActionVar.Variant1 && currentPsychicPoints >= 4)
                 {
                     target = CheckValidTarget(hit, equipedWeapons[1]);
                     if (target)
                     {
+                        currentPsychicPoints -= 4;
+                        UpdatePsychicPoints();
                         StartAction(equipedWeapons[1].weaponName);
                         StartCoroutine(HeavyMelee(equipedWeapons[1], target));
                     }
@@ -133,6 +148,8 @@ public class Seer : CharacterAttacks
                     return;
                 currentPsychicPoints = Mathf.Min(currentPsychicPoints + Random.Range((int)psychicGeneration.x, (int)psychicGeneration.y), maxPsychicPoints);
                 UpdatePsychicPoints();
+                StartAction();
+                ContinueTurn();
                 break;
             default:
                 base.PerformAction(hit, player);
@@ -142,5 +159,25 @@ public class Seer : CharacterAttacks
     [ClientRpc] private void UpdatePsychicPoints()
     {
         ppCounter.text = $"Psychic points:\n[{currentPsychicPoints}/{maxPsychicPoints}]";
+    }
+
+    [Server] private void CheckRunicArmor()
+    {
+        if (!hasRunicArmor)
+            return;
+        if (runicArmorActve)
+        {
+            armorSave -= 1;
+            damageReduction -= 1;
+            runicArmorActve = false;
+        }
+        if (currentPsychicPoints > 0)
+        {
+            currentPsychicPoints--;
+            armorSave += 1;
+            damageReduction += 1;
+            runicArmorActve = true;
+        }
+        UpdatePsychicPoints();
     }
 }

@@ -1794,7 +1794,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 3555823683757961821}
         m_TargetAssemblyTypeName: CharacterBase, Assembly-CSharp
         m_MethodName: FinishTurn
         m_Mode: 1

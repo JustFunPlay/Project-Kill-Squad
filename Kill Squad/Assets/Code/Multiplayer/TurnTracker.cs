@@ -85,6 +85,7 @@ public class TurnTracker : NetworkBehaviour
         activeCharacter = null;
         
         yield return new WaitForSeconds(1f);
+        ScrambleCharacterList();
         progressing = CheckForTurn();
         while (characters.Count > 0 && progressing == true)
         {
@@ -122,5 +123,17 @@ public class TurnTracker : NetworkBehaviour
                 return;
         }
         NetworkManager.singleton.ServerChangeScene(NetworkManager.singleton.onlineScene);
+    }
+
+    [Server] private void ScrambleCharacterList()
+    {
+        for (int i = 0; i < characters.Count; i++)
+        {
+            CharacterBase ogCharacter = characters[i];
+            int newIndex = Random.Range(0, characters.Count);
+            CharacterBase newCharacter = characters[newIndex];
+            characters[i] = newCharacter;
+            characters[newIndex] = ogCharacter;
+        }
     }
 }

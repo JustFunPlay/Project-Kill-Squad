@@ -6,5 +6,8 @@ using UnityEngine;
 
 public class HitmanData : CharacterInfoBase
 {
+    [Header("Ult")]
+    public int ultDamage;
+    public int requiredCrits;
 
 }

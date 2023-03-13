@@ -26,3 +26,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}
   grenade: {fileID: 11400000, guid: 4c2a7024787c38e4ead38f7b0d7841dd, type: 2}
   extraGrenades: 1
+  minUltHits: 3
+  maxUltHits: 5
+  ultAp: -3
+  ultDamage: 5
+  requiredDamageDealt: 40
