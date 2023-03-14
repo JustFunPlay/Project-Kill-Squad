@@ -90,6 +90,27 @@ public class CharacterAttacks : CharacterMovement
         }
         if (target == null || target.Owner == owner)
             return null;
+        bool hasLos = false;
+        for (int i = 0; i < 4; i++)
+        {
+            Vector3 startpos = transform.position + Vector3.up;
+            if (i == 1)
+                startpos += Vector3.forward;
+            else if (i == 2)
+                startpos += Vector3.back;
+            else if (i == 3)
+                startpos += Vector3.left;
+            else
+                startpos += Vector3.right;
+
+            if (Physics.Raycast(startpos, (target.transform.position - startpos).normalized, Vector3.Distance(startpos, target.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
+            {
+                hasLos = true;
+                break;
+            }
+        }
+        if (!hasLos)
+            return null;
         GridCombatSystem.instance.grid.GetXZ(target.transform.position, out int targetX, out int targetZ);
         GridCombatSystem.instance.grid.GetXZ(transform.position, out int x, out int z);
         if ((weapon.type == WeaponType.Melee || weapon.type == WeaponType.Heavy || weapon.type == WeaponType.Swift) && Mathf.Abs(x - targetX) <= weapon.range && Mathf.Abs(z - targetZ) <= weapon.range)

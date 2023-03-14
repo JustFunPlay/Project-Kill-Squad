@@ -18,7 +18,7 @@ public class GridCombatSystem : Pathfinding
     [SyncVar] private bool nextTeam;
     [SerializeField] private Vector2 attackerGridSpawn;
     [SerializeField] private Vector2 defenderGridSpawn;
-    [SerializeField] private LayerMask obstacleLayer;
+    public LayerMask obstacleLayer;
 
     [Header("Visualisation")]
     [SerializeField] private GameObject gridCube;
