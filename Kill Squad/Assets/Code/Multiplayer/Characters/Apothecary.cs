@@ -166,7 +166,7 @@ public class Apothecary : CharacterAttacks
                 List<GridNode> path = GridCombatSystem.instance.FindPath(x, z, targetX, targetZ);
                 if (path != null && path.Count <= 3)
                 {
-                    StartAction("Medkit");
+                    StartAction();
                     int healvalue = Random.Range((int)healRange.x, (int)healRange.y);
                     target.GetHealed(healvalue, out int healingDone);
                     remainingHealCharges--;

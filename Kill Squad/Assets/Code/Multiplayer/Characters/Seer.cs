@@ -21,6 +21,11 @@ public class Seer : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ppCounter;
 
 
+    [Header("Ult")]
+    [SyncVar] [SerializeField] private int ultRange;
+    [SyncVar] [SerializeField] private int ultpointRequirement;
+    [SyncVar] [SerializeField] private int pointsSpent;
+
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
@@ -30,7 +35,9 @@ public class Seer : CharacterAttacks
         currentPsychicPoints = maxPsychicPoints = seerInfo.psychicPoints;
         psychicGeneration = seerInfo.psychicGeneration;
         hasRunicArmor = seerInfo.hasRunicArmor;
-        UpdatePsychicPoints();
+        ultRange = seerInfo.ultRange;
+        ultpointRequirement = seerInfo.requiredUltPoints;
+        pointsSpent = 0;
         UpdatePsychicPoints();
         base.SetupCharacter(player, info);
     }
@@ -128,6 +135,7 @@ public class Seer : CharacterAttacks
                     if (target)
                     {
                         currentPsychicPoints -= 4;
+                        pointsSpent += 4;
                         UpdatePsychicPoints();
                         StartAction(equipedWeapons[1].weaponName);
                         StartCoroutine(HeavyMelee(equipedWeapons[1], target));
@@ -150,6 +158,10 @@ public class Seer : CharacterAttacks
                 UpdatePsychicPoints();
                 StartAction();
                 ContinueTurn();
+                break;
+            case Action.Ultimate:
+                if (pointsSpent < ultpointRequirement)
+                    return;
                 break;
             default:
                 base.PerformAction(hit, player);

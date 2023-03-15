@@ -95,13 +95,13 @@ public class CharacterAttacks : CharacterMovement
         {
             Vector3 startpos = transform.position + Vector3.up;
             if (i == 1)
-                startpos += Vector3.forward;
+                startpos += Vector3.forward * 0.95f;
             else if (i == 2)
-                startpos += Vector3.back;
+                startpos += Vector3.back * 0.95f;
             else if (i == 3)
-                startpos += Vector3.left;
+                startpos += Vector3.left * 0.95f;
             else
-                startpos += Vector3.right;
+                startpos += Vector3.right * 0.95f;
 
             if (Physics.Raycast(startpos, (target.transform.position - startpos).normalized, Vector3.Distance(startpos, target.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
             {
@@ -176,7 +176,8 @@ public class CharacterAttacks : CharacterMovement
         for (int i = 0; i < weapon.attacks; i++)
         {
             report.totalAttackCount++;
-            Attack(Ranged, LuckyRangedAttack(), weapon.armorPenetration, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
+            Attack(Ranged, false, weapon.armorPenetration, weapon.crit, false, weapon.damage, target, out CombatReport newReport);
+            CallForGunParticle(target.transform, newReport.attacksHit > 0);
             report.attacksHit += newReport.attacksHit;
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
@@ -197,7 +198,8 @@ public class CharacterAttacks : CharacterMovement
         for (int i = 0; i < weapon.attacks * 2; i++)
         {
             report.totalAttackCount++;
-            Attack(Ranged, LuckyRangedAttack(), weapon.armorPenetration, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
+            Attack(Ranged, false, weapon.armorPenetration, weapon.crit, false, weapon.damage, target, out CombatReport newReport);
+            CallForGunParticle(target.transform, newReport.attacksHit > 0);
             report.attacksHit += newReport.attacksHit;
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
@@ -219,6 +221,7 @@ public class CharacterAttacks : CharacterMovement
         {
             report.totalAttackCount++;
             Attack(Ranged, true, weapon.armorPenetration, weapon.crit, true, weapon.damage, target, out CombatReport newReport);
+            CallForGunParticle(target.transform, newReport.attacksHit > 0);
             report.attacksHit += newReport.attacksHit;
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
@@ -240,7 +243,8 @@ public class CharacterAttacks : CharacterMovement
         for (int i = 0; i < (isHalfRange ? weapon.attacks * 2 : weapon.attacks); i++)
         {
             report.totalAttackCount++;
-            Attack(Ranged, LuckyRangedAttack(), isHalfRange ? weapon.armorPenetration - 2 : weapon.armorPenetration, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
+            Attack(Ranged, false, isHalfRange ? weapon.armorPenetration - 2 : weapon.armorPenetration, weapon.crit, false, weapon.damage, target, out CombatReport newReport);
+            CallForGunParticle(target.transform, newReport.attacksHit > 0);
             report.attacksHit += newReport.attacksHit;
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
@@ -326,6 +330,11 @@ public class CharacterAttacks : CharacterMovement
         ReportForCombat(report);
     }
     #endregion
+
+    [ClientRpc] private void CallForGunParticle(Transform target, bool hit)
+    {
+        ParticleManager.instance.FireBullet(transform.position + Vector3.up * 1.5f, target.position, hit);
+    }
 }
 
 public class CombatReport

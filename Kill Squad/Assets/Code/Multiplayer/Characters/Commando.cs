@@ -37,7 +37,7 @@ public class Commando : CharacterAttacks
         ultAp = comInfo.ultAp;
         ultDamage = comInfo.ultDamage;
         requiredDamageDealt = comInfo.requiredDamageDealt;
-        damageDealt = 0;
+        damageDealt = 40;
         UpdateUltProgress();
         base.SetupCharacter(player, info);
     }
@@ -168,7 +168,7 @@ public class Commando : CharacterAttacks
                 if (damageDealt < requiredDamageDealt)
                     return;
                 List<CharacterBase> targetsInUlt = new List<CharacterBase>();
-                Vector2 ultOrigin = hit.point;
+                Vector3 ultOrigin = hit.point;
                 foreach (CharacterBase character in TurnTracker.instance.characters)
                 {
                     List<Vector3> ultpath = GridCombatSystem.instance.FindPath(ultOrigin, character.transform.position);
@@ -178,6 +178,8 @@ public class Commando : CharacterAttacks
                 StartAction();
                 damageDealt = 0;
                 UpdateUltProgress();
+                GridCombatSystem.instance.grid.GetXZ(ultOrigin, out int laserX, out int laserZ);
+                FireLaser(GridCombatSystem.instance.grid.GetWorldPosition(laserX, laserZ));
                 StartCoroutine(UltBeam(targetsInUlt));
                 break; 
             default:
@@ -189,22 +191,33 @@ public class Commando : CharacterAttacks
 
     [Server] private IEnumerator UltBeam(List<CharacterBase> targets)
     {
+
         yield return new WaitForSeconds(0.8f);
         int ultHits = Random.Range(minUltHits, maxUltHits + 1);
         CombatReport report = new CombatReport();
         for (int hit = 0; hit < ultHits; hit++)
         {
+            yield return new WaitForSeconds(0.25f);
             for (int i = 0; i < targets.Count; i++)
             {
-                targets[i].ArmorSave(ultAp, 0, false, ultDamage, out bool wounded, out bool critConfirm, out int damageDealt, out bool killingBlow);
+                targets[i].ArmorSave(ultAp, 0, false, ultDamage, out bool wound, out bool critConfirm, out int damageDealt, out bool killingBlow);
+                report.totalAttackCount++;
+                report.attacksHit++;
+                if (wound)
+                {
+                    report.armorPierced++;
+                    if (critConfirm)
+                        report.critHits++;
+                    report.damageDealt += damageDealt;
+                }
                 if (killingBlow)
                 {
                     targets.RemoveAt(i);
                     i--;
                 }
             }
-            yield return new WaitForSeconds(0.25f);
         }
+        Debug.Log($"Total attacks: {report.totalAttackCount}\nHits: {report.attacksHit}\nWounds: {report.armorPierced}\nCrits: {report.critHits}\nTotal Damage: {report.damageDealt}\nKilling blow: {report.killingBlow}");
         ContinueTurn();
     }
 
@@ -212,5 +225,9 @@ public class Commando : CharacterAttacks
     private void UpdateUltProgress()
     {
         ultProgress.text = $"Progress:\n[{Mathf.Min(damageDealt, requiredDamageDealt)}/{requiredDamageDealt}]";
+    }
+    [ClientRpc] private void FireLaser(Vector3 target)
+    {
+        ParticleManager.instance.FireOrbitalLaser(target);
     }
 }

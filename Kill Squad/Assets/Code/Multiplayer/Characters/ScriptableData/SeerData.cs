@@ -6,7 +6,12 @@ using UnityEngine;
 
 public class SeerData : CharacterInfoBase
 {
+    [Header("Psychic Powers")]
     public int psychicPoints;
     public Vector2 psychicGeneration;
     public bool hasRunicArmor;
+
+    [Header("Ult")]
+    public int ultRange;
+    public int requiredUltPoints;
 }
