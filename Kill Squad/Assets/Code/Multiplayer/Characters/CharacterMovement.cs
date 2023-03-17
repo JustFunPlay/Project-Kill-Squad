@@ -78,8 +78,9 @@ public class CharacterMovement : CharacterBase
     {
         List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, targetpos);
         Debug.Log(path);
-        if (path != null && path.Count <= movement + 1 && path.Count > 1)
+        if (path != null && path.Count <= movement + 1 && path.Count > 1 && GridCombatSystem.instance.grid.GetGridObject(path[path.Count - 1]).isOccupied == false)
         {
+            GridCombatSystem.instance.grid.GetGridObject(transform.position).isOccupied = false;
             StartAction();
             StartCoroutine(MoveCharacter(path));
         }
@@ -90,10 +91,11 @@ public class CharacterMovement : CharacterBase
         {
             transform.LookAt(path[0], Vector3.up);
             transform.Translate(0, 0, 0.2f);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.025f);
             if (Vector3.Distance(transform.position, path[0]) <= 0.1f)
                 path.RemoveAt(0);
         }
+        GridCombatSystem.instance.grid.GetGridObject(transform.position).isOccupied = true;
         ContinueTurn();
     }
 }

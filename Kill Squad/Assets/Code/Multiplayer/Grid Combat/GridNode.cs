@@ -15,6 +15,7 @@ public class GridNode
     public int fCost;
 
     public bool isWalkable = true;
+    public bool isOccupied;
 
     public GridNode cameFromNode;
 

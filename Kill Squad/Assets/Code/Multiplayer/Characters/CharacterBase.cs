@@ -187,6 +187,10 @@ public class CharacterBase : NetworkBehaviour
         if (armorLuck == LuckyRate.First)
             luckyArmor = true;
     }
+    [Server] public virtual void AddTurn()
+    {
+        turnProgress++;
+    }
 
     [Server] public void PrepareTurn()
     {

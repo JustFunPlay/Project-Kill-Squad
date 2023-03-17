@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using System.Collections;
 
 /*
 	Documentation: https://mirror-networking.gitbook.io/docs/guides/networkbehaviour
@@ -165,14 +166,26 @@ public class Hitman : CharacterAttacks
                     return;
                 StartAction();
                 currentCrits = 0;
-                Attack(Ranged + 10, false, -10, 19, false, ultDamage, target, out CombatReport newReport);
-                ReportForCombat(newReport);
+                StartCoroutine(PerformUlt(target));
                 break;
             default:
                 base.PerformAction(hit, player);
                 break;
         }
     }
+
+    [Server] IEnumerator PerformUlt(CharacterBase target)
+    {
+        ShowUlt(target.transform.position);
+        yield return new WaitForSeconds(0.8f);
+        Attack(Ranged + 10, false, -10, 19, false, ultDamage, target, out CombatReport newReport);
+        ReportForCombat(newReport);
+    }
+    [ClientRpc] void ShowUlt(Vector3 target)
+    {
+        ParticleManager.instance.FireRailRound(transform.position, target);
+    }
+
 
     [ClientRpc] private void UpdateUltProgress()
     {

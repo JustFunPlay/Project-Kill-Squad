@@ -11,7 +11,12 @@ public class ParticleManager : MonoBehaviour
     List<GameObject> bullets = new List<GameObject>();
     int currentBulletIndex;
 
+    [Header("Commando Ult")]
     [SerializeField] private OrbitalLazer laser;
+
+    [Header("Hitman Ult")]
+    [SerializeField] private LineRenderer targetLine;
+    [SerializeField] private Transform railRound;
 
     void Start()
     {
@@ -29,8 +34,9 @@ public class ParticleManager : MonoBehaviour
     {
         if (currentBulletIndex >= bullets.Count)
             currentBulletIndex = 0;
-        bullets[currentBulletIndex].SetActive(true);
         bullets[currentBulletIndex].transform.position = startpos;
+        bullets[currentBulletIndex].GetComponentInChildren<TrailRenderer>().Clear();
+        bullets[currentBulletIndex].SetActive(true);
         endpos += new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(1.4f, 1.7f), Random.Range(-0.2f, 0.2f));
         if (!hit)
             endpos += new Vector3(RandomMissDir(), RandomMissDir(), RandomMissDir());
@@ -60,5 +66,32 @@ public class ParticleManager : MonoBehaviour
     public void FireOrbitalLaser(Vector3 origin)
     {
         StartCoroutine(laser.FiringLazer(origin));
+    }
+    
+    public void FireRailRound(Vector3 origin, Vector3 target)
+    {
+        origin += Vector3.up * 1.5f;
+        target += Vector3.up * 1.5f;
+        targetLine.SetPosition(0, origin);
+        targetLine.SetPosition(1, target);
+        targetLine.gameObject.SetActive(true);
+        StartCoroutine(BurnRailRound(origin, target));
+    }
+
+    IEnumerator BurnRailRound(Vector3 origin, Vector3 target)
+    {
+        railRound.position = origin;
+        railRound.LookAt(target, Vector3.up);
+        yield return new WaitForSeconds(0.8f);
+        targetLine.gameObject.SetActive(false);
+        railRound.gameObject.SetActive(true);
+        railRound.GetComponentInChildren<TrailRenderer>().Clear();
+        for (int i = 0; i < 100; i++)
+        {
+            railRound.Translate(Vector3.forward * 10);
+            yield return new WaitForSeconds(0.01f);
+        }
+        yield return new WaitForSeconds(1f);
+        railRound.gameObject.SetActive(false);
     }
 }

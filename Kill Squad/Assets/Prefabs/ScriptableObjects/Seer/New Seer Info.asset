@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: New Seer Info
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 387466440081277886, guid: 134ccead41d4d624c9c476381ad61738, type: 3}
-  speed: 5
+  speed: 10
   movement: 6
   health: 60
   armor: 5
@@ -25,4 +25,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ea2efbb9be78cae448bc8744e50b4862, type: 2}
   psychicPoints: 40
   psychicGeneration: {x: 5, y: 12}
+  psychicRange: 15
+  discipline1: {fileID: 11400000, guid: ed8b92b6ce9587f499c7876a9cb7d840, type: 2}
   hasRunicArmor: 1
+  ultRange: 0
+  requiredUltPoints: 0
