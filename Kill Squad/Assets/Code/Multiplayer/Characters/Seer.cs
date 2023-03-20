@@ -20,7 +20,8 @@ public class Seer : CharacterAttacks
     [SyncVar] [SerializeField] private bool hasRunicArmor;
     [SyncVar] [SerializeField] private bool runicArmorActve;
     [SerializeField] private TMPro.TextMeshProUGUI ppCounter;
-    [SyncVar] [SerializeField] private BasePsychicDiscipline discipline;
+    [SyncVar] [SerializeField] private BasePsychicDiscipline discipline1;
+    [SyncVar] [SerializeField] private BasePsychicDiscipline discipline2;
 
 
     [Header("Ult")]
@@ -37,7 +38,8 @@ public class Seer : CharacterAttacks
         currentPsychicPoints = maxPsychicPoints = seerInfo.psychicPoints;
         psychicGeneration = seerInfo.psychicGeneration;
         psychicRange = seerInfo.psychicRange;
-        discipline = seerInfo.discipline1;
+        discipline1 = seerInfo.discipline1;
+        discipline2 = seerInfo.discipline2;
         hasRunicArmor = seerInfo.hasRunicArmor;
         ultRange = seerInfo.ultRange;
         ultpointRequirement = seerInfo.requiredUltPoints;
@@ -164,48 +166,89 @@ public class Seer : CharacterAttacks
                     return;
                 if (selectedVariant == ActionVar.Normal)
                 {
-                    if (currentPsychicPoints < discipline.power1Cost || performedActions.Contains(discipline.power1Name))
+                    if (currentPsychicPoints < discipline1.power1Cost || performedActions.Contains(discipline1.power1Name))
                         return;
-                    //if ((discipline.power1Targeting != Targeting.Ally && Owner != target.Owner) || (discipline.power1Targeting != Targeting.Enemy && Owner == target.Owner))
-                    if (discipline.PerformPsychicPower1(this, target))
+                    if (discipline1.PerformPsychicPower1(this, target))
                     {
-                        StartAction(discipline.power1Name);
-                        //target.RecieveBuff(discipline.power1Buff, discipline.power1Strength, discipline.power1Duration, discipline.power1Additive);
-                        currentPsychicPoints -= discipline.power1Cost;
-                        pointsSpent += discipline.power1Cost;
-                        Debug.Log($"Cast {discipline.power1Name} on {target.name}");
+                        StartAction(discipline1.power1Name);
+                        currentPsychicPoints -= discipline1.power1Cost;
+                        pointsSpent += discipline1.power1Cost;
+                        Debug.Log($"Cast {discipline1.power1Name} on {target.name}");
                         UpdatePsychicPoints();
                         ContinueTurn();
                     }
                 }
                 else if (selectedVariant == ActionVar.Variant1)
                 {
-                    if (currentPsychicPoints < discipline.power2Cost || performedActions.Contains(discipline.power2Name))
+                    if (currentPsychicPoints < discipline1.power2Cost || performedActions.Contains(discipline1.power2Name))
                         return;
-                    //if ((discipline.power2Targeting != Targeting.Ally && Owner != target.Owner) || (discipline.power2Targeting != Targeting.Enemy && Owner == target.Owner))
-                    if (discipline.PerformPsychicPower2(this, target))
+                    if (discipline1.PerformPsychicPower2(this, target))
                     {
-                        StartAction(discipline.power2Name);
-                        //target.RecieveBuff(discipline.power2Buff, discipline.power2Strength, discipline.power2Duration, discipline.power2Additive);
-                        currentPsychicPoints -= discipline.power2Cost;
-                        pointsSpent += discipline.power2Cost;
-                        Debug.Log($"Cast {discipline.power2Name} on {target.name}");
+                        StartAction(discipline1.power2Name);
+                        currentPsychicPoints -= discipline1.power2Cost;
+                        pointsSpent += discipline1.power2Cost;
+                        Debug.Log($"Cast {discipline1.power2Name} on {target.name}");
                         UpdatePsychicPoints();
                         ContinueTurn();
                     }
                 }
                 else if (selectedVariant == ActionVar.Variant2)
                 {
-                    if (currentPsychicPoints < discipline.power3Cost || performedActions.Contains(discipline.power3Name))
+                    if (currentPsychicPoints < discipline1.power3Cost || performedActions.Contains(discipline1.power3Name))
                         return;
-                    //if ((discipline.power3Targeting != Targeting.Ally && Owner != target.Owner) || (discipline.power3Targeting != Targeting.Enemy && Owner == target.Owner))
-                    if (discipline.PerformPsychicPower3(this, target))
+                    if (discipline1.PerformPsychicPower3(this, target))
                     {
-                        StartAction(discipline.power3Name);
-                        //target.RecieveBuff(discipline.power3Buff, discipline.power3Strength, discipline.power3Duration, discipline.power3Additive);
-                        currentPsychicPoints -= discipline.power3Cost;
-                        pointsSpent += discipline.power3Cost;
-                        Debug.Log($"Cast {discipline.power3Name} on {target.name}");
+                        StartAction(discipline1.power3Name);
+                        currentPsychicPoints -= discipline1.power3Cost;
+                        pointsSpent += discipline1.power3Cost;
+                        Debug.Log($"Cast {discipline1.power3Name} on {target.name}");
+                        UpdatePsychicPoints();
+                        ContinueTurn();
+                    }
+                }
+                break;
+            case Action.Action5:
+                target = FindPsychicTarget(hit, psychicRange);
+                if (target == null)
+                    return;
+                if (selectedVariant == ActionVar.Normal)
+                {
+                    if (currentPsychicPoints < discipline2.power1Cost || performedActions.Contains(discipline2.power1Name))
+                        return;
+                    if (discipline2.PerformPsychicPower1(this, target))
+                    {
+                        StartAction(discipline2.power1Name);
+                        currentPsychicPoints -= discipline2.power1Cost;
+                        pointsSpent += discipline2.power1Cost;
+                        Debug.Log($"Cast {discipline2.power1Name} on {target.name}");
+                        UpdatePsychicPoints();
+                        ContinueTurn();
+                    }
+                }
+                else if (selectedVariant == ActionVar.Variant1)
+                {
+                    if (currentPsychicPoints < discipline2.power2Cost || performedActions.Contains(discipline2.power2Name))
+                        return;
+                    if (discipline2.PerformPsychicPower2(this, target))
+                    {
+                        StartAction(discipline2.power2Name);
+                        currentPsychicPoints -= discipline2.power2Cost;
+                        pointsSpent += discipline2.power2Cost;
+                        Debug.Log($"Cast {discipline2.power2Name} on {target.name}");
+                        UpdatePsychicPoints();
+                        ContinueTurn();
+                    }
+                }
+                else if (selectedVariant == ActionVar.Variant2)
+                {
+                    if (currentPsychicPoints < discipline2.power3Cost || performedActions.Contains(discipline2.power3Name))
+                        return;
+                    if (discipline2.PerformPsychicPower3(this, target))
+                    {
+                        StartAction(discipline2.power3Name);
+                        currentPsychicPoints -= discipline2.power3Cost;
+                        pointsSpent += discipline2.power3Cost;
+                        Debug.Log($"Cast {discipline2.power3Name} on {target.name}");
                         UpdatePsychicPoints();
                         ContinueTurn();
 
@@ -272,7 +315,7 @@ public class Seer : CharacterAttacks
                 }
             }
         }
-        if (target == null)
+        if (target == null || target == this)
             return null;
         bool hasLos = false;
         for (int i = 0; i < 4; i++)

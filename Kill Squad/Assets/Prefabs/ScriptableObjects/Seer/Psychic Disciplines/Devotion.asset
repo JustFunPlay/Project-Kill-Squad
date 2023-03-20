@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed00c8d5251e2047826b06f58852f61, type: 3}
+  m_Name: Devotion
+  m_EditorClassIdentifier: 
+  disciplineName: Discipline of Devotion
+  disciplineCost: 0
+  power1Name: Ward
+  power1Cost: 6
+  power1Strength: 1
+  power1Duration: 4
+  power1Additive: 0
+  power1Buff: 2
+  power1Targeting: 0
+  power2Name: Shield
+  power2Cost: 7
+  power2Strength: 1
+  power2Duration: 3
+  power2Additive: 0
+  power2Buff: 6
+  power2Targeting: 0
+  power3Name: 
+  power3Cost: 500
+  power3Strength: 0
+  power3Duration: 0
+  power3Additive: 0
+  power3Buff: 0
+  power3Targeting: 0

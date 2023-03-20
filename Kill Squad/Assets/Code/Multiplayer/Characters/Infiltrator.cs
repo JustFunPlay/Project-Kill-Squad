@@ -11,15 +11,25 @@ using Mirror;
 
 public class Infiltrator : CharacterAttacks
 {
+    [Header("Ult")]
+    [SyncVar] [SerializeField] private int ultDuration;
+
+    [SyncVar] [SerializeField] private int invisibleDuration;
+    [SyncVar] [SerializeField] private bool canGoInvisible;
+    [SerializeField] private GameObject[] invisibleObjects;
 
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
         equipedWeapons.Clear();
         equipedWeapons.AddRange(info.equipedWeapons);
-        //InfiltratorData infilInfo = (InfiltratorData)info;
+        InfiltratorData infilInfo = (InfiltratorData)info;
+        ultDuration = infilInfo.ultDuration;
+        canGoInvisible = true;
         base.SetupCharacter(player, info);
     }
+
+    
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -83,12 +93,12 @@ public class Infiltrator : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(equipedWeapons[0].weaponName) && performedActions.Contains($"{ equipedWeapons[0].weaponName}2"))
+                if (performedActions.Contains(equipedWeapons[0].weaponName) && (performedActions.Contains($"{ equipedWeapons[0].weaponName}2") || equipedWeapons[0].weaponName.Contains("Twin") == false))
                     return;
                 target = CheckValidTarget(hit, equipedWeapons[0]);
                 if (target)
                 {
-                    if (performedActions.Contains(equipedWeapons[0].weaponName))
+                    if (performedActions.Contains(equipedWeapons[0].weaponName) && equipedWeapons[0].weaponName.Contains("Twin"))
                         StartAction($"{ equipedWeapons[0].weaponName}2");
                     else
                         StartAction(equipedWeapons[0].weaponName);
@@ -105,9 +115,45 @@ public class Infiltrator : CharacterAttacks
                     StartCoroutine(StandardMelee(equipedWeapons[1], target));
                 }
                 break;
+            case Action.Ultimate:
+                if (canGoInvisible)
+                {
+                    GoInvisible();
+                    canGoInvisible = false;
+                }
+                break;
             default:
                 base.PerformAction(hit, player);
                 break;
+        }
+    }
+    [Server] private void GoInvisible()
+    {
+        invisibleDuration = ultDuration;
+        movement += 1;
+        dodgeChance += 10;
+        ToggleInvisible(false);
+
+    }
+    [Server] private void ExitInvisible()
+    {
+        invisibleDuration = -1;
+        movement -= 1;
+        dodgeChance -= 10;
+        RecieveBuff(StatChange.Melee, 1, 1, true);
+        RecieveBuff(StatChange.Ranged, 1, 1, true);
+        RecieveBuff(StatChange.Attacks, 1, 1, true);
+        RecieveBuff(StatChange.Crit, 1, 1, true);
+        RecieveBuff(StatChange.Ap, -1, 1, true);
+        ToggleInvisible(true);
+    }
+    [ClientRpc] private void ToggleInvisible(bool active)
+    {
+        if (owner.isOwned)
+            return;
+        for (int i = 0; i < invisibleObjects.Length; i++)
+        {
+            invisibleObjects[i].SetActive(active);
         }
     }
 }

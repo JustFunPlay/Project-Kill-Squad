@@ -141,7 +141,7 @@ public class CharacterAttacks : CharacterMovement
         if (hitRoll < accuracy - target.Dodge)
         {
             report.attacksHit++;
-            target.ArmorSave(penetration, crit, luckyCrit, damage, out wound, out critConfirm, out damageDealt, out report.killingBlow);
+            target.ArmorSave(penetration + apBoost, crit + critBoost, luckyCrit, damage + damageBoost, out wound, out critConfirm, out damageDealt, out report.killingBlow);
             if (wound)
             {
                 report.armorPierced++;
@@ -157,7 +157,7 @@ public class CharacterAttacks : CharacterMovement
             if (hitRoll < accuracy - target.Dodge)
             {
                 report.attacksHit++;
-                target.ArmorSave(penetration, crit, luckyCrit, damage, out wound, out critConfirm, out damageDealt, out report.killingBlow);
+                target.ArmorSave(penetration + apBoost, crit + critBoost, luckyCrit, damage + damageBoost, out wound, out critConfirm, out damageDealt, out report.killingBlow);
                 if (wound)
                 {
                     report.armorPierced++;

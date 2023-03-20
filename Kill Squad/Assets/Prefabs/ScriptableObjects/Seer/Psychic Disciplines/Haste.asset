@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ed00c8d5251e2047826b06f58852f61, type: 3}
-  m_Name: psychic disicpline 1
+  m_Name: Haste
   m_EditorClassIdentifier: 
-  disciplineName: 
+  disciplineName: Discipline of Haste
   disciplineCost: 0
-  power1Name: Buff Speed
-  power1Cost: 5
-  power1Strength: 3
-  power1Duration: 4
+  power1Name: Haste
+  power1Cost: 3
+  power1Strength: 2
+  power1Duration: 5
   power1Additive: 0
   power1Buff: 0
   power1Targeting: 0
-  power2Name: Debuf Armor
-  power2Cost: 6
-  power2Strength: -1
+  power2Name: Swiftness
+  power2Cost: 4
+  power2Strength: 1
   power2Duration: 3
-  power2Additive: 1
-  power2Buff: 2
-  power2Targeting: 1
-  power3Name: Buff Movement
+  power2Additive: 0
+  power2Buff: 1
+  power2Targeting: 0
+  power3Name: Agility
   power3Cost: 4
-  power3Strength: 20
+  power3Strength: 1
   power3Duration: 3
   power3Additive: 0
-  power3Buff: 1
+  power3Buff: 7
   power3Targeting: 0

@@ -11,6 +11,7 @@ public class SeerData : CharacterInfoBase
     public Vector2 psychicGeneration;
     public int psychicRange;
     public BasePsychicDiscipline discipline1;
+    public BasePsychicDiscipline discipline2;
     public bool hasRunicArmor;
 
     [Header("Ult")]
