@@ -17,6 +17,7 @@ public class Infiltrator : CharacterAttacks
     [SyncVar] [SerializeField] private int invisibleDuration;
     [SyncVar] [SerializeField] private bool canGoInvisible;
     [SerializeField] private GameObject[] invisibleObjects;
+    [SerializeField] private TMPro.TextMeshProUGUI ultChargeText;
 
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
@@ -26,10 +27,27 @@ public class Infiltrator : CharacterAttacks
         InfiltratorData infilInfo = (InfiltratorData)info;
         ultDuration = infilInfo.ultDuration;
         canGoInvisible = true;
+        Invoke("ShowUltCharge", 1f);
         base.SetupCharacter(player, info);
     }
 
-    
+    [Server] public override void PrepareTurn()
+    {
+        if (invisibleDuration > 0)
+            invisibleDuration--;
+        if (invisibleDuration == 0)
+            ExitInvisible();
+        base.PrepareTurn();
+    }
+
+    [Server] protected override void ReportForCombat(CombatReport report)
+    {
+        if (report.killingBlows.Count > 0)
+            canGoInvisible = true;
+        ShowUltCharge();
+        base.ReportForCombat(report);
+    }
+
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -102,6 +120,8 @@ public class Infiltrator : CharacterAttacks
                         StartAction($"{ equipedWeapons[0].weaponName}2");
                     else
                         StartAction(equipedWeapons[0].weaponName);
+                    if (invisibleDuration > 0)
+                        ExitInvisible();
                     StartCoroutine(NormalFire(equipedWeapons[0], target));
                 }
                 break;
@@ -112,6 +132,8 @@ public class Infiltrator : CharacterAttacks
                 if (target)
                 {
                     StartAction(equipedWeapons[1].weaponName);
+                    if (invisibleDuration > 0)
+                        ExitInvisible();
                     StartCoroutine(StandardMelee(equipedWeapons[1], target));
                 }
                 break;
@@ -120,6 +142,7 @@ public class Infiltrator : CharacterAttacks
                 {
                     GoInvisible();
                     canGoInvisible = false;
+                    ShowUltCharge();
                 }
                 break;
             default:
@@ -155,5 +178,13 @@ public class Infiltrator : CharacterAttacks
         {
             invisibleObjects[i].SetActive(active);
         }
+    }
+    
+    [ClientRpc] private void ShowUltCharge()
+    {
+        if (canGoInvisible)
+            ultChargeText.text = "Ult Charged";
+        else
+            ultChargeText.text = "Requires Charging";
     }
 }

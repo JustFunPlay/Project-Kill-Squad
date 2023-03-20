@@ -16,6 +16,10 @@ public class Apothecary : CharacterAttacks
     [SyncVar] [SerializeField] private int remainingHealCharges;
     [SerializeField] private TMPro.TextMeshProUGUI chargeCounter;
 
+    [Header("Ult")]
+    [SyncVar] [SerializeField] private bool ultCharged;
+    [SerializeField] private TMPro.TextMeshProUGUI ultChargeText;
+
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
@@ -25,7 +29,19 @@ public class Apothecary : CharacterAttacks
         healRange = medicInfo.healValue;
         remainingHealCharges = medicInfo.healCharges;
         UpdateHealCharges();
+        Invoke("ShowUltCharge", 1f);
         base.SetupCharacter(player, info);
+    }
+    [Server]
+    protected override void ReportForCombat(CombatReport report)
+    {
+        for (int i = 0; i < report.killingBlows.Count; i++)
+        {
+            if (report.killingBlows[i].hasKilled)
+                ultCharged = true;
+        }
+        ShowUltCharge();
+        base.ReportForCombat(report);
     }
 
     #region Start & Stop Callbacks
@@ -161,9 +177,7 @@ public class Apothecary : CharacterAttacks
                 }
                 if (target == null || target.Owner != owner)
                     return;
-                GridCombatSystem.instance.grid.GetXZ(target.transform.position, out int targetX, out int targetZ);
-                GridCombatSystem.instance.grid.GetXZ(transform.position, out int x, out int z);
-                List<GridNode> path = GridCombatSystem.instance.FindPath(x, z, targetX, targetZ);
+                List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, target.transform.position);
                 if (path != null && path.Count <= 3)
                 {
                     StartAction();
@@ -171,6 +185,36 @@ public class Apothecary : CharacterAttacks
                     target.GetHealed(healvalue, out int healingDone);
                     remainingHealCharges--;
                     UpdateHealCharges();
+                    ContinueTurn();
+                }
+                break;
+            case Action.Ultimate:
+                if (ultCharged == false)
+                    return;
+                if (hit.collider.GetComponent<CharacterBase>() && hit.collider.GetComponent<CharacterBase>().Owner == owner && hit.collider.GetComponent<CharacterBase>().Health < 0)
+                {
+                    target = hit.collider.GetComponent<CharacterBase>();
+                }
+                else
+                {
+                    GridCombatSystem.instance.grid.GetXZ(hit.point, out int gridX, out int gridZ);
+                    foreach (CharacterBase character in TurnTracker.instance.deadCharacters)
+                    {
+                        GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
+                        if (gridX == characterX && gridZ == characterZ)
+                        {
+                            target = character;
+                        }
+                    }
+                }
+                if (target == null || target.Owner != owner)
+                    return;
+                List<Vector3> ultPath = GridCombatSystem.instance.FindPath(transform.position, target.transform.position);
+                if (ultPath != null && ultPath.Count <= 3)
+                {
+                    StartAction();
+                    target.GetRessurected();
+                    ultCharged = false;
                     ContinueTurn();
                 }
                 break;
@@ -183,5 +227,13 @@ public class Apothecary : CharacterAttacks
     [ClientRpc] private void UpdateHealCharges()
     {
         chargeCounter.text = $"Charges: {remainingHealCharges}";
+    }
+    [ClientRpc]
+    private void ShowUltCharge()
+    {
+        if (ultCharged)
+            ultChargeText.text = "Ult Charged";
+        else
+            ultChargeText.text = "Requires Charging";
     }
 }

@@ -25,7 +25,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 021cd313524f94e49936d191cb8fbda5, type: 2}
   - {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}
   grenade: {fileID: 11400000, guid: 4c2a7024787c38e4ead38f7b0d7841dd, type: 2}
-  extraGrenades: 0
+  extraGrenades: 1
   minUltHits: 5
   maxUltHits: 5
   ultAp: -3

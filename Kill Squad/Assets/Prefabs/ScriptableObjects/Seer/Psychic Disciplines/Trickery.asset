@@ -9,29 +9,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ed00c8d5251e2047826b06f58852f61, type: 3}
-  m_Name: Ruin
+  m_Script: {fileID: 11500000, guid: 32091d321b2ec4141a1b858370c63816, type: 3}
+  m_Name: Trickery
   m_EditorClassIdentifier: 
-  disciplineName: Discipline of Ruin
+  disciplineName: Discipline of Trickery
   disciplineCost: 0
-  power1Name: Wreck
-  power1Cost: 5
-  power1Strength: -1
-  power1Duration: 4
+  power1Name: Swap
+  power1Cost: 10
+  power1Strength: 0
+  power1Duration: 0
   power1Additive: 0
-  power1Buff: 6
-  power1Targeting: 1
-  power2Name: Shatter
-  power2Cost: 6
+  power1Buff: 0
+  power1Targeting: 2
+  power2Name: Restrain
+  power2Cost: 5
   power2Strength: -1
   power2Duration: 3
   power2Additive: 0
-  power2Buff: 2
+  power2Buff: 0
   power2Targeting: 1
-  power3Name: Debuff dodge
+  power3Name: Slow
   power3Cost: 4
   power3Strength: -1
   power3Duration: 3
   power3Additive: 0
-  power3Buff: 7
+  power3Buff: 1
   power3Targeting: 1

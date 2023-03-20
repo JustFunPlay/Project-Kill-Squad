@@ -13,6 +13,7 @@ public class TurnTracker : NetworkBehaviour
 {
     public static TurnTracker instance { get; private set; }
     public SyncList<CharacterBase> characters = new SyncList<CharacterBase>();
+    public SyncList<CharacterBase> deadCharacters = new SyncList<CharacterBase>();
     [SyncVar] public CharacterBase activeCharacter;
     [SyncVar] [SerializeField] private int turns = 0;
     [SyncVar] [SerializeField] private bool progressing;

@@ -23,4 +23,4 @@ MonoBehaviour:
   equipedWeapons:
   - {fileID: 11400000, guid: 6114ad2684f74b4458f1c0ef69605cac, type: 2}
   - {fileID: 11400000, guid: d321d3557af571e4dad471507b234358, type: 2}
-  ultDuration: 0
+  ultDuration: 3

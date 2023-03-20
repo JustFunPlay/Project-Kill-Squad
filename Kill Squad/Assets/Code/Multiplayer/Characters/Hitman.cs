@@ -179,6 +179,7 @@ public class Hitman : CharacterAttacks
         ShowUlt(target.transform.position);
         yield return new WaitForSeconds(0.8f);
         Attack(Ranged + 10, false, -10, 19, false, ultDamage, target, out CombatReport newReport);
+        newReport.totalAttackCount++;
         ReportForCombat(newReport);
     }
     [ClientRpc] void ShowUlt(Vector3 target)

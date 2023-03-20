@@ -21,13 +21,16 @@ public class Seer : CharacterAttacks
     [SyncVar] [SerializeField] private bool runicArmorActve;
     [SerializeField] private TMPro.TextMeshProUGUI ppCounter;
     [SyncVar] [SerializeField] private BasePsychicDiscipline discipline1;
+    [SerializeField] private TMPro.TextMeshProUGUI[] disipline1Text;
     [SyncVar] [SerializeField] private BasePsychicDiscipline discipline2;
+    [SerializeField] private TMPro.TextMeshProUGUI[] disipline2Text;
 
 
     [Header("Ult")]
     [SyncVar] [SerializeField] private int ultRange;
     [SyncVar] [SerializeField] private int ultpointRequirement;
     [SyncVar] [SerializeField] private int pointsSpent;
+    [SerializeField] private TMPro.TextMeshProUGUI ultCounter;
 
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
@@ -44,7 +47,9 @@ public class Seer : CharacterAttacks
         ultRange = seerInfo.ultRange;
         ultpointRequirement = seerInfo.requiredUltPoints;
         pointsSpent = 0;
-        UpdatePsychicPoints();
+        Invoke("UpdatePsychicPoints", 1f);
+        Invoke("UpdateUltPoints", 1f);
+        Invoke("SetDisciplineNames", 1f);
         base.SetupCharacter(player, info);
     }
 
@@ -143,6 +148,7 @@ public class Seer : CharacterAttacks
                     currentPsychicPoints -= 4;
                     pointsSpent += 4;
                     UpdatePsychicPoints();
+                    UpdateUltPoints();
                     StartAction(equipedWeapons[1].weaponName);
                     StartCoroutine(HeavyMelee(equipedWeapons[1], target));
                 }
@@ -175,6 +181,7 @@ public class Seer : CharacterAttacks
                         pointsSpent += discipline1.power1Cost;
                         Debug.Log($"Cast {discipline1.power1Name} on {target.name}");
                         UpdatePsychicPoints();
+                        UpdateUltPoints();
                         ContinueTurn();
                     }
                 }
@@ -189,6 +196,7 @@ public class Seer : CharacterAttacks
                         pointsSpent += discipline1.power2Cost;
                         Debug.Log($"Cast {discipline1.power2Name} on {target.name}");
                         UpdatePsychicPoints();
+                        UpdateUltPoints();
                         ContinueTurn();
                     }
                 }
@@ -203,6 +211,7 @@ public class Seer : CharacterAttacks
                         pointsSpent += discipline1.power3Cost;
                         Debug.Log($"Cast {discipline1.power3Name} on {target.name}");
                         UpdatePsychicPoints();
+                        UpdateUltPoints();
                         ContinueTurn();
                     }
                 }
@@ -222,6 +231,7 @@ public class Seer : CharacterAttacks
                         pointsSpent += discipline2.power1Cost;
                         Debug.Log($"Cast {discipline2.power1Name} on {target.name}");
                         UpdatePsychicPoints();
+                        UpdateUltPoints();
                         ContinueTurn();
                     }
                 }
@@ -236,6 +246,7 @@ public class Seer : CharacterAttacks
                         pointsSpent += discipline2.power2Cost;
                         Debug.Log($"Cast {discipline2.power2Name} on {target.name}");
                         UpdatePsychicPoints();
+                        UpdateUltPoints();
                         ContinueTurn();
                     }
                 }
@@ -250,6 +261,7 @@ public class Seer : CharacterAttacks
                         pointsSpent += discipline2.power3Cost;
                         Debug.Log($"Cast {discipline2.power3Name} on {target.name}");
                         UpdatePsychicPoints();
+                        UpdateUltPoints();
                         ContinueTurn();
 
                     }
@@ -274,6 +286,19 @@ public class Seer : CharacterAttacks
     [ClientRpc] private void UpdatePsychicPoints()
     {
         ppCounter.text = $"Psychic points:\n[{currentPsychicPoints}/{maxPsychicPoints}]";
+    }
+    [ClientRpc] private void UpdateUltPoints()
+    {
+        ultCounter.text = $"Ult progress:\n[{Mathf.Min(pointsSpent, ultpointRequirement)}/{ultpointRequirement}]";
+    }
+    [ClientRpc] private void SetDisciplineNames()
+    {
+        disipline1Text[0].text = discipline1.power1Name;
+        disipline1Text[1].text = discipline1.power2Name;
+        disipline1Text[2].text = discipline1.power3Name;
+        disipline2Text[0].text = discipline2.power1Name;
+        disipline2Text[1].text = discipline2.power2Name;
+        disipline2Text[2].text = discipline2.power3Name;
     }
 
     [Server] private void CheckRunicArmor()
@@ -338,9 +363,7 @@ public class Seer : CharacterAttacks
         }
         if (!hasLos)
             return null;
-        GridCombatSystem.instance.grid.GetXZ(target.transform.position, out int targetX, out int targetZ);
-        GridCombatSystem.instance.grid.GetXZ(transform.position, out int x, out int z);
-        List<GridNode> path = GridCombatSystem.instance.FindPath(x, z, targetX, targetZ);
+        List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, target.transform.position);
         if (path != null && path.Count <= range + 1)
             return target;
         return null;

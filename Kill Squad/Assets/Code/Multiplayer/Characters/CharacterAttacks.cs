@@ -141,7 +141,7 @@ public class CharacterAttacks : CharacterMovement
         if (hitRoll < accuracy - target.Dodge)
         {
             report.attacksHit++;
-            target.ArmorSave(penetration + apBoost, crit + critBoost, luckyCrit, damage + damageBoost, out wound, out critConfirm, out damageDealt, out report.killingBlow);
+            target.ArmorSave(penetration + apBoost, crit + critBoost, luckyCrit, damage + damageBoost, out wound, out critConfirm, out damageDealt, out bool killingBlow); ;
             if (wound)
             {
                 report.armorPierced++;
@@ -149,6 +149,8 @@ public class CharacterAttacks : CharacterMovement
                     report.critHits++;
                 report.damageDealt = damageDealt;
             }
+            if (killingBlow)
+                report.killingBlows.Add(target);
             return;
         }
         else if (luckyAttack)
@@ -157,7 +159,7 @@ public class CharacterAttacks : CharacterMovement
             if (hitRoll < accuracy - target.Dodge)
             {
                 report.attacksHit++;
-                target.ArmorSave(penetration + apBoost, crit + critBoost, luckyCrit, damage + damageBoost, out wound, out critConfirm, out damageDealt, out report.killingBlow);
+                target.ArmorSave(penetration + apBoost, crit + critBoost, luckyCrit, damage + damageBoost, out wound, out critConfirm, out damageDealt, out bool killingBlow);
                 if (wound)
                 {
                     report.armorPierced++;
@@ -165,6 +167,8 @@ public class CharacterAttacks : CharacterMovement
                         report.critHits++;
                     report.damageDealt = damageDealt;
                 }
+                if (killingBlow)
+                    report.killingBlows.Add(target);
                 return;
             }
         }
@@ -182,9 +186,9 @@ public class CharacterAttacks : CharacterMovement
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
             report.damageDealt += newReport.damageDealt;
-            if (newReport.killingBlow)
+            if (newReport.killingBlows.Count > 0)
             {
-                report.killingBlow = true;
+                report.killingBlows.AddRange(newReport.killingBlows);
                 break;
             }
             yield return new WaitForSeconds(0.15f);
@@ -204,9 +208,9 @@ public class CharacterAttacks : CharacterMovement
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
             report.damageDealt += newReport.damageDealt;
-            if (newReport.killingBlow)
+            if (newReport.killingBlows.Count > 0)
             {
-                report.killingBlow = true;
+                report.killingBlows.AddRange(newReport.killingBlows);
                 break;
             }
             yield return new WaitForSeconds(0.15f);
@@ -226,9 +230,9 @@ public class CharacterAttacks : CharacterMovement
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
             report.damageDealt += newReport.damageDealt;
-            if (newReport.killingBlow)
+            if (newReport.killingBlows.Count > 0)
             {
-                report.killingBlow = true;
+                report.killingBlows.AddRange(newReport.killingBlows);
                 break;
             }
             yield return new WaitForSeconds(0.15f);
@@ -249,9 +253,9 @@ public class CharacterAttacks : CharacterMovement
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
             report.damageDealt += newReport.damageDealt;
-            if (newReport.killingBlow)
+            if (newReport.killingBlows.Count > 0)
             {
-                report.killingBlow = true;
+                report.killingBlows.AddRange(newReport.killingBlows);
                 break;
             }
         }
@@ -262,7 +266,7 @@ public class CharacterAttacks : CharacterMovement
     protected IEnumerator StandardMelee(ScriptableWeapon weapon, CharacterBase target)
     {
         CombatReport report = new CombatReport();
-        for (int i = 0; i < (weapon.type == WeaponType.Swift ? Attacks * 2 : Attacks + weapon.attacks); i++)
+        for (int i = 0; i < (weapon.type == WeaponType.Swift ? (Attacks + weapon.attacks) * 2 : Attacks + weapon.attacks); i++)
         {
             report.totalAttackCount++;
             Attack(Melee, LuckyMeleeAttack(), weapon.armorPenetration, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
@@ -270,9 +274,9 @@ public class CharacterAttacks : CharacterMovement
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
             report.damageDealt += newReport.damageDealt;
-            if (newReport.killingBlow)
+            if (newReport.killingBlows.Count > 0)
             {
-                report.killingBlow = true;
+                report.killingBlows = newReport.killingBlows;
                 break;
             }
             yield return new WaitForSeconds(0.15f);
@@ -291,9 +295,9 @@ public class CharacterAttacks : CharacterMovement
             report.armorPierced += newReport.armorPierced;
             report.critHits += newReport.critHits;
             report.damageDealt += newReport.damageDealt;
-            if (newReport.killingBlow)
+            if (newReport.killingBlows.Count > 0)
             {
-                report.killingBlow = true;
+                report.killingBlows.AddRange(newReport.killingBlows);
                 break;
             }
             yield return new WaitForSeconds(0.15f);
@@ -319,9 +323,9 @@ public class CharacterAttacks : CharacterMovement
                     report.armorPierced += newReport.armorPierced;
                     report.critHits += newReport.critHits;
                     report.damageDealt += newReport.damageDealt;
-                    if (newReport.killingBlow)
+                    if (newReport.killingBlows.Count > 0)
                     {
-                        report.killingBlow = true;
+                        report.killingBlows.AddRange(newReport.killingBlows);
                         i = count;
                     }
                 }
@@ -344,5 +348,5 @@ public class CombatReport
     public int armorPierced;
     public int critHits;
     public int damageDealt;
-    public bool killingBlow;
+    public List<CharacterBase> killingBlows = new List<CharacterBase>();
 }

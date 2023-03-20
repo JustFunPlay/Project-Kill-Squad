@@ -172,7 +172,7 @@ public class Commando : CharacterAttacks
                 foreach (CharacterBase character in TurnTracker.instance.characters)
                 {
                     List<Vector3> ultpath = GridCombatSystem.instance.FindPath(ultOrigin, character.transform.position);
-                    if (ultpath != null && ultpath.Count <= 4)
+                    if (character.Owner != owner && ultpath != null && ultpath.Count <= 4)
                         targetsInUlt.Add(character);
                 }
                 StartAction();
@@ -212,12 +212,14 @@ public class Commando : CharacterAttacks
                 }
                 if (killingBlow)
                 {
+                    report.killingBlows.Add(targets[i]);
+                    hasKilled = true;
                     targets.RemoveAt(i);
                     i--;
                 }
             }
         }
-        Debug.Log($"Total attacks: {report.totalAttackCount}\nHits: {report.attacksHit}\nWounds: {report.armorPierced}\nCrits: {report.critHits}\nTotal Damage: {report.damageDealt}\nKilling blow: {report.killingBlow}");
+        Debug.Log($"Total attacks: {report.totalAttackCount}\nHits: {report.attacksHit}\nWounds: {report.armorPierced}\nCrits: {report.critHits}\nTotal Damage: {report.damageDealt}\nKilling blow: {report.killingBlows.Count}");
         ContinueTurn();
     }
 

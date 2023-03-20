@@ -43,6 +43,8 @@ public class CharacterBase : NetworkBehaviour
     public GameObject[] buttons;
     [SerializeField] private Slider hpSlider;
     public SyncList<BuffCounter> buffs = new SyncList<BuffCounter>();
+    [SyncVar] public bool hasKilled;
+    [SyncVar] public bool doubleNextHit;
 
     [Header("Turn management")]
     [SyncVar] [SerializeField] protected bool canAct = false;
@@ -192,7 +194,7 @@ public class CharacterBase : NetworkBehaviour
         turnProgress++;
     }
 
-    [Server] public void PrepareTurn()
+    [Server] public virtual void PrepareTurn()
     {
         remainingActions = 3;
         canAct = true;
@@ -269,7 +271,9 @@ public class CharacterBase : NetworkBehaviour
 
     [Server] protected virtual void ReportForCombat(CombatReport report)
     {
-        Debug.Log($"Total attacks: {report.totalAttackCount}\nHits: {report.attacksHit}\nWounds: {report.armorPierced}\nCrits: {report.critHits}\nTotal Damage: {report.damageDealt}\nKilling blow: {report.killingBlow}");
+        Debug.Log($"Total attacks: {report.totalAttackCount}\nHits: {report.attacksHit}\nWounds: {report.armorPierced}\nCrits: {report.critHits}\nTotal Damage: {report.damageDealt}\nKilling blow: {report.killingBlows.Count}");
+        if (report.killingBlows.Count > 0)
+            hasKilled = true;
         ContinueTurn();
     }
     #endregion
@@ -298,6 +302,11 @@ public class CharacterBase : NetworkBehaviour
             }
         }
         wound = true;
+        if (doubleNextHit)
+        {
+            damage *= 2;
+            doubleNextHit = false;
+        }
         int critCheck = Random.Range(0, 10);
         if (critCheck < crit)
         {
@@ -332,6 +341,7 @@ public class CharacterBase : NetworkBehaviour
     [Server] protected virtual void OnDeath()
     {
         TurnTracker.instance.characters.Remove(this);
+        TurnTracker.instance.deadCharacters.Add(this);
         TurnTracker.instance.CheckForGameEnd(Owner);
     }
     [Server] public void GetHealed(int healValue, out int healingDone)
@@ -349,6 +359,20 @@ public class CharacterBase : NetworkBehaviour
             hpSlider.fillRect.GetComponent<Image>().color = Color.green;
         else
             hpSlider.fillRect.GetComponent<Image>().color = Color.red;
+    }
+
+    [Server] public void GetRessurected()
+    {
+        currentHealth = (int)(maxHealth * 0.3f);
+        TurnTracker.instance.characters.Add(this);
+        TurnTracker.instance.deadCharacters.Remove(this);
+        hasKilled = false;
+        turnProgress = 0;
+        while (buffs.Count > 0)
+        {
+            CheckBuffStatus();
+        }
+        UpdateHpBar();
     }
     #endregion
 
