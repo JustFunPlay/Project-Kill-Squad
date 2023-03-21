@@ -22,12 +22,12 @@ MonoBehaviour:
   attacks: 3
   equipedWeapons:
   - {fileID: 11400000, guid: fc6c1c2fee90cff4891984f600e95697, type: 2}
-  - {fileID: 11400000, guid: b297c12e1194e6b47b50561028208551, type: 2}
+  - {fileID: 11400000, guid: ea2efbb9be78cae448bc8744e50b4862, type: 2}
   psychicPoints: 40
   psychicGeneration: {x: 5, y: 12}
   psychicRange: 15
-  discipline1: {fileID: 11400000, guid: 8f0469b188b055c40a966558919ece86, type: 2}
-  discipline2: {fileID: 11400000, guid: 7d8e70a8de910de4ea76e065c2ce47c5, type: 2}
-  hasRunicArmor: 1
+  discipline1: {fileID: 11400000, guid: ed8b92b6ce9587f499c7876a9cb7d840, type: 2}
+  discipline2: {fileID: 11400000, guid: dfb1650c8f06f244396bd97453f66470, type: 2}
+  hasRunicArmor: 0
   ultRange: 10
   requiredUltPoints: 40

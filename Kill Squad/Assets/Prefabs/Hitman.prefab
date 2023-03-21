@@ -2048,6 +2048,9 @@ MonoBehaviour:
   rangedLuck: 1
   meleeLuck: 0
   critLuck: 1
+  damageBoost: 0
+  critBoost: 0
+  apBoost: 0
   buttons:
   - {fileID: 3912795709114365949}
   - {fileID: 4296344143885057344}
@@ -2059,10 +2062,16 @@ MonoBehaviour:
   - {fileID: 3476397095990092979}
   - {fileID: 4085728962696971872}
   hpSlider: {fileID: 3306385968357208095}
+  hasKilled: 0
+  doubleNextHit: 0
   canAct: 0
   remainingActions: 0
   selectedAction: 0
   selectedVariant: 0
+  equipmentSlots:
+  - {fileID: 3236859076807888241}
+  - {fileID: 6094042575530645413}
+  - {fileID: 3199101894290400968}
   ultDamage: 0
   requiredCrits: 0
   currentCrits: 0

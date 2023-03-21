@@ -1265,10 +1265,15 @@ MonoBehaviour:
   - {fileID: 1507550035978509884}
   hpSlider: {fileID: 6636265727489848167}
   hasKilled: 0
+  doubleNextHit: 0
   canAct: 0
   remainingActions: 0
   selectedAction: 0
   selectedVariant: 0
+  equipmentSlots:
+  - {fileID: 6904018737663950813}
+  - {fileID: 3076121866678325243}
+  - {fileID: 9220107573431056741}
   healRange: {x: 0, y: 0}
   remainingHealCharges: 0
   chargeCounter: {fileID: 1555180815494876297}

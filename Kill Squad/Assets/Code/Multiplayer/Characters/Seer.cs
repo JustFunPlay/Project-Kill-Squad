@@ -47,10 +47,20 @@ public class Seer : CharacterAttacks
         ultRange = seerInfo.ultRange;
         ultpointRequirement = seerInfo.requiredUltPoints;
         pointsSpent = 0;
-        Invoke("UpdatePsychicPoints", 1f);
-        Invoke("UpdateUltPoints", 1f);
-        Invoke("SetDisciplineNames", 1f);
+        Invoke("UpdatePsychicPoints", 0.5f);
+        Invoke("UpdateUltPoints", 0.5f);
         base.SetupCharacter(player, info);
+    }
+    [ClientRpc]
+    protected override void SetEquipmentNames()
+    {
+        disipline1Text[0].text = discipline1.power1Name;
+        disipline1Text[1].text = discipline1.power2Name;
+        disipline1Text[2].text = discipline1.power3Name;
+        disipline2Text[0].text = discipline2.power1Name;
+        disipline2Text[1].text = discipline2.power2Name;
+        disipline2Text[2].text = discipline2.power3Name;
+        base.SetEquipmentNames();
     }
 
     [Server] public override void ProgressTurn()
@@ -291,15 +301,7 @@ public class Seer : CharacterAttacks
     {
         ultCounter.text = $"Ult progress:\n[{Mathf.Min(pointsSpent, ultpointRequirement)}/{ultpointRequirement}]";
     }
-    [ClientRpc] private void SetDisciplineNames()
-    {
-        disipline1Text[0].text = discipline1.power1Name;
-        disipline1Text[1].text = discipline1.power2Name;
-        disipline1Text[2].text = discipline1.power3Name;
-        disipline2Text[0].text = discipline2.power1Name;
-        disipline2Text[1].text = discipline2.power2Name;
-        disipline2Text[2].text = discipline2.power3Name;
-    }
+
 
     [Server] private void CheckRunicArmor()
     {

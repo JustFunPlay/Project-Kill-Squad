@@ -15,6 +15,8 @@ public class Commando : CharacterAttacks
     [Header("Equipment")]
     [SyncVar] [SerializeField] private ScriptableGrenade grenade;
     [SyncVar] [SerializeField] private int remainingGrenades;
+    [SerializeField] private TMPro.TextMeshProUGUI grenadeName;
+    [SerializeField] private TMPro.TextMeshProUGUI grenadeCount;
 
     [Header("Ult")]
     [SyncVar] [SerializeField] private int minUltHits;
@@ -38,9 +40,17 @@ public class Commando : CharacterAttacks
         ultDamage = comInfo.ultDamage;
         requiredDamageDealt = comInfo.requiredDamageDealt;
         damageDealt = 40;
-        UpdateUltProgress();
+        Invoke("UpdateUltProgress", 0.5f);
+        Invoke("UpdateGrenadeCount", 0.5f);
         base.SetupCharacter(player, info);
     }
+
+    [ClientRpc] protected override void SetEquipmentNames()
+    {
+        grenadeName.text = grenade.weaponName;
+        base.SetEquipmentNames();
+    }
+
 
     protected override void ReportForCombat(CombatReport report)
     {
@@ -162,6 +172,7 @@ public class Commando : CharacterAttacks
                     GridCombatSystem.instance.grid.GetXZ(hit.point, out int x, out int z);
                     StartAction(grenade.weaponName);
                     GrenadeThrow(grenade, x, z);
+                    UpdateGrenadeCount();
                 }
                 break;
             case Action.Ultimate:
@@ -227,6 +238,11 @@ public class Commando : CharacterAttacks
     private void UpdateUltProgress()
     {
         ultProgress.text = $"Progress:\n[{Mathf.Min(damageDealt, requiredDamageDealt)}/{requiredDamageDealt}]";
+    }
+    [ClientRpc]
+    private void UpdateGrenadeCount()
+    {
+        grenadeCount.text = $"Remaining Grenades:\n{remainingGrenades}";
     }
     [ClientRpc] private void FireLaser(Vector3 target)
     {

@@ -13,6 +13,16 @@ using System.Collections;
 public class CharacterAttacks : CharacterMovement
 {
     public SyncList<ScriptableWeapon> equipedWeapons = new SyncList<ScriptableWeapon>();
+    [SerializeField] private TMPro.TextMeshProUGUI[] equipmentSlots;
+
+
+    [ClientRpc] protected override void SetEquipmentNames()
+    {
+        for (int i = 0; i < equipmentSlots.Length; i++)
+        {
+            equipmentSlots[i].text = equipedWeapons[i].weaponName;
+        }
+    }
 
     #region Start & Stop Callbacks
 
@@ -309,6 +319,7 @@ public class CharacterAttacks : CharacterMovement
     protected void GrenadeThrow(ScriptableGrenade grenade, int xLocation, int zLocation)
     {
         CombatReport report = new CombatReport();
+        CallForGrenadeParticle(GridCombatSystem.instance.grid.GetWorldPosition(xLocation, zLocation));
         foreach (CharacterBase character in TurnTracker.instance.characters)
         {
             GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
@@ -338,6 +349,10 @@ public class CharacterAttacks : CharacterMovement
     [ClientRpc] private void CallForGunParticle(Transform target, bool hit)
     {
         ParticleManager.instance.FireBullet(transform.position + Vector3.up * 1.5f, target.position, hit);
+    }
+    [ClientRpc] private void CallForGrenadeParticle(Vector3 origin)
+    {
+        ParticleManager.instance.GrenadeBlast(origin);
     }
 }
 

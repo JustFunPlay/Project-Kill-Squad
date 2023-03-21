@@ -180,7 +180,9 @@ public class CharacterBase : NetworkBehaviour
         if (armorLuck != LuckyRate.Never)
             luckyArmor = true;
         Invoke("UpdateHpBar", 0.5f);
+        Invoke("SetEquipmentNames", 0.5f);
     }
+    [ClientRpc] protected virtual void SetEquipmentNames() { }
 
     #region Turns and actions
     [Server] public virtual void ProgressTurn()

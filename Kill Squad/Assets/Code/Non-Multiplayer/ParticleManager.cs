@@ -10,6 +10,8 @@ public class ParticleManager : MonoBehaviour
     [SerializeField] private GameObject bulletExample;
     List<GameObject> bullets = new List<GameObject>();
     int currentBulletIndex;
+    [Header("Grenade Particle")]
+    [SerializeField] private ParticleSystem grenadeBlast;
 
     [Header("Commando Ult")]
     [SerializeField] private OrbitalLazer laser;
@@ -61,6 +63,12 @@ public class ParticleManager : MonoBehaviour
     {
         int dir = Random.Range(0, 2);
         return dir == 1 ? dir : -1;
+    }
+
+    public void GrenadeBlast(Vector3 origin)
+    {
+        grenadeBlast.transform.position = origin;
+        grenadeBlast.Play();
     }
 
     public void FireOrbitalLaser(Vector3 origin)

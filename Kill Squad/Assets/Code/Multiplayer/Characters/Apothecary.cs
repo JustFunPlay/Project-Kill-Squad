@@ -28,8 +28,8 @@ public class Apothecary : CharacterAttacks
         ApothecaryData medicInfo = (ApothecaryData)info;
         healRange = medicInfo.healValue;
         remainingHealCharges = medicInfo.healCharges;
-        UpdateHealCharges();
-        Invoke("ShowUltCharge", 1f);
+        Invoke("UpdateHealCharges", 0.5f);
+        Invoke("ShowUltCharge", 0.5f);
         base.SetupCharacter(player, info);
     }
     [Server]

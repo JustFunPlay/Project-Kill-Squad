@@ -27,7 +27,7 @@ public class Infiltrator : CharacterAttacks
         InfiltratorData infilInfo = (InfiltratorData)info;
         ultDuration = infilInfo.ultDuration;
         canGoInvisible = true;
-        Invoke("ShowUltCharge", 1f);
+        Invoke("ShowUltCharge", 0.5f);
         base.SetupCharacter(player, info);
     }
 

@@ -2098,10 +2098,15 @@ MonoBehaviour:
   - {fileID: 3605361223495302216}
   - {fileID: 2885696075102385605}
   hpSlider: {fileID: 5163745482868069624}
+  hasKilled: 0
+  doubleNextHit: 0
   canAct: 0
   remainingActions: 0
   selectedAction: 0
   selectedVariant: 0
+  equipmentSlots:
+  - {fileID: 1528371600212796853}
+  - {fileID: 402191174132622465}
   maxPsychicPoints: 0
   currentPsychicPoints: 0
   psychicGeneration: {x: 0, y: 0}
