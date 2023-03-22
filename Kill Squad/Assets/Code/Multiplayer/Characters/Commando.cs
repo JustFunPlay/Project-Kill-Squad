@@ -58,6 +58,22 @@ public class Commando : CharacterAttacks
         UpdateUltProgress();
         base.ReportForCombat(report);
     }
+    [Server]
+    protected override void OnSelectAction()
+    {
+        switch (selectedAction)
+        {
+            case Action.Action4:
+                GetMoveRange(grenade.range, false);
+                break;
+            case Action.Ultimate:
+                ClearRangeVisuals();
+                break;
+            default:
+                base.OnSelectAction();
+                break;
+        }
+    }
 
     #region Start & Stop Callbacks
 

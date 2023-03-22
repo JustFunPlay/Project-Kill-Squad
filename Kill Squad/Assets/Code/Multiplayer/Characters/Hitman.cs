@@ -38,6 +38,19 @@ public class Hitman : CharacterAttacks
         UpdateUltProgress();
         base.ReportForCombat(report);
     }
+    [Server]
+    protected override void OnSelectAction()
+    {
+        switch (selectedAction)
+        {
+            case Action.Ultimate:
+                ClearRangeVisuals();
+                break;
+            default:
+                base.OnSelectAction();
+                break;
+        }
+    }
 
     #region Start & Stop Callbacks
 

@@ -14,7 +14,7 @@ using UnityEngine.EventSystems;
 public class InGamePlayer : NetworkBehaviour
 {
     [SyncVar] private string playerName;
-    public KillSquad killSquad;
+    //public KillSquad killSquad;
 
     Vector2 moveVector;
     [SerializeField] float moveSpeed;
@@ -82,7 +82,7 @@ public class InGamePlayer : NetworkBehaviour
 
     [Command] private void CmdSetUpSquad()
     {
-        GridCombatSystem.instance.SetupTeam(killSquad, this);
+        GridCombatSystem.instance.SetupTeam(PersistantInfo.Instance.squad, this);
     }
     [Command] private void CmdSetName()
     {

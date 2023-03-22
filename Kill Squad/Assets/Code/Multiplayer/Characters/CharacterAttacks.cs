@@ -23,6 +23,28 @@ public class CharacterAttacks : CharacterMovement
             equipmentSlots[i].text = equipedWeapons[i].weaponName;
         }
     }
+    [Server] protected override void OnSelectAction()
+    {
+        switch (selectedAction)
+        {
+            case Action.Action1:
+                if (equipedWeapons.Count >= 1)
+                    GetMoveRange(equipedWeapons[0].range, true);
+                break;
+            case Action.Action2:
+                if (equipedWeapons.Count >= 2)
+                    GetMoveRange(equipedWeapons[1].range, true);
+                break;
+            case Action.Action3:
+                if (equipedWeapons.Count >= 3)
+                    GetMoveRange(equipedWeapons[2].range, true);
+                break;
+            default:
+                base.OnSelectAction();
+                break;
+        }
+    }
+
 
     #region Start & Stop Callbacks
 

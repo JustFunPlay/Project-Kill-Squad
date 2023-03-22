@@ -75,6 +75,34 @@ public class Seer : CharacterAttacks
         CheckRunicArmor();
         base.EndTurn();
     }
+
+    [Server]
+    protected override void OnSelectAction()
+    {
+        switch (selectedAction)
+        {
+            case Action.Action3:
+                if (currentPsychicPoints == maxPsychicPoints)
+                    return;
+                currentPsychicPoints = Mathf.Min(currentPsychicPoints + Random.Range((int)psychicGeneration.x, (int)psychicGeneration.y), maxPsychicPoints);
+                UpdatePsychicPoints();
+                StartAction();
+                ContinueTurn();
+                break;
+            case Action.Action4:
+                GetMoveRange(psychicRange, true);
+                break;
+            case Action.Action5:
+                GetMoveRange(psychicRange, true);
+                break;
+            case Action.Ultimate:
+                GetMoveRange(ultRange, true);
+                break;
+            default:
+                base.OnSelectAction();
+                break;
+        }
+    }
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -167,14 +195,6 @@ public class Seer : CharacterAttacks
                     StartAction(equipedWeapons[1].weaponName);
                     StartCoroutine(StandardMelee(equipedWeapons[1], target));
                 }
-                break;
-            case Action.Action3:
-                if (currentPsychicPoints == maxPsychicPoints)
-                    return;
-                currentPsychicPoints = Mathf.Min(currentPsychicPoints + Random.Range((int)psychicGeneration.x, (int)psychicGeneration.y), maxPsychicPoints);
-                UpdatePsychicPoints();
-                StartAction();
-                ContinueTurn();
                 break;
             case Action.Action4:
                 target = FindPsychicTarget(hit, psychicRange);

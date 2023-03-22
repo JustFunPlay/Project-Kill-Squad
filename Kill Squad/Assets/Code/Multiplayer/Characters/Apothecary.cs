@@ -43,6 +43,21 @@ public class Apothecary : CharacterAttacks
         ShowUltCharge();
         base.ReportForCombat(report);
     }
+    [Server]protected override void OnSelectAction()
+    {
+        switch(selectedAction)
+        {
+            case Action.Action3:
+                GetMoveRange(2, true);
+                break;
+            case Action.Ultimate:
+                GetMoveRange(2, true);
+                break;
+            default:
+                base.OnSelectAction();
+                break;
+        }
+    }
 
     #region Start & Stop Callbacks
 

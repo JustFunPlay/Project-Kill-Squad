@@ -98,4 +98,9 @@ public class CharacterMovement : CharacterBase
         GridCombatSystem.instance.grid.GetGridObject(transform.position).isOccupied = true;
         ContinueTurn();
     }
+    [Server]protected override void OnSelectAction()
+    {
+        if (selectedAction == Action.Movement)
+            GetMoveRange(movement, false);
+    }
 }

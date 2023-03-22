@@ -102,7 +102,7 @@ public class Pathfinding : NetworkBehaviour
         return path;
     }
 
-    [Server]private List<GridNode> GetneighborList(GridNode currentnode)
+    protected List<GridNode> GetneighborList(GridNode currentnode)
     {
         List<GridNode> neighbors = new List<GridNode>();
 

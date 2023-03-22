@@ -218,6 +218,7 @@ public class CharacterBase : NetworkBehaviour
             return;
         canAct = false;
         Progress -= 1;
+        ClearRangeVisuals();
         CheckBuffStatus();
         StartCoroutine(TurnTracker.instance.ProgressTurns());
         DeactivateTurnUi();
@@ -248,12 +249,14 @@ public class CharacterBase : NetworkBehaviour
             EndTurn();
             return;
         }
+        GetMoveRange(movement, false);
     }
     [Server] protected void StartAction(int actionCost = 1, string performedAction = null)
     {
         remainingActions -= actionCost;
         performedActions.Add(performedAction);
         canAct = false;
+        ClearRangeVisuals();
     }
     [Server] protected void StartAction(string performedAction)
     {
@@ -262,9 +265,11 @@ public class CharacterBase : NetworkBehaviour
 
     [Command] public void SelectAction(Action action, ActionVar variant)
     {
-        this.selectedAction = action;
-        this.selectedVariant = variant;
+        selectedAction = action;
+        selectedVariant = variant;
+        OnSelectAction();
     }
+    [Server] protected virtual void OnSelectAction() { }
 
     [Server] public virtual void PerformAction(RaycastHit hit, InGamePlayer player)
     {
@@ -378,9 +383,14 @@ public class CharacterBase : NetworkBehaviour
     }
     #endregion
 
-    [Command] public void GetMoveRange()
+    [Server] protected void GetMoveRange(int range, bool needsLos)
     {
-        GridCombatSystem.instance.VisualizeMoveDistance(this);
+        if (owner.isOwned)
+            GridCombatSystem.instance.GetRangeVisualizer(this, range, needsLos);
+    }
+    [Server] protected void ClearRangeVisuals()
+    {
+        GridCombatSystem.instance.ResetVisualRange();
     }
 
     #region Buffs

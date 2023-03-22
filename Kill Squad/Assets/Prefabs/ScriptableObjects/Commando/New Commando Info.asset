@@ -21,10 +21,10 @@ MonoBehaviour:
   melee: 6
   attacks: 4
   equipedWeapons:
-  - {fileID: 11400000, guid: 1e73157119b100b4bb0deba5f9cb7ac2, type: 2}
-  - {fileID: 11400000, guid: 7af4c708edf2c214884c27f63061858e, type: 2}
+  - {fileID: 11400000, guid: 023a16c42ca434e409dacba9f78ba604, type: 2}
+  - {fileID: 11400000, guid: 021cd313524f94e49936d191cb8fbda5, type: 2}
   - {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}
-  grenade: {fileID: 11400000, guid: 8fce0ef1949573440a10d5d0d0972694, type: 2}
+  grenade: {fileID: 11400000, guid: 4c2a7024787c38e4ead38f7b0d7841dd, type: 2}
   extraGrenades: 1
   minUltHits: 5
   maxUltHits: 5

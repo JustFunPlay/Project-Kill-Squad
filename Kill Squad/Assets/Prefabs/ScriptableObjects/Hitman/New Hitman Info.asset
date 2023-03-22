@@ -21,7 +21,7 @@ MonoBehaviour:
   melee: 6
   attacks: 3
   equipedWeapons:
-  - {fileID: 11400000, guid: 62721487163824b459d468a4465e74c9, type: 2}
+  - {fileID: 11400000, guid: d4f714846974c5346aa1af556ebad800, type: 2}
   - {fileID: 11400000, guid: b367df74e08c9b449b80d654454926a5, type: 2}
   - {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}
   ultDamage: 10

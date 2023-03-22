@@ -47,6 +47,24 @@ public class Infiltrator : CharacterAttacks
         ShowUltCharge();
         base.ReportForCombat(report);
     }
+    [Server]
+    protected override void OnSelectAction()
+    {
+        switch (selectedAction)
+        {
+            case Action.Ultimate:
+                if (canGoInvisible)
+                {
+                    GoInvisible();
+                    canGoInvisible = false;
+                    ShowUltCharge();
+                }
+                break;
+            default:
+                base.OnSelectAction();
+                break;
+        }
+    }
 
     #region Start & Stop Callbacks
 
@@ -135,14 +153,6 @@ public class Infiltrator : CharacterAttacks
                     if (invisibleDuration > 0)
                         ExitInvisible();
                     StartCoroutine(StandardMelee(equipedWeapons[1], target));
-                }
-                break;
-            case Action.Ultimate:
-                if (canGoInvisible)
-                {
-                    GoInvisible();
-                    canGoInvisible = false;
-                    ShowUltCharge();
                 }
                 break;
             default:

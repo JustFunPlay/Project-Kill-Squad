@@ -22,7 +22,7 @@ public class GridCombatSystem : Pathfinding
 
     [Header("Visualisation")]
     [SerializeField] private GameObject gridCube;
-    public SyncList<GridVisualizer> gridSlots = new SyncList<GridVisualizer>();
+    public GameObject[,] gridVisualizer;
 
     #region Start & Stop Callbacks
 
@@ -50,7 +50,9 @@ public class GridCombatSystem : Pathfinding
     /// Called on every NetworkBehaviour when it is activated on a client.
     /// <para>Objects on the host have this function called, as there is a local client on the host. The values of SyncVars on object are guaranteed to be initialized correctly with the latest state from the server when this function is called on the client.</para>
     /// </summary>
-    public override void OnStartClient() { }
+    public override void OnStartClient()
+    {
+    }
 
     /// <summary>
     /// This is invoked on clients when the server has caused this object to be destroyed.
@@ -88,52 +90,107 @@ public class GridCombatSystem : Pathfinding
     [Server] private void SetupPathFinder()
     {
         InitializeGrid(gridSizeX, gridSizeZ, gridOrigin);
-        Invoke("SetupGridVisualizer", 0.1f);
-    }
-    [Server]private void SetupGridVisualizer()
-    {
         for (int x = 0; x < grid.GetWidth(); x++)
         {
             for (int z = 0; z < grid.GetLength(); z++)
             {
                 if (Physics.Raycast(grid.GetWorldPosition(x, z) + Vector3.down, Vector3.up, 4, obstacleLayer))
                     grid.GetGridObject(x, z).isWalkable = false;
+            }
+        }
+        Invoke("SetupGridVisualizer", 0.3f);
+
+    }
+    [ClientRpc]private void SetupGridVisualizer()
+    {
+        CreateGridVisuals();
+    }
+    [Client] private void CreateGridVisuals()
+    {
+        gridVisualizer = new GameObject[gridSizeX, gridSizeZ];
+        for (int x = 0; x < grid.GetWidth(); x++)
+        {
+            for (int z = 0; z < grid.GetLength(); z++)
+            {
                 GameObject newVisualizer = Instantiate(gridCube, grid.GetWorldPosition(x, z) + new Vector3(0, 0.1f, 0), Quaternion.identity, transform);
-                NetworkServer.Spawn(newVisualizer);
-                gridSlots.Add(new GridVisualizer(newVisualizer, new Vector2(x, z)));
+                //gridSlots.Add(new GridVisualizer(newVisualizer, new Vector2(x, z)));
+                gridVisualizer[x, z] = newVisualizer;
+                gridVisualizer[x, z].SetActive(false);
             }
         }
     }
     
-    [Server] public void VisualizeMoveDistance(CharacterBase character)
+    [Server] public void GetRangeVisualizer(CharacterBase character, int range, bool requiresLos)
     {
-        //for (int i = 0; i < gridSlots.Count; i++)
-        //{
-        //    gridSlots[i].visualizer.SetActive(false);
-        //}
-        //int maxMove = character.Movement;
-        //grid.GetXZ(character.transform.position, out int charX, out int charZ);
-        //for (int x = 0; x < grid.GetWidth(); x++)
-        //{
-        //    for (int z = 0; z < grid.GetLength(); z++)
-        //    {
-        //        if (grid.GetGridObject(x, z).isWalkable && Findpath(charX, charZ, x, z) != null && Findpath(charX, charZ, x, z).Count <= maxMove)
-        //        {
-        //            GridVisualizer visualizer = GetGridVisualizer(x, z);
-        //            if (visualizer != null)
-        //                visualizer.visualizer.SetActive(true);
-        //        }
-        //    }
-        //}
+        ResetVisualRange();
+        Vector3 origin = character.transform.position;
+        List<GridNode> validPositions = new List<GridNode> { grid.GetGridObject(origin)};
+        for (int i = 0; i < range; i++)
+        {
+            int currentPositions = validPositions.Count;
+            for (int ii = 0; ii < currentPositions; ii++)
+            {
+                //GetNeighborsFromServer(validPositions[ii], out List<GridNode> neigborList);
+                foreach (GridNode neighborNode in GetneighborList(validPositions[ii]))
+                {
+                    if (validPositions.Contains(neighborNode)  || !neighborNode.isWalkable)
+                        continue;
+                    if (!requiresLos)
+                    {
+                        validPositions.Add(neighborNode);
+                        continue;
+                    }
+                    bool hasLos = false;
+                    for (int l = 0; l < 4; l++)
+                    {
+                        Vector3 startpos = origin + Vector3.up;
+                        if (l == 1)
+                            startpos += Vector3.forward * 0.95f;
+                        else if (l == 2)
+                            startpos += Vector3.back * 0.95f;
+                        else if (l == 3)
+                            startpos += Vector3.left * 0.95f;
+                        else
+                            startpos += Vector3.right * 0.95f;
+
+                        if (Physics.Raycast(startpos, (grid.GetWorldPosition(neighborNode.X, neighborNode.Z) - startpos).normalized, Vector3.Distance(startpos, grid.GetWorldPosition(neighborNode.X, neighborNode.Z)), obstacleLayer) == false)
+                        {
+                            hasLos = true;
+                            break;
+                        }
+                    }
+                    if (hasLos)
+                        validPositions.Add(neighborNode);
+                }
+            }
+        }
+        VisualizeRange(validPositions, character);
+    }
+    [ClientRpc] private void VisualizeRange(List<GridNode> validPositions, CharacterBase character)
+    {
+        if (!character.Owner.isOwned)
+            return;
+        foreach (GridNode validPos in validPositions)
+        {
+            gridVisualizer[validPos.X, validPos.Z].SetActive(true);
+        }
+
+    }
+    [ClientRpc] public void ResetVisualRange()
+    {
+        for (int x = 0; x < grid.GetWidth(); x++)
+        {
+            for (int z = 0; z < grid.GetLength(); z++)
+            {
+                gridVisualizer[x, z].SetActive(false);
+            }
+        }
     }
 
-    private GridVisualizer GetGridVisualizer(int x, int z)
-    {
-        int i = grid.GetWidth() * z + x;
-        if (gridSlots[i].gridLocation != new Vector2(x, z))
-            return null;
-        return gridSlots[i];
-    }
+    //[Command] private void GetNeighborsFromServer(GridNode currentNode, out List<GridNode> neighbors)
+    //{
+    //    neighbors =  GetneighborList(currentNode);
+    //}
 
     [Server]
     public void SetupTeam(KillSquad squad, InGamePlayer player)
@@ -158,20 +215,20 @@ public class GridCombatSystem : Pathfinding
     }
 }
 
-[System.Serializable]
-public class GridVisualizer
-{
-    public GameObject visualizer;
-    public Vector2 gridLocation;
+//[System.Serializable]
+//public class GridVisualizer
+//{
+//    public GameObject visualizer;
+//    public Vector2 gridLocation;
 
-    public GridVisualizer(GameObject gameObject, Vector2 gridLocation)
-    {
-        this.visualizer = gameObject;
-        this.gridLocation = gridLocation;
-    }
-    public GridVisualizer()
-    {
-        visualizer = null;
-        gridLocation = new Vector2(-5, -5);
-    }
-}
+//    public GridVisualizer(GameObject gameObject, Vector2 gridLocation)
+//    {
+//        this.visualizer = gameObject;
+//        this.gridLocation = gridLocation;
+//    }
+//    public GridVisualizer()
+//    {
+//        visualizer = null;
+//        gridLocation = new Vector2(-5, -5);
+//    }
+//}
