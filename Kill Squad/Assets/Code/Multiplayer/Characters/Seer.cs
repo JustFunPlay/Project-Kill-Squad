@@ -90,13 +90,13 @@ public class Seer : CharacterAttacks
                 ContinueTurn();
                 break;
             case Action.Action4:
-                GetMoveRange(psychicRange, true);
+                GetRangeVisuals(psychicRange, true);
                 break;
             case Action.Action5:
-                GetMoveRange(psychicRange, true);
+                GetRangeVisuals(psychicRange, true);
                 break;
             case Action.Ultimate:
-                GetMoveRange(ultRange, true);
+                GetRangeVisuals(ultRange, true);
                 break;
             default:
                 base.OnSelectAction();

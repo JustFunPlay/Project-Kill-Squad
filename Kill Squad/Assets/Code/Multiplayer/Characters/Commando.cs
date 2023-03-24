@@ -64,7 +64,7 @@ public class Commando : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action4:
-                GetMoveRange(grenade.range, false);
+                GetRangeVisuals(grenade.range, false);
                 break;
             case Action.Ultimate:
                 ClearRangeVisuals();

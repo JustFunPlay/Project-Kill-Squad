@@ -20,10 +20,6 @@ public class GridCombatSystem : Pathfinding
     [SerializeField] private Vector2 defenderGridSpawn;
     public LayerMask obstacleLayer;
 
-    [Header("Visualisation")]
-    [SerializeField] private GameObject gridCube;
-    public GameObject[,] gridVisualizer;
-
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -103,21 +99,7 @@ public class GridCombatSystem : Pathfinding
     }
     [ClientRpc]private void SetupGridVisualizer()
     {
-        CreateGridVisuals();
-    }
-    [Client] private void CreateGridVisuals()
-    {
-        gridVisualizer = new GameObject[gridSizeX, gridSizeZ];
-        for (int x = 0; x < grid.GetWidth(); x++)
-        {
-            for (int z = 0; z < grid.GetLength(); z++)
-            {
-                GameObject newVisualizer = Instantiate(gridCube, grid.GetWorldPosition(x, z) + new Vector3(0, 0.1f, 0), Quaternion.identity, transform);
-                //gridSlots.Add(new GridVisualizer(newVisualizer, new Vector2(x, z)));
-                gridVisualizer[x, z] = newVisualizer;
-                gridVisualizer[x, z].SetActive(false);
-            }
-        }
+        GridVisualizer.instance.SetupGridVisualizer(gridOrigin, gridSizeX, gridSizeZ);
     }
     
     [Server] public void GetRangeVisualizer(CharacterBase character, int range, bool requiresLos)
@@ -164,33 +146,24 @@ public class GridCombatSystem : Pathfinding
                 }
             }
         }
-        VisualizeRange(validPositions, character);
+        List<Vector3> validLocations = new List<Vector3>();
+        foreach (GridNode validPos in validPositions)
+        {
+            validLocations.Add(grid.GetWorldPosition(validPos.X, validPos.Z));
+        }
+        VisualizeRange(validLocations, character);
     }
-    [ClientRpc] private void VisualizeRange(List<GridNode> validPositions, CharacterBase character)
+    [ClientRpc] private void VisualizeRange(List<Vector3> validPositions, CharacterBase character)
     {
         if (!character.Owner.isOwned)
             return;
-        foreach (GridNode validPos in validPositions)
-        {
-            gridVisualizer[validPos.X, validPos.Z].SetActive(true);
-        }
+        GridVisualizer.instance.VisualizeRange(validPositions);
 
     }
     [ClientRpc] public void ResetVisualRange()
     {
-        for (int x = 0; x < grid.GetWidth(); x++)
-        {
-            for (int z = 0; z < grid.GetLength(); z++)
-            {
-                gridVisualizer[x, z].SetActive(false);
-            }
-        }
+        GridVisualizer.instance.ResetVisualRange();
     }
-
-    //[Command] private void GetNeighborsFromServer(GridNode currentNode, out List<GridNode> neighbors)
-    //{
-    //    neighbors =  GetneighborList(currentNode);
-    //}
 
     [Server]
     public void SetupTeam(KillSquad squad, InGamePlayer player)

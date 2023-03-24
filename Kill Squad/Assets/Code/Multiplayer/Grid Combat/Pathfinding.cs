@@ -147,16 +147,4 @@ public class Pathfinding : NetworkBehaviour
         }
         return lowestFCostNode;
     }
-
-    public void OnDrawGizmos()
-    {
-        for (int x = 0; x < grid.GetWidth(); x++)
-        {
-            for (int z = 0; z < grid.GetLength(); z++)
-            {
-                Gizmos.DrawLine(grid.GetWorldPosition(x, z), grid.GetWorldPosition(x, z) + new Vector3(grid.GetCellSize(), 0, 0));
-                Gizmos.DrawLine(grid.GetWorldPosition(x, z), grid.GetWorldPosition(x, z) + new Vector3(0, 0, grid.GetCellSize()));
-            }
-        }
-    }
 }

@@ -249,7 +249,7 @@ public class CharacterBase : NetworkBehaviour
             EndTurn();
             return;
         }
-        GetMoveRange(movement, false);
+        GetRangeVisuals(movement, false);
     }
     [Server] protected void StartAction(int actionCost = 1, string performedAction = null)
     {
@@ -383,10 +383,9 @@ public class CharacterBase : NetworkBehaviour
     }
     #endregion
 
-    [Server] protected void GetMoveRange(int range, bool needsLos)
+    [Server] protected void GetRangeVisuals(int range, bool needsLos)
     {
-        if (owner.isOwned)
-            GridCombatSystem.instance.GetRangeVisualizer(this, range, needsLos);
+        GridCombatSystem.instance.GetRangeVisualizer(this, range, needsLos);
     }
     [Server] protected void ClearRangeVisuals()
     {

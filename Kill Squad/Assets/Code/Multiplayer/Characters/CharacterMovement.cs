@@ -101,6 +101,6 @@ public class CharacterMovement : CharacterBase
     [Server]protected override void OnSelectAction()
     {
         if (selectedAction == Action.Movement)
-            GetMoveRange(movement, false);
+            GetRangeVisuals(movement, false);
     }
 }

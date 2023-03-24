@@ -48,10 +48,10 @@ public class Apothecary : CharacterAttacks
         switch(selectedAction)
         {
             case Action.Action3:
-                GetMoveRange(2, true);
+                GetRangeVisuals(2, true);
                 break;
             case Action.Ultimate:
-                GetMoveRange(2, true);
+                GetRangeVisuals(2, true);
                 break;
             default:
                 base.OnSelectAction();
