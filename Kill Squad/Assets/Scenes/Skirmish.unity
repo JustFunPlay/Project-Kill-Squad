@@ -1022,12 +1022,11 @@ MonoBehaviour:
   gridSizeX: 20
   gridSizeZ: 30
   gridOrigin: {x: -20, y: 0, z: -30}
-  attackerGridSpawn: {x: 6, y: 1}
-  defenderGridSpawn: {x: 13, y: 28}
+  attackerGridSpawn: {x: 6, y: 0}
+  defenderGridSpawn: {x: 13, y: 29}
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 64
-  gridCube: {fileID: 6052704675058433591, guid: 8bdd85f288a3c094a94653b24a8e4df4, type: 3}
 --- !u!114 &1954461991
 MonoBehaviour:
   m_ObjectHideFlags: 0

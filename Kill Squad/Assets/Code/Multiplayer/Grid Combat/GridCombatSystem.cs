@@ -131,43 +131,43 @@ public class GridCombatSystem : Pathfinding
             for (int ii = 0; ii < currentPositions; ii++)
             {
                 //GetNeighborsFromServer(validPositions[ii], out List<GridNode> neigborList);
-                foreach (GridNode neighborNode in GetneighborList(validPositions[ii], false))
+                foreach (GridNode neighborNode in GetneighborList(validPositions[ii], !requiresLos))
                 {
                     if (validPositions.Contains(neighborNode)  || !neighborNode.isWalkable)
                         continue;
-                    if (!requiresLos)
-                    {
-                        validPositions.Add(neighborNode);
-                        continue;
-                    }
-                    bool hasLos = false;
-                    for (int l = 0; l < 4; l++)
-                    {
-                        Vector3 startpos = origin + Vector3.up;
-                        if (l == 1)
-                            startpos += Vector3.forward * 0.95f;
-                        else if (l == 2)
-                            startpos += Vector3.back * 0.95f;
-                        else if (l == 3)
-                            startpos += Vector3.left * 0.95f;
-                        else
-                            startpos += Vector3.right * 0.95f;
-
-                        if (Physics.Raycast(startpos, (grid.GetWorldPosition(neighborNode.X, neighborNode.Z) - startpos).normalized, Vector3.Distance(startpos, grid.GetWorldPosition(neighborNode.X, neighborNode.Z)), obstacleLayer) == false)
-                        {
-                            hasLos = true;
-                            break;
-                        }
-                    }
-                    if (hasLos)
-                        validPositions.Add(neighborNode);
+                     validPositions.Add(neighborNode);
                 }
             }
         }
         List<Vector3> validLocations = new List<Vector3>();
         foreach (GridNode validPos in validPositions)
         {
-            validLocations.Add(grid.GetWorldPosition(validPos.X, validPos.Z));
+            if (!requiresLos)
+            {
+                validLocations.Add(grid.GetWorldPosition(validPos.X, validPos.Z));
+                continue;
+            }
+            bool hasLos = false;
+            for (int l = 0; l < 5; l++)
+            {
+                Vector3 startpos = origin + Vector3.up * 1.5f;
+                if (l == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, obstacleLayer))
+                    startpos += Vector3.forward * 0.95f;
+                else if (l == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, obstacleLayer))
+                    startpos += Vector3.back * 0.95f;
+                else if (l == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, obstacleLayer))
+                    startpos += Vector3.left * 0.95f;
+                else if (l == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, obstacleLayer))
+                    startpos += Vector3.right * 0.95f;
+
+                if (Physics.Raycast(startpos, (grid.GetWorldPosition(validPos.X, validPos.Z) + Vector3.up * 1.5f - startpos).normalized, Vector3.Distance(startpos, grid.GetWorldPosition(validPos.X, validPos.Z)), obstacleLayer) == false)
+                {
+                    hasLos = true;
+                    break;
+                }
+            }
+            if (hasLos)
+                validLocations.Add(grid.GetWorldPosition(validPos.X, validPos.Z));
         }
         VisualizeRange(validLocations, character);
     }
@@ -194,16 +194,16 @@ public class GridCombatSystem : Pathfinding
                             continue;
                         }
                         bool hasLos = false;
-                        for (int l = 0; l < 4; l++)
+                        for (int l = 0; l < 5; l++)
                         {
                             Vector3 startpos = origin + Vector3.up;
-                            if (l == 1)
+                            if (l == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, obstacleLayer))
                                 startpos += Vector3.forward * 0.95f;
-                            else if (l == 2)
+                            else if (l == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, obstacleLayer))
                                 startpos += Vector3.back * 0.95f;
-                            else if (l == 3)
+                            else if (l == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, obstacleLayer))
                                 startpos += Vector3.left * 0.95f;
-                            else
+                            else if (l == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, obstacleLayer))
                                 startpos += Vector3.right * 0.95f;
 
                             if (Physics.Raycast(startpos, (grid.GetWorldPosition(neighborNode.X, neighborNode.Z) - startpos).normalized, Vector3.Distance(startpos, grid.GetWorldPosition(neighborNode.X, neighborNode.Z)), obstacleLayer) == false)

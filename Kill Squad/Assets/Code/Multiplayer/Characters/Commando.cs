@@ -64,7 +64,7 @@ public class Commando : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action4:
-                GetRangeVisuals(grenade.range, false);
+                GetRangeVisuals(grenade.range, true);
                 break;
             case Action.Ultimate:
                 ClearRangeVisuals();
@@ -184,6 +184,27 @@ public class Commando : CharacterAttacks
                 List<Vector3> grenadePath = GridCombatSystem.instance.FindPath(transform.position, hit.point, false);
                 if (grenadePath != null && grenadePath.Count <= grenade.range + 1)
                 {
+                    bool hasLos = false;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Vector3 startpos = transform.position + Vector3.up * 1.5f;
+                        if (i == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.forward * 0.95f;
+                        else if (i == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.back * 0.95f;
+                        else if (i == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.left * 0.95f;
+                        else if (i == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.right * 0.95f;
+
+                        if (Physics.Raycast(startpos, (grenadePath[grenadePath.Count - 1] + Vector3.up * 1.5f - startpos).normalized, Vector3.Distance(startpos, grenadePath[grenadePath.Count - 1]), GridCombatSystem.instance.obstacleLayer) == false)
+                        {
+                            hasLos = true;
+                            break;
+                        }
+                    }
+                    if (!hasLos)
+                        return;
                     remainingGrenades -= 1;
                     GridCombatSystem.instance.grid.GetXZ(hit.point, out int x, out int z);
                     StartAction(grenade.weaponName);

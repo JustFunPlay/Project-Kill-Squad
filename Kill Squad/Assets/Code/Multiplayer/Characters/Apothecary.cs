@@ -47,7 +47,7 @@ public class Apothecary : CharacterAttacks
     {
         switch(selectedAction)
         {
-            case Action.Action3:
+            case Action.Action4:
                 GetRangeVisuals(2, true);
                 break;
             case Action.Ultimate:
@@ -195,6 +195,27 @@ public class Apothecary : CharacterAttacks
                 List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, target.transform.position, false);
                 if (path != null && path.Count <= 3)
                 {
+                    bool hasLos = false;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Vector3 startpos = transform.position + Vector3.up * 1.5f;
+                        if (i == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.forward * 0.95f;
+                        else if (i == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.back * 0.95f;
+                        else if (i == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.left * 0.95f;
+                        else if (i == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.right * 0.95f;
+
+                        if (Physics.Raycast(startpos, (target.transform.position + Vector3.up * 1.5f - startpos).normalized, Vector3.Distance(startpos, target.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
+                        {
+                            hasLos = true;
+                            break;
+                        }
+                    }
+                    if (!hasLos)
+                        return;
                     StartAction();
                     int healvalue = Random.Range((int)healRange.x, (int)healRange.y);
                     target.GetHealed(healvalue, out int healingDone);
@@ -227,6 +248,27 @@ public class Apothecary : CharacterAttacks
                 List<Vector3> ultPath = GridCombatSystem.instance.FindPath(transform.position, target.transform.position, false);
                 if (ultPath != null && ultPath.Count <= 3)
                 {
+                    bool hasLos = false;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Vector3 startpos = transform.position + Vector3.up * 1.5f;
+                        if (i == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.forward * 0.95f;
+                        else if (i == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.back * 0.95f;
+                        else if (i == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.left * 0.95f;
+                        else if (i == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.right * 0.95f;
+
+                        if (Physics.Raycast(startpos, (target.transform.position + Vector3.up * 1.5f - startpos).normalized, Vector3.Distance(startpos, target.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
+                        {
+                            hasLos = true;
+                            break;
+                        }
+                    }
+                    if (!hasLos)
+                        return;
                     StartAction();
                     target.GetRessurected();
                     ultCharged = false;

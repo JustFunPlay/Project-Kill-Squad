@@ -138,19 +138,19 @@ public class CharacterAttacks : CharacterMovement
         if (target == null || target.Owner == owner)
             return null;
         bool hasLos = false;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
         {
-            Vector3 startpos = transform.position + Vector3.up;
-            if (i == 1)
+            Vector3 startpos = transform.position + Vector3.up * 1.5f;
+            if (i == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, GridCombatSystem.instance.obstacleLayer))
                 startpos += Vector3.forward * 0.95f;
-            else if (i == 2)
+            else if (i == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, GridCombatSystem.instance.obstacleLayer))
                 startpos += Vector3.back * 0.95f;
-            else if (i == 3)
+            else if (i == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, GridCombatSystem.instance.obstacleLayer))
                 startpos += Vector3.left * 0.95f;
-            else
+            else if (i == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, GridCombatSystem.instance.obstacleLayer))
                 startpos += Vector3.right * 0.95f;
 
-            if (Physics.Raycast(startpos, (target.transform.position - startpos).normalized, Vector3.Distance(startpos, target.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
+            if (Physics.Raycast(startpos, (target.transform.position + Vector3.up * 1.5f - startpos).normalized, Vector3.Distance(startpos, target.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
             {
                 hasLos = true;
                 break;
@@ -326,7 +326,7 @@ public class CharacterAttacks : CharacterMovement
                 report.killingBlows = newReport.killingBlows;
                 break;
             }
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.2f);
         }
         ReportForCombat(report);
     }
@@ -347,7 +347,7 @@ public class CharacterAttacks : CharacterMovement
                 report.killingBlows.AddRange(newReport.killingBlows);
                 break;
             }
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.25f);
         }
         ReportForCombat(report);
     }
@@ -359,9 +359,29 @@ public class CharacterAttacks : CharacterMovement
         CallForGrenadeParticle(GridCombatSystem.instance.grid.GetWorldPosition(xLocation, zLocation));
         foreach (CharacterBase character in TurnTracker.instance.characters)
         {
+            if (character.Owner == owner)
+                continue;
             GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
             if (Mathf.Abs(characterX - xLocation) <= 1 && Mathf.Abs(characterZ - zLocation) <= 1)
             {
+                bool hasLos = false;
+                for (int i = 0; i < 5; i++)
+                {
+                    Vector3 startpos = transform.position + Vector3.up * 1.5f;
+                    if (i == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                        startpos += Vector3.forward * 0.95f;
+                    else if (i == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                        startpos += Vector3.back * 0.95f;
+                    else if (i == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                        startpos += Vector3.left * 0.95f;
+                    else if (i == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                        startpos += Vector3.right * 0.95f;
+
+                    if (Physics.Raycast(startpos, (character.transform.position + Vector3.up * 1.5f - startpos).normalized, Vector3.Distance(startpos, character.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
+                        hasLos = true;
+                }
+                if (!hasLos)
+                    continue;
                 int count = Random.Range((int)grenade.attacks.x, (int)grenade.attacks.y);
                 for (int i = 0; i < count; i++)
                 {

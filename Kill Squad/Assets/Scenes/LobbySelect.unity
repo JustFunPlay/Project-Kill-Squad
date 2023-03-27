@@ -1466,6 +1466,7 @@ MonoBehaviour:
   - {fileID: 8612920624829106673, guid: b968e2042987e474a84ab7796df03486, type: 3}
   - {fileID: 5634495248904195570, guid: f4274d7171fce3647bb7fdcc803afa9a, type: 3}
   - {fileID: 4819802593932141326, guid: 134ccead41d4d624c9c476381ad61738, type: 3}
+  - {fileID: 5634495248904195570, guid: 3fa209528caaa6d4e943e50323722c7e, type: 3}
   timeInterpolationGui: 0
   showRoomGUI: 1
   minPlayers: 2

@@ -365,19 +365,19 @@ public class Seer : CharacterAttacks
         if (target == null || target == this)
             return null;
         bool hasLos = false;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
         {
-            Vector3 startpos = transform.position + Vector3.up;
-            if (i == 1)
+            Vector3 startpos = transform.position + Vector3.up * 1.5f;
+            if (i == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, GridCombatSystem.instance.obstacleLayer))
                 startpos += Vector3.forward * 0.95f;
-            else if (i == 2)
+            else if (i == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, GridCombatSystem.instance.obstacleLayer))
                 startpos += Vector3.back * 0.95f;
-            else if (i == 3)
+            else if (i == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, GridCombatSystem.instance.obstacleLayer))
                 startpos += Vector3.left * 0.95f;
-            else
+            else if (i == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, GridCombatSystem.instance.obstacleLayer))
                 startpos += Vector3.right * 0.95f;
 
-            if (Physics.Raycast(startpos, (target.transform.position - startpos).normalized, Vector3.Distance(startpos, target.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
+            if (Physics.Raycast(startpos, (target.transform.position + Vector3.up * 1.5f - startpos).normalized, Vector3.Distance(startpos, target.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
             {
                 hasLos = true;
                 break;
