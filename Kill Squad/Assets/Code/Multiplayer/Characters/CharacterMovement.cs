@@ -76,7 +76,7 @@ public class CharacterMovement : CharacterBase
 
     [Server] public void MoveToNewPostion(Vector3 targetpos)
     {
-        List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, targetpos);
+        List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, targetpos, true);
         Debug.Log(path);
         if (path != null && path.Count <= movement + 1 && path.Count > 1 && GridCombatSystem.instance.grid.GetGridObject(path[path.Count - 1]).isOccupied == false)
         {

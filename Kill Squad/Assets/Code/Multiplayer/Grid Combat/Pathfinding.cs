@@ -14,11 +14,11 @@ public class Pathfinding : NetworkBehaviour
         grid = new GridSystem<GridNode>(width, height, 2f, origin, (GridSystem<GridNode> grid, int x, int z) => new GridNode(grid, x, z));
     }
     
-    [Server]public List<Vector3> FindPath(Vector3 startPos, Vector3 endPos)
+    [Server]public List<Vector3> FindPath(Vector3 startPos, Vector3 endPos, bool trueMovement)
     {
         grid.GetXZ(startPos, out int startX, out int startZ);
         grid.GetXZ(endPos, out int endX, out int endZ);
-        List<GridNode> path = FindPath(startX, startZ, endX, endZ);
+        List<GridNode> path = FindPath(startX, startZ, endX, endZ, trueMovement);
         if (path == null)
             return null;
         List<Vector3> vectorPath = new List<Vector3>();
@@ -29,7 +29,7 @@ public class Pathfinding : NetworkBehaviour
         return vectorPath;
     }
 
-    [Server]public List<GridNode> FindPath(int startX, int startZ, int endX, int endZ)
+    [Server]public List<GridNode> FindPath(int startX, int startZ, int endX, int endZ, bool trueMovement)
     {
         GridNode startNode = grid.GetGridObject(startX, startZ);
         GridNode endNode = grid.GetGridObject(endX, endZ);
@@ -61,7 +61,7 @@ public class Pathfinding : NetworkBehaviour
             openList.Remove(currentNode);
             closedList.Add(currentNode);
 
-            foreach (GridNode neighborNode in GetneighborList(currentNode))
+            foreach (GridNode neighborNode in GetneighborList(currentNode, trueMovement))
             {
                 if (closedList.Contains(neighborNode))
                     continue;
@@ -102,23 +102,23 @@ public class Pathfinding : NetworkBehaviour
         return path;
     }
 
-    protected List<GridNode> GetneighborList(GridNode currentnode)
+    protected List<GridNode> GetneighborList(GridNode currentnode, bool requiresMovePossibility)
     {
         List<GridNode> neighbors = new List<GridNode>();
 
-        if (currentnode.X - 1 >= 0)
+        if ((currentnode.canMoveWest || !requiresMovePossibility) && currentnode.X - 1 >= 0)
         {
             neighbors.Add(GetNode(currentnode.X - 1, currentnode.Z));
         }
-        if (currentnode.X + 1 < grid.GetWidth())
+        if ((currentnode.canMoveEast || !requiresMovePossibility) && currentnode.X + 1 < grid.GetWidth())
         {
             neighbors.Add(GetNode(currentnode.X + 1, currentnode.Z));
         }
-        if (currentnode.Z - 1 >= 0)
+        if ((currentnode.canMoveSouth || !requiresMovePossibility) && currentnode.Z - 1 >= 0)
         {
             neighbors.Add(GetNode(currentnode.X, currentnode.Z - 1));
         }
-        if (currentnode.Z + 1 < grid.GetLength())
+        if ((currentnode.canMoveNorth || !requiresMovePossibility) && currentnode.Z + 1 < grid.GetLength())
         {
             neighbors.Add(GetNode(currentnode.X, currentnode.Z + 1));
         }

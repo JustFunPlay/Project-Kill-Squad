@@ -385,7 +385,7 @@ public class Seer : CharacterAttacks
         }
         if (!hasLos)
             return null;
-        List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, target.transform.position);
+        List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, target.transform.position, false);
         if (path != null && path.Count <= range + 1)
             return target;
         return null;

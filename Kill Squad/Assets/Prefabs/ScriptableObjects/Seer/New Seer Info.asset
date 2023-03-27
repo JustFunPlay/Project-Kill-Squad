@@ -28,6 +28,6 @@ MonoBehaviour:
   psychicRange: 15
   discipline1: {fileID: 11400000, guid: 8f0469b188b055c40a966558919ece86, type: 2}
   discipline2: {fileID: 11400000, guid: 7d8e70a8de910de4ea76e065c2ce47c5, type: 2}
-  hasRunicArmor: 1
+  hasRunicArmor: 0
   ultRange: 10
   requiredUltPoints: 40

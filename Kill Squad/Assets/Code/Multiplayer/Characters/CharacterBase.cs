@@ -387,6 +387,10 @@ public class CharacterBase : NetworkBehaviour
     {
         GridCombatSystem.instance.GetRangeVisualizer(this, range, needsLos);
     }
+    [Server] protected void GetMeleeVisuals(int range, bool needsLos)
+    {
+        GridCombatSystem.instance.GetMeleeVisualizer(this, range, needsLos);
+    }
     [Server] protected void ClearRangeVisuals()
     {
         GridCombatSystem.instance.ResetVisualRange();

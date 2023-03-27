@@ -181,7 +181,7 @@ public class Commando : CharacterAttacks
             case Action.Action4:
                 if (performedActions.Contains(grenade.weaponName) || remainingGrenades <= 0)
                     return;
-                List<Vector3> grenadePath = GridCombatSystem.instance.FindPath(transform.position, hit.point);
+                List<Vector3> grenadePath = GridCombatSystem.instance.FindPath(transform.position, hit.point, false);
                 if (grenadePath != null && grenadePath.Count <= grenade.range + 1)
                 {
                     remainingGrenades -= 1;
@@ -198,7 +198,7 @@ public class Commando : CharacterAttacks
                 Vector3 ultOrigin = hit.point;
                 foreach (CharacterBase character in TurnTracker.instance.characters)
                 {
-                    List<Vector3> ultpath = GridCombatSystem.instance.FindPath(ultOrigin, character.transform.position);
+                    List<Vector3> ultpath = GridCombatSystem.instance.FindPath(ultOrigin, character.transform.position, false);
                     if (character.Owner != owner && ultpath != null && ultpath.Count <= 4)
                         targetsInUlt.Add(character);
                 }

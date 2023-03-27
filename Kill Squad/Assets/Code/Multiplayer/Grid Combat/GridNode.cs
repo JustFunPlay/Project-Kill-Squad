@@ -17,6 +17,11 @@ public class GridNode
     public bool isWalkable = true;
     public bool isOccupied;
 
+    public bool canMoveNorth = true;
+    public bool canMoveEast = true;
+    public bool canMoveSouth = true;
+    public bool canMoveWest = true;
+
     public GridNode cameFromNode;
 
     public GridNode(GridSystem<GridNode> grid, int x, int z)

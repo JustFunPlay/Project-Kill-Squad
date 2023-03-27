@@ -192,7 +192,7 @@ public class Apothecary : CharacterAttacks
                 }
                 if (target == null || target.Owner != owner)
                     return;
-                List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, target.transform.position);
+                List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, target.transform.position, false);
                 if (path != null && path.Count <= 3)
                 {
                     StartAction();
@@ -224,7 +224,7 @@ public class Apothecary : CharacterAttacks
                 }
                 if (target == null || target.Owner != owner)
                     return;
-                List<Vector3> ultPath = GridCombatSystem.instance.FindPath(transform.position, target.transform.position);
+                List<Vector3> ultPath = GridCombatSystem.instance.FindPath(transform.position, target.transform.position, false);
                 if (ultPath != null && ultPath.Count <= 3)
                 {
                     StartAction();

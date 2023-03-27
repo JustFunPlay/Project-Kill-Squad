@@ -29,15 +29,30 @@ public class CharacterAttacks : CharacterMovement
         {
             case Action.Action1:
                 if (equipedWeapons.Count >= 1)
-                    GetRangeVisuals(equipedWeapons[0].range, true);
+                {
+                    if (equipedWeapons[0].type == WeaponType.Melee || equipedWeapons[0].type == WeaponType.Heavy || equipedWeapons[0].type == WeaponType.Swift)
+                        GetMeleeVisuals(equipedWeapons[0].range, true);
+                    else
+                        GetRangeVisuals(equipedWeapons[0].range, true);
+                }
                 break;
             case Action.Action2:
                 if (equipedWeapons.Count >= 2)
-                    GetRangeVisuals(equipedWeapons[1].range, true);
+                {
+                    if (equipedWeapons[1].type == WeaponType.Melee || equipedWeapons[1].type == WeaponType.Heavy || equipedWeapons[1].type == WeaponType.Swift)
+                        GetMeleeVisuals(equipedWeapons[1].range, true);
+                    else
+                        GetRangeVisuals(equipedWeapons[1].range, true);
+                }
                 break;
             case Action.Action3:
                 if (equipedWeapons.Count >= 3)
+                {
+                    if (equipedWeapons[2].type == WeaponType.Melee || equipedWeapons[2].type == WeaponType.Heavy || equipedWeapons[2].type == WeaponType.Swift)
+                        GetMeleeVisuals(equipedWeapons[2].range, true);
+                    else
                     GetRangeVisuals(equipedWeapons[2].range, true);
+                }
                 break;
             default:
                 base.OnSelectAction();
@@ -153,7 +168,7 @@ public class CharacterAttacks : CharacterMovement
         {
             if (weapon.type != WeaponType.Pistol && Mathf.Abs(x - targetX) <= 1 && Mathf.Abs(z - targetZ) <= 1)
                 return null;
-            List<GridNode> path = GridCombatSystem.instance.FindPath(x, z, targetX, targetZ);
+            List<GridNode> path = GridCombatSystem.instance.FindPath(x, z, targetX, targetZ, false);
             if (path != null && path.Count <= weapon.range + 1)
                 return target;
         }
@@ -275,7 +290,7 @@ public class CharacterAttacks : CharacterMovement
     protected void SpreadFire(ScriptableWeapon weapon, CharacterBase target)
     {
         CombatReport report = new CombatReport();
-        bool isHalfRange = (GridCombatSystem.instance.FindPath(transform.position, target.transform.position).Count - 1) * 2 <= weapon.range;
+        bool isHalfRange = (GridCombatSystem.instance.FindPath(transform.position, target.transform.position, false).Count - 1) * 2 <= weapon.range;
         for (int i = 0; i < (isHalfRange ? weapon.attacks * 2 : weapon.attacks); i++)
         {
             report.totalAttackCount++;
