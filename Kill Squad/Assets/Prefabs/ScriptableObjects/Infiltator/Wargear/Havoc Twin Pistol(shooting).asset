@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b435321c4c220d94899710a132796a19, type: 3}
   m_Name: Havoc Twin Pistol(shooting)
   m_EditorClassIdentifier: 
-  weaponName: Havoc Twin Pistol (Shooting)
+  weaponName: Twin Havoc Pistols
   type: 3
   attacks: 15
   range: 10
