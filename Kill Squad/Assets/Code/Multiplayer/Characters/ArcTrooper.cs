@@ -15,11 +15,19 @@ public class ArcTrooper : CharacterAttacks
     [Header("Tesla Coil")]
     [SyncVar] [SerializeField] int storedPower;
 
+    [Header("Ult")]
+    [SyncVar] [SerializeField] int ultDamage;
+    [SyncVar] [SerializeField] int ultchargeRequirement;
+    [SyncVar] [SerializeField] int currentUltCharge;
+
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
         equipedWeapons.Clear();
         equipedWeapons.AddRange(info.equipedWeapons);
-        //ArcTrooperData arcInfo = (ArcTrooperData)info;
+        ArcTrooperData arcInfo = (ArcTrooperData)info;
+        ultDamage = arcInfo.ultDamage;
+        ultchargeRequirement = arcInfo.ultChargeRequirement;
+        currentUltCharge = 0;
         base.SetupCharacter(player, info);
     }
     [Server]
@@ -27,6 +35,19 @@ public class ArcTrooper : CharacterAttacks
     {
         TeslaCoilDamage();
         base.ProgressTurn();
+    }
+    [Server]
+    protected override void OnSelectAction()
+    {
+        switch (selectedAction)
+        {
+            case Action.Ultimate:
+                GetRangeVisuals(3, true);
+                break;
+            default:
+                base.OnSelectAction();
+                break;
+        }
     }
 
     #region Start & Stop Callbacks
@@ -111,6 +132,48 @@ public class ArcTrooper : CharacterAttacks
                     StartCoroutine(TeslaMelee(equipedWeapons[1], target));
                 }
                 break;
+            case Action.Ultimate:
+                if (currentUltCharge < ultchargeRequirement)
+                    return;
+                StartAction();
+                List<CharacterBase> targetsInUlt = new List<CharacterBase>();
+                foreach (CharacterBase character in TurnTracker.instance.characters)
+                {
+                    List<Vector3> ultpath = GridCombatSystem.instance.FindPath(transform.position, character.transform.position, false);
+                    if (character.Owner != owner && ultpath != null && ultpath.Count <= 4)
+                        targetsInUlt.Add(character);
+                }
+                int totalUltDamage = 0;
+                foreach (CharacterBase character in targetsInUlt)
+                {
+                    bool hasLos = false;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Vector3 startpos = transform.position + Vector3.up * 1.5f;
+                        if (i == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.forward * 0.95f;
+                        else if (i == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.back * 0.95f;
+                        else if (i == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.left * 0.95f;
+                        else if (i == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.right * 0.95f;
+
+                        if (Physics.Raycast(startpos, (character.transform.position + Vector3.up * 1.5f - startpos).normalized, Vector3.Distance(startpos, character.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
+                            hasLos = true;
+                    }
+                    if (hasLos)
+                    {
+                        character.TakeDamage(ultDamage, true, out int damageDealt, out bool kilingBlow);
+                        totalUltDamage += damageDealt;
+                        if (kilingBlow)
+                            hasKilled = true;
+                    }
+                }
+                TeslaCharge(totalUltDamage);
+                TeslaCoilDamage();
+                ContinueTurn();
+                break;
             default:
                 base.PerformAction(hit, player);
                 break;
@@ -136,33 +199,34 @@ public class ArcTrooper : CharacterAttacks
         int teslaDamageDealt = 0;
         foreach (CharacterBase character in TurnTracker.instance.characters)
         {
-            if (character.Owner == owner)
-                continue;
-            GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
-            if (Mathf.Abs(characterX - currentX) <= 1 && Mathf.Abs(characterZ - currentZ) <= 1)
+            if (character.Owner != owner)
             {
-                bool hasLos = false;
-                for (int i = 0; i < 5; i++)
+                GridCombatSystem.instance.grid.GetXZ(character.transform.position, out int characterX, out int characterZ);
+                if (Mathf.Abs(characterX - currentX) <= 1 && Mathf.Abs(characterZ - currentZ) <= 1)
                 {
-                    Vector3 startpos = transform.position + Vector3.up * 1.5f;
-                    if (i == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, GridCombatSystem.instance.obstacleLayer))
-                        startpos += Vector3.forward * 0.95f;
-                    else if (i == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, GridCombatSystem.instance.obstacleLayer))
-                        startpos += Vector3.back * 0.95f;
-                    else if (i == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, GridCombatSystem.instance.obstacleLayer))
-                        startpos += Vector3.left * 0.95f;
-                    else if (i == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, GridCombatSystem.instance.obstacleLayer))
-                        startpos += Vector3.right * 0.95f;
+                    bool hasLos = false;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Vector3 startpos = transform.position + Vector3.up * 1.5f;
+                        if (i == 1 && !Physics.Raycast(startpos, Vector3.forward, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.forward * 0.95f;
+                        else if (i == 2 && !Physics.Raycast(startpos, Vector3.back, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.back * 0.95f;
+                        else if (i == 3 && !Physics.Raycast(startpos, Vector3.left, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.left * 0.95f;
+                        else if (i == 4 && !Physics.Raycast(startpos, Vector3.right, 0.95f, GridCombatSystem.instance.obstacleLayer))
+                            startpos += Vector3.right * 0.95f;
 
-                    if (Physics.Raycast(startpos, (character.transform.position + Vector3.up * 1.5f - startpos).normalized, Vector3.Distance(startpos, character.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
-                        hasLos = true;
+                        if (Physics.Raycast(startpos, (character.transform.position + Vector3.up * 1.5f - startpos).normalized, Vector3.Distance(startpos, character.transform.position), GridCombatSystem.instance.obstacleLayer) == false)
+                            hasLos = true;
+                    }
+                    if (!hasLos)
+                        continue;
+                    character.TakeDamage(1, true, out int damageDealt, out bool killingBlow);
+                    teslaDamageDealt++;
+                    if (killingBlow)
+                        hasKilled = true;
                 }
-                if (!hasLos)
-                    continue;
-                character.TakeDamage(1, true, out int damageDealt, out bool killingBlow);
-                teslaDamageDealt++;
-                if (killingBlow)
-                    hasKilled = true;
             }
         }
         Debug.Log($"Tesla coil damage: {teslaDamageDealt}");

@@ -6,5 +6,8 @@ using UnityEngine;
 
 public class ArcTrooperData : CharacterInfoBase
 {
+    [Header("Ult")]
+    public int ultDamage;
+    public int ultChargeRequirement;
 
 }
