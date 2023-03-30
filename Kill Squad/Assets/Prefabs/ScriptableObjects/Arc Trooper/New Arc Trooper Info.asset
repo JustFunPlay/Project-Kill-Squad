@@ -23,3 +23,5 @@ MonoBehaviour:
   equipedWeapons:
   - {fileID: 11400000, guid: 971d22f6147c0d544924ff4de2f63b3f, type: 2}
   - {fileID: 11400000, guid: 2f608e84912d35140a4d6617c2e9b206, type: 2}
+  ultDamage: 12
+  ultChargeRequirement: 0

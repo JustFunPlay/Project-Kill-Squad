@@ -929,6 +929,7 @@ MonoBehaviour:
   - {fileID: 7702158604056226865}
   - {fileID: 7125257681541861566}
   - {fileID: 1297069960731460850}
+  - {fileID: 1216329026317110453}
   hpSlider: {fileID: 1976889964474850285}
   hasKilled: 0
   doubleNextHit: 0
@@ -940,6 +941,9 @@ MonoBehaviour:
   - {fileID: 2439948230106317444}
   - {fileID: 1611097134782850476}
   storedPower: 0
+  ultDamage: 0
+  ultchargeRequirement: 0
+  currentUltCharge: 0
 --- !u!1 &6033162470185035857
 GameObject:
   m_ObjectHideFlags: 0
