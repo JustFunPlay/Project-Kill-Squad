@@ -20,15 +20,16 @@ public class Infiltrator : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ultChargeText;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
     {
-        equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.equipedWeapons);
-        InfiltratorData infilInfo = (InfiltratorData)info;
-        ultDuration = infilInfo.ultDuration;
+        equipedIndexes = new int[2];
+        for (int i = 0; i < equipedIndexes.Length; i++)
+        {
+            equipedIndexes[i] = selectedEquipmentIndexes[i];
+        }
         canGoInvisible = true;
         Invoke("ShowUltCharge", 0.5f);
-        base.SetupCharacter(player, info);
+        base.SetupCharacter(player, info, selectedEquipmentIndexes);
     }
 
     [Server] public override void PrepareTurn()
@@ -129,30 +130,30 @@ public class Infiltrator : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(equipedWeapons[0].weaponName) && (performedActions.Contains($"{ equipedWeapons[0].weaponName}2") || equipedWeapons[0].weaponName.Contains("Twin") == false))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedIndexes[0]].weaponName) && (performedActions.Contains($"{ charInfo.weaponOptions[equipedIndexes[0]].weaponName}2") || charInfo.weaponOptions[equipedIndexes[0]].weaponName.Contains("Twin") == false))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[0]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedIndexes[0]]);
                 if (target)
                 {
-                    if (performedActions.Contains(equipedWeapons[0].weaponName) && equipedWeapons[0].weaponName.Contains("Twin"))
-                        StartAction($"{ equipedWeapons[0].weaponName}2");
+                    if (performedActions.Contains(charInfo.weaponOptions[equipedIndexes[0]].weaponName) && charInfo.weaponOptions[equipedIndexes[0]].weaponName.Contains("Twin"))
+                        StartAction($"{ charInfo.weaponOptions[equipedIndexes[0]].weaponName}2");
                     else
-                        StartAction(equipedWeapons[0].weaponName);
+                        StartAction(charInfo.weaponOptions[equipedIndexes[0]].weaponName);
                     if (invisibleDuration > 0)
                         ExitInvisible();
-                    StartCoroutine(NormalFire(equipedWeapons[0], target));
+                    StartCoroutine(NormalFire(charInfo.weaponOptions[equipedIndexes[0]], target));
                 }
                 break;
             case Action.Action2:
-                if (performedActions.Contains(equipedWeapons[1].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedIndexes[1]].weaponName))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[1]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedIndexes[1]]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[1].weaponName);
+                    StartAction(charInfo.weaponOptions[equipedIndexes[1]].weaponName);
                     if (invisibleDuration > 0)
                         ExitInvisible();
-                    StartCoroutine(StandardMelee(equipedWeapons[1], target));
+                    StartCoroutine(StandardMelee(charInfo.weaponOptions[equipedIndexes[1]], target));
                 }
                 break;
             default:
@@ -163,7 +164,7 @@ public class Infiltrator : CharacterAttacks
     [Server] private void GoInvisible()
     {
         invisibleDuration = ultDuration;
-        movement += 1;
+        movementModifier += 1;
         dodgeChance += 10;
         ToggleInvisible(false);
 
@@ -171,7 +172,7 @@ public class Infiltrator : CharacterAttacks
     [Server] private void ExitInvisible()
     {
         invisibleDuration = -1;
-        movement -= 1;
+        movementModifier -= 1;
         dodgeChance -= 10;
         RecieveBuff(StatChange.Melee, 1, 1, true);
         RecieveBuff(StatChange.Ranged, 1, 1, true);

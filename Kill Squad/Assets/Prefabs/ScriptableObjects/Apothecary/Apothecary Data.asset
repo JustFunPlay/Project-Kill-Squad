@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef1b80f92fd1d524dae4ed2ecaaab20d, type: 3}
   m_Name: Apothecary Data
   m_EditorClassIdentifier: 
+  pointsCost: 60
   physicalCharacter: {fileID: 3555823683757961821, guid: 468946791af016c44af13fbdd096a65a, type: 3}
   speed: 4
   movement: 7
@@ -20,9 +21,10 @@ MonoBehaviour:
   ranged: 6
   melee: 6
   attacks: 3
-  equipedWeapons:
+  weaponOptions:
   - {fileID: 11400000, guid: a468d40f553a91b4b808e1ba225eeaa5, type: 2}
   - {fileID: 11400000, guid: f627d3d24b95b1c409f61abe9ce35313, type: 2}
   - {fileID: 11400000, guid: 3fd1e48e503ac604dadf3712057fe630, type: 2}
-  healValue: {x: 4, y: 10}
+  - {fileID: 11400000, guid: 461a13120ba3d054a9a729ffda2402de, type: 2}
+  healValue: {x: 6, y: 15}
   healCharges: 10

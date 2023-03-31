@@ -16,19 +16,17 @@ public class ArcTrooper : CharacterAttacks
     [SyncVar] [SerializeField] int storedPower;
 
     [Header("Ult")]
-    [SyncVar] [SerializeField] int ultDamage;
-    [SyncVar] [SerializeField] int ultchargeRequirement;
     [SyncVar] [SerializeField] int currentUltCharge;
 
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
     {
-        equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.equipedWeapons);
-        ArcTrooperData arcInfo = (ArcTrooperData)info;
-        ultDamage = arcInfo.ultDamage;
-        ultchargeRequirement = arcInfo.ultChargeRequirement;
+        equipedIndexes = new int[2];
+        for (int i = 0; i < equipedIndexes.Length; i++)
+        {
+            equipedIndexes[i] = selectedEquipmentIndexes[i];
+        }
         currentUltCharge = 0;
-        base.SetupCharacter(player, info);
+        base.SetupCharacter(player, info, selectedEquipmentIndexes);
     }
     [Server]
     public override void ProgressTurn()
@@ -113,27 +111,27 @@ public class ArcTrooper : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(equipedWeapons[0].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedIndexes[0]].weaponName))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[0]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedIndexes[0]]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[0].weaponName);
-                    StartCoroutine(TeslaFire(equipedWeapons[0], target));
+                    StartAction(charInfo.weaponOptions[equipedIndexes[0]].weaponName);
+                    StartCoroutine(TeslaFire(charInfo.weaponOptions[equipedIndexes[0]], target));
                 }
                 break;
             case Action.Action2:
-                if (performedActions.Contains(equipedWeapons[1].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedIndexes[1]].weaponName))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[1]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedIndexes[1]]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[1].weaponName);
-                    StartCoroutine(TeslaMelee(equipedWeapons[1], target));
+                    StartAction(charInfo.weaponOptions[equipedIndexes[1]].weaponName);
+                    StartCoroutine(TeslaMelee(charInfo.weaponOptions[equipedIndexes[1]], target));
                 }
                 break;
             case Action.Ultimate:
-                if (currentUltCharge < ultchargeRequirement)
+                if (currentUltCharge < ((ArcTrooperData)charInfo).ultChargeRequirement)
                     return;
                 StartAction();
                 List<CharacterBase> targetsInUlt = new List<CharacterBase>();
@@ -164,7 +162,7 @@ public class ArcTrooper : CharacterAttacks
                     }
                     if (hasLos)
                     {
-                        character.TakeDamage(ultDamage, true, out int damageDealt, out bool kilingBlow);
+                        character.TakeDamage(((ArcTrooperData)charInfo).ultDamage, true, out int damageDealt, out bool kilingBlow);
                         totalUltDamage += damageDealt;
                         if (kilingBlow)
                             hasKilled = true;
@@ -246,7 +244,7 @@ public class ArcTrooper : CharacterAttacks
             int hitRoll = Random.Range(0, 10);
             int damageDealt = 0;
             bool killingBlow = false;
-            if (hitRoll < rangedSkill - target.Dodge)
+            if (hitRoll < rangedModifier - target.Dodge)
             {
                 report.attacksHit++;
                 target.TakeDamage(weapon.damage, true, out damageDealt, out killingBlow);
@@ -259,7 +257,7 @@ public class ArcTrooper : CharacterAttacks
             else if (LuckyRangedAttack())
             {
                 hitRoll = Random.Range(0, 10);
-                if (hitRoll < rangedSkill - target.Dodge)
+                if (hitRoll < rangedModifier - target.Dodge)
                 {
                     report.attacksHit++;
                     target.TakeDamage(weapon.damage, true, out damageDealt, out killingBlow);

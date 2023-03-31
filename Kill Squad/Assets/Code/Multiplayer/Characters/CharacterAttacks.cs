@@ -12,7 +12,7 @@ using System.Collections;
 
 public class CharacterAttacks : CharacterMovement
 {
-    public SyncList<ScriptableWeapon> equipedWeapons = new SyncList<ScriptableWeapon>();
+    [SyncVar] [SerializeField] protected int[] equipedIndexes;
     [SerializeField] private TMPro.TextMeshProUGUI[] equipmentSlots;
 
 
@@ -20,7 +20,7 @@ public class CharacterAttacks : CharacterMovement
     {
         for (int i = 0; i < equipmentSlots.Length; i++)
         {
-            equipmentSlots[i].text = equipedWeapons[i].weaponName;
+            equipmentSlots[i].text = charInfo.weaponOptions[equipedIndexes[i]].weaponName;
         }
     }
     [Server] protected override void OnSelectAction()
@@ -28,30 +28,30 @@ public class CharacterAttacks : CharacterMovement
         switch (selectedAction)
         {
             case Action.Action1:
-                if (equipedWeapons.Count >= 1)
+                if (equipedIndexes.Length >= 1)
                 {
-                    if (equipedWeapons[0].type == WeaponType.Melee || equipedWeapons[0].type == WeaponType.Heavy || equipedWeapons[0].type == WeaponType.Swift)
-                        GetMeleeVisuals(equipedWeapons[0].range, true);
+                    if (charInfo.weaponOptions[equipedIndexes[0]].type == WeaponType.Melee || charInfo.weaponOptions[equipedIndexes[0]].type == WeaponType.Heavy || charInfo.weaponOptions[equipedIndexes[0]].type == WeaponType.Swift)
+                        GetMeleeVisuals(charInfo.weaponOptions[equipedIndexes[0]].range, true);
                     else
-                        GetRangeVisuals(equipedWeapons[0].range, true);
+                        GetRangeVisuals(charInfo.weaponOptions[equipedIndexes[0]].range, true);
                 }
                 break;
             case Action.Action2:
-                if (equipedWeapons.Count >= 2)
+                if (equipedIndexes.Length >= 2)
                 {
-                    if (equipedWeapons[1].type == WeaponType.Melee || equipedWeapons[1].type == WeaponType.Heavy || equipedWeapons[1].type == WeaponType.Swift)
-                        GetMeleeVisuals(equipedWeapons[1].range, true);
+                    if (charInfo.weaponOptions[equipedIndexes[1]].type == WeaponType.Melee || charInfo.weaponOptions[equipedIndexes[1]].type == WeaponType.Heavy || charInfo.weaponOptions[equipedIndexes[1]].type == WeaponType.Swift)
+                        GetMeleeVisuals(charInfo.weaponOptions[equipedIndexes[1]].range, true);
                     else
-                        GetRangeVisuals(equipedWeapons[1].range, true);
+                        GetRangeVisuals(charInfo.weaponOptions[equipedIndexes[1]].range, true);
                 }
                 break;
             case Action.Action3:
-                if (equipedWeapons.Count >= 3)
+                if (equipedIndexes.Length >= 3)
                 {
-                    if (equipedWeapons[2].type == WeaponType.Melee || equipedWeapons[2].type == WeaponType.Heavy || equipedWeapons[2].type == WeaponType.Swift)
-                        GetMeleeVisuals(equipedWeapons[2].range, true);
+                    if (charInfo.weaponOptions[equipedIndexes[2]].type == WeaponType.Melee || charInfo.weaponOptions[equipedIndexes[2]].type == WeaponType.Heavy || charInfo.weaponOptions[equipedIndexes[2]].type == WeaponType.Swift)
+                        GetMeleeVisuals(charInfo.weaponOptions[equipedIndexes[2]].range, true);
                     else
-                    GetRangeVisuals(equipedWeapons[2].range, true);
+                    GetRangeVisuals(charInfo.weaponOptions[equipedIndexes[2]].range, true);
                 }
                 break;
             default:

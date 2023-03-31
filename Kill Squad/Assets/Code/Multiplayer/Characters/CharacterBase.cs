@@ -12,16 +12,16 @@ using UnityEngine.UI;
 
 public class CharacterBase : NetworkBehaviour
 {
+    [SyncVar] [SerializeField] protected CharacterInfoBase charInfo;
     [Header("Stats")]
-    [SyncVar] [SerializeField] protected int turnSpeed;
-    [SyncVar] [SerializeField] protected int movement;
-    [SyncVar] [SerializeField] protected int maxHealth;
-    [SyncVar] [SerializeField] protected int armorSave;
-    [SyncVar] [SerializeField] protected int rangedSkill;
-    [SyncVar] [SerializeField] protected int meleeSkill;
-    [SyncVar] [SerializeField] protected int meleeAttacks;
+    [SyncVar] [SerializeField] protected int speedModifier;
+    [SyncVar] [SerializeField] protected int movementModifier;
+    [SyncVar] [SerializeField] protected int armorModifier;
+    [SyncVar] [SerializeField] protected int rangedModifier;
+    [SyncVar] [SerializeField] protected int meleeModifier;
+    [SyncVar] [SerializeField] protected int attacksModifier;
     [SyncVar] [SerializeField] protected float turnProgress = 0;
-    [SyncVar] protected int currentHealth;
+    [SyncVar] [SerializeField] protected int currentHealth;
 
     [Header("Specialized Stats")]
     [SyncVar] [SerializeField] protected int dodgeChance;
@@ -56,16 +56,16 @@ public class CharacterBase : NetworkBehaviour
 
 
     #region Getters/Setters
-    public int Speed { get { return turnSpeed; } protected set { turnSpeed = value; } }
-    public int Movement { get { return movement; } protected set { movement = value; } }
-    public float Progress { get { return turnProgress; } protected set { turnProgress = value; } }
-    public int Health { get { return currentHealth; } protected set { currentHealth = value; } }
-    public int Armor { get { return armorSave; } protected set { armorSave = value; } }
-    public int Ranged { get { return rangedSkill; } protected set { rangedSkill = value; } }
-    public int Melee { get { return meleeSkill; } protected set { meleeSkill = value; } }
-    public int Attacks { get { return meleeAttacks; } protected set { meleeAttacks = value; } }
-    public int Dodge { get { return dodgeChance; } protected set { dodgeChance = value; } }
-    public int DR { get { return damageReduction; } protected set { damageReduction = value; } }
+    public int Speed { get { return speedModifier + charInfo.speed; } }
+    public int Movement { get { return movementModifier + charInfo.movement; } }
+    public float Progress { get { return turnProgress; } }
+    public int Health { get { return currentHealth; } }
+    public int Armor { get { return armorModifier + charInfo.armor; } }
+    public int Ranged { get { return rangedModifier + charInfo.ranged; } }
+    public int Melee { get { return meleeModifier + charInfo.melee; } }
+    public int Attacks { get { return attacksModifier + charInfo.attacks; } }
+    public int Dodge { get { return dodgeChance; } }
+    public int DR { get { return damageReduction; } }
     public InGamePlayer Owner { get { return owner; } }
     public bool CanAct { get { return canAct; } }
     public int RemainingActions { get { return remainingActions; } set { remainingActions = value; } }
@@ -165,17 +165,11 @@ public class CharacterBase : NetworkBehaviour
 
     #endregion
 
-    [Server] public virtual void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    [Server] public virtual void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
     {
         owner = player;
-        turnSpeed = info.speed;
-        movement = info.movement;
-        maxHealth = info.health;
-        armorSave = info.armor;
-        rangedSkill = info.ranged;
-        meleeSkill = info.melee;
-        meleeAttacks = info.attacks;
-        currentHealth = maxHealth;
+        charInfo = info;
+        currentHealth = info.health;
         TurnTracker.instance.characters.Add(this);
         if (armorLuck != LuckyRate.Never)
             luckyArmor = true;
@@ -190,6 +184,8 @@ public class CharacterBase : NetworkBehaviour
         turnProgress += Speed / (25f + Speed);
         if (armorLuck == LuckyRate.First)
             luckyArmor = true;
+        if (rangedLuck == LuckyRate.First)
+            luckyShot = true;
     }
     [Server] public virtual void AddTurn()
     {
@@ -217,7 +213,7 @@ public class CharacterBase : NetworkBehaviour
         if (!canAct)
             return;
         canAct = false;
-        Progress -= 1;
+        turnProgress -= 1;
         ClearRangeVisuals();
         CheckBuffStatus();
         StartCoroutine(TurnTracker.instance.ProgressTurns());
@@ -249,7 +245,7 @@ public class CharacterBase : NetworkBehaviour
             EndTurn();
             return;
         }
-        GetRangeVisuals(movement, false);
+        GetRangeVisuals(movementModifier, false);
     }
     [Server] protected void StartAction(int actionCost = 1, string performedAction = null)
     {
@@ -292,17 +288,15 @@ public class CharacterBase : NetworkBehaviour
         critConfirm = false;
         damageDealt = 0;
         killingBlow = false;
-        if (armorCheck < armorSave + pen)
+        if (armorCheck < Armor + pen)
         {
             wound = false;
             return;
         }
         else if (luckyArmor)
         {
-            if (armorLuck == LuckyRate.First)
-                luckyArmor = false;
             armorCheck = Random.Range(0, 10);
-            if (armorCheck < armorSave + pen)
+            if (armorCheck < armorModifier + pen)
             {
                 wound = false;
                 return;
@@ -353,15 +347,15 @@ public class CharacterBase : NetworkBehaviour
     }
     [Server] public void GetHealed(int healValue, out int healingDone)
     {
-        healingDone = Mathf.Min(maxHealth - currentHealth, healValue);
-        currentHealth = Mathf.Min(currentHealth + healValue, maxHealth);
+        healingDone = Mathf.Min(charInfo.health - currentHealth, healValue);
+        currentHealth = Mathf.Min(currentHealth + healValue, charInfo.health);
         UpdateHpBar();
     }
 
     [ClientRpc] private void UpdateHpBar()
     {
+        hpSlider.maxValue = charInfo.health;
         hpSlider.value = currentHealth;
-        hpSlider.maxValue = maxHealth;
         if (isOwned)
             hpSlider.fillRect.GetComponent<Image>().color = Color.green;
         else
@@ -370,7 +364,7 @@ public class CharacterBase : NetworkBehaviour
 
     [Server] public void GetRessurected()
     {
-        currentHealth = (int)(maxHealth * 0.3f);
+        currentHealth = (int)(charInfo.health * 0.3f);
         TurnTracker.instance.characters.Add(this);
         TurnTracker.instance.deadCharacters.Remove(this);
         hasKilled = false;
@@ -425,10 +419,10 @@ public class CharacterBase : NetworkBehaviour
                 apBoost += buff.Ammount;
                 break;
             case StatChange.Armor:
-                armorSave += buff.Ammount;
+                armorModifier += buff.Ammount;
                 break;
             case StatChange.Attacks:
-                meleeAttacks += buff.Ammount;
+                attacksModifier += buff.Ammount;
                 break;
             case StatChange.Crit:
                 critBoost += buff.Ammount;
@@ -443,16 +437,16 @@ public class CharacterBase : NetworkBehaviour
                 damageReduction += buff.Ammount;
                 break;
             case StatChange.Melee:
-                meleeSkill += buff.Ammount;
+                meleeModifier += buff.Ammount;
                 break;
             case StatChange.Movement:
-                movement += buff.Ammount;
+                movementModifier += buff.Ammount;
                 break;
             case StatChange.Ranged:
-                rangedSkill += buff.Ammount;
+                rangedModifier += buff.Ammount;
                 break;
             case StatChange.Speed:
-                turnSpeed += buff.Ammount;
+                speedModifier += buff.Ammount;
                 break;
             default:
                 Debug.LogError("Failed to implement (de)buff");
@@ -473,10 +467,10 @@ public class CharacterBase : NetworkBehaviour
                         apBoost -= buffs[i].Ammount;
                         break;
                     case StatChange.Armor:
-                        armorSave -= buffs[i].Ammount;
+                        armorModifier -= buffs[i].Ammount;
                         break;
                     case StatChange.Attacks:
-                        meleeAttacks -= buffs[i].Ammount;
+                        attacksModifier -= buffs[i].Ammount;
                         break;
                     case StatChange.Crit:
                         critBoost -= buffs[i].Ammount;
@@ -491,16 +485,16 @@ public class CharacterBase : NetworkBehaviour
                         damageReduction -= buffs[i].Ammount;
                         break;
                     case StatChange.Melee:
-                        meleeSkill -= buffs[i].Ammount;
+                        meleeModifier -= buffs[i].Ammount;
                         break;
                     case StatChange.Movement:
-                        movement -= buffs[i].Ammount;
+                        movementModifier -= buffs[i].Ammount;
                         break;
                     case StatChange.Ranged:
-                        rangedSkill -= buffs[i].Ammount;
+                        rangedModifier -= buffs[i].Ammount;
                         break;
                     case StatChange.Speed:
-                        turnSpeed -= buffs[i].Ammount;
+                        speedModifier -= buffs[i].Ammount;
                         break;
                     default:
                         Debug.LogError("Failed to disable (de)buff");
