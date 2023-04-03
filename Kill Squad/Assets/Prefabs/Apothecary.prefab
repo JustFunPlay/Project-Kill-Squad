@@ -1233,14 +1233,15 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  turnSpeed: 0
-  movement: 0
-  maxHealth: 0
-  armorSave: 0
-  rangedSkill: 0
-  meleeSkill: 0
-  meleeAttacks: 0
+  charInfo: {fileID: 11400000, guid: c2abe5e3aedb22849bb42fa39500cfa9, type: 2}
+  speedModifier: 0
+  movementModifier: 0
+  armorModifier: 0
+  rangedModifier: 0
+  meleeModifier: 0
+  attacksModifier: 0
   turnProgress: 0
+  currentHealth: 0
   dodgeChance: 0
   damageReduction: 0
   armorLuck: 0
@@ -1274,7 +1275,6 @@ MonoBehaviour:
   - {fileID: 6904018737663950813}
   - {fileID: 3076121866678325243}
   - {fileID: 9220107573431056741}
-  healRange: {x: 0, y: 0}
   remainingHealCharges: 0
   chargeCounter: {fileID: 1555180815494876297}
   ultCharged: 0

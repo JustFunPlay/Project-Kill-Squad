@@ -906,14 +906,15 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  turnSpeed: 0
-  movement: 0
-  maxHealth: 0
-  armorSave: 0
-  rangedSkill: 0
-  meleeSkill: 0
-  meleeAttacks: 0
+  charInfo: {fileID: 11400000, guid: 8a0bd2f93eb85834f875842da1ec4e49, type: 2}
+  speedModifier: 0
+  movementModifier: 0
+  armorModifier: 0
+  rangedModifier: 0
+  meleeModifier: 0
+  attacksModifier: 0
   turnProgress: 0
+  currentHealth: 0
   dodgeChance: 1
   damageReduction: 0
   armorLuck: 0

@@ -168,7 +168,7 @@ public class CharacterBase : NetworkBehaviour
     [Server] public virtual void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
     {
         owner = player;
-        charInfo = info;
+        //charInfo = info;
         currentHealth = info.health;
         TurnTracker.instance.characters.Add(this);
         if (armorLuck != LuckyRate.Never)
