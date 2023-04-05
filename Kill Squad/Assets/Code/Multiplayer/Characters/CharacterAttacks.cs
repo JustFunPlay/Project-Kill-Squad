@@ -12,7 +12,8 @@ using System.Collections;
 
 public class CharacterAttacks : CharacterMovement
 {
-    public SyncList<int> equipedIndexes = new SyncList<int>();
+    //public SyncList<int> equipedIndexes = new SyncList<int>();
+    protected SyncList<int> equipedIndexes = new SyncList<int>();
     [SerializeField] private TMPro.TextMeshProUGUI[] equipmentSlots;
 
 

@@ -23,10 +23,11 @@ public class Infiltrator : CharacterAttacks
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
     {
         //equipedIndexes.AddRange(new List<int>(2));
-        equipedIndexes = new SyncList<int>(new List<int>(2));
-        for (int i = 0; i < equipedIndexes.Count; i++)
+        //equipedIndexes = new SyncList<int>(new List<int>(2));
+        equipedIndexes.Clear();
+        for (int i = 0; i < 2; i++)
         {
-            equipedIndexes[i] = selectedEquipmentIndexes[i];
+            equipedIndexes.Add(selectedEquipmentIndexes[i]);
         }
         canGoInvisible = true;
         Invoke("ShowUltCharge", 0.5f);

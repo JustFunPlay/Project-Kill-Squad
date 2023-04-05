@@ -55,7 +55,7 @@ public class InGamePlayer : NetworkBehaviour
     /// </summary>
     public override void OnStartLocalPlayer()
     {
-        Invoke("CmdSetUpSquad", 0.1f);
+        Invoke("GetSquadForServer", 0.1f);
         CmdSetName();
     }
 
@@ -80,9 +80,18 @@ public class InGamePlayer : NetworkBehaviour
 
     #endregion
 
-    [Command] private void CmdSetUpSquad()
+    [Client] private void GetSquadForServer()
     {
-        GridCombatSystem.instance.SetupTeam(PersistantInfo.Instance.squad, this);
+        List<CharacterLoadout> playerSquad = new List<CharacterLoadout>();
+        for (int i = 0; i < PersistantInfo.Instance.squad.Count; i++)
+        {
+            playerSquad.Add(PersistantInfo.Instance.squad[i]);
+        }
+        CmdSetUpSquad(playerSquad);
+    }
+    [Command] private void CmdSetUpSquad(List<CharacterLoadout> squad)
+    {
+        GridCombatSystem.instance.SetupTeam(squad, this);
     }
     [Command] private void CmdSetName()
     {

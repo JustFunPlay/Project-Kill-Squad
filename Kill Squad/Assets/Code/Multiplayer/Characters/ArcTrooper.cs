@@ -20,11 +20,12 @@ public class ArcTrooper : CharacterAttacks
 
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
     {
-        equipedIndexes = new SyncList<int>(new List<int>(2));
+        //equipedIndexes = new SyncList<int>(new List<int>(2));
         //equipedIndexes.AddRange(new List<int>(2));
-        for (int i = 0; i < equipedIndexes.Count; i++)
+        equipedIndexes.Clear();
+        for (int i = 0; i < 2; i++)
         {
-            equipedIndexes[i] = selectedEquipmentIndexes[i];
+            equipedIndexes.Add(selectedEquipmentIndexes[i]);
         }
         currentUltCharge = 0;
         base.SetupCharacter(player, info, selectedEquipmentIndexes);
