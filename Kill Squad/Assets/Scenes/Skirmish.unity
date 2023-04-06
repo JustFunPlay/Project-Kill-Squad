@@ -1027,6 +1027,13 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 64
+  characterBodies:
+  - {fileID: 3555823683757961821, guid: 468946791af016c44af13fbdd096a65a, type: 3}
+  - {fileID: 4953558494458179774, guid: 3fa209528caaa6d4e943e50323722c7e, type: 3}
+  - {fileID: 3423450269583213764, guid: 526152e1ca2c8f5479fac8b42d9b7e05, type: 3}
+  - {fileID: 7725001508692832866, guid: b968e2042987e474a84ab7796df03486, type: 3}
+  - {fileID: 8827378593658907782, guid: f4274d7171fce3647bb7fdcc803afa9a, type: 3}
+  - {fileID: 387466440081277886, guid: 134ccead41d4d624c9c476381ad61738, type: 3}
 --- !u!114 &1954461991
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -22,7 +22,7 @@ public class Commando : CharacterAttacks
     [SyncVar] [SerializeField] private int damageDealt;
     [SerializeField] private TMPro.TextMeshProUGUI ultProgress;
 
-    [Server] public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
+    [Server] public override void SetupCharacter(InGamePlayer player, List<int> selectedEquipmentIndexes)
     {
         equipedIndexes.Clear();
         //equipedIndexes.AddRange(new List<int>(3));
@@ -32,11 +32,11 @@ public class Commando : CharacterAttacks
             equipedIndexes.Add(selectedEquipmentIndexes[i]);
         }
         grenadeIndex = selectedEquipmentIndexes[3];
-        remainingGrenades = ((CommandoData)info).grenades[0].increasedCount * selectedEquipmentIndexes[4];
+        remainingGrenades = ((CommandoData)charInfo).grenades[0].increasedCount * selectedEquipmentIndexes[4];
         damageDealt = 0;
         Invoke("UpdateUltProgress", 0.5f);
         Invoke("UpdateGrenadeCount", 0.5f);
-        base.SetupCharacter(player, info, selectedEquipmentIndexes);
+        base.SetupCharacter(player, selectedEquipmentIndexes);
     }
 
     [ClientRpc] protected override void SetEquipmentNames()

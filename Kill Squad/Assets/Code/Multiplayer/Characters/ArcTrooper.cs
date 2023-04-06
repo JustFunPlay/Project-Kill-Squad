@@ -18,7 +18,7 @@ public class ArcTrooper : CharacterAttacks
     [Header("Ult")]
     [SyncVar] [SerializeField] int currentUltCharge;
 
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
+    public override void SetupCharacter(InGamePlayer player, List<int> selectedEquipmentIndexes)
     {
         //equipedIndexes = new SyncList<int>(new List<int>(2));
         //equipedIndexes.AddRange(new List<int>(2));
@@ -28,7 +28,7 @@ public class ArcTrooper : CharacterAttacks
             equipedIndexes.Add(selectedEquipmentIndexes[i]);
         }
         currentUltCharge = 0;
-        base.SetupCharacter(player, info, selectedEquipmentIndexes);
+        base.SetupCharacter(player, selectedEquipmentIndexes);
     }
     [Server]
     public override void ProgressTurn()

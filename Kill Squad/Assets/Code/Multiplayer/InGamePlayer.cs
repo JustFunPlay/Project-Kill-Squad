@@ -82,16 +82,21 @@ public class InGamePlayer : NetworkBehaviour
 
     [Client] private void GetSquadForServer()
     {
-        List<CharacterLoadout> playerSquad = new List<CharacterLoadout>();
+        //List<CharacterLoadout> playerSquad = new List<CharacterLoadout>();
+        //for (int i = 0; i < PersistantInfo.Instance.squad.Count; i++)
+        //{
+        //    playerSquad.Add(PersistantInfo.Instance.squad[i]);
+        //}
+        //CmdSetUpSquad(playerSquad);
+        CmdSetUpSquad();
+    }
+    //[Command] private void CmdSetUpSquad(List<CharacterLoadout> squad)
+    [Command] private void CmdSetUpSquad()
+    {
         for (int i = 0; i < PersistantInfo.Instance.squad.Count; i++)
         {
-            playerSquad.Add(PersistantInfo.Instance.squad[i]);
+            GridCombatSystem.instance.SetupCharacter(PersistantInfo.Instance.squad[i].Character, PersistantInfo.Instance.squad[i].SelectedLoadoutOptions, this);
         }
-        CmdSetUpSquad(playerSquad);
-    }
-    [Command] private void CmdSetUpSquad(List<CharacterLoadout> squad)
-    {
-        GridCombatSystem.instance.SetupTeam(squad, this);
     }
     [Command] private void CmdSetName()
     {

@@ -19,6 +19,10 @@ public class GridCombatSystem : Pathfinding
     [SerializeField] private Vector2 attackerGridSpawn;
     [SerializeField] private Vector2 defenderGridSpawn;
     public LayerMask obstacleLayer;
+    private SyncList<InGamePlayer> players = new SyncList<InGamePlayer>();
+    [SyncVar] int p1i;
+    [SyncVar] int p2i;
+    [SerializeField] List<CharacterBase> characterBodies;
 
     #region Start & Stop Callbacks
 
@@ -238,25 +242,44 @@ public class GridCombatSystem : Pathfinding
     }
 
     [Server]
-    public void SetupTeam(List<CharacterLoadout> squad, InGamePlayer player)
+    public void SetupCharacter(CharacterType character, List<int> loadout, InGamePlayer player)
     {
-        if (!nextTeam)
+        if (!players.Contains(player))
+            players.Add(player);
+        if (players[0] == player)
         {
-            for (int i = 0; i < squad.Count; i++)
-            {
-                CharacterBase character = Instantiate(squad[i].Character.physicalCharacter, grid.GetWorldPosition((int)attackerGridSpawn.x + i, (int)attackerGridSpawn.y), Quaternion.identity);
-                NetworkServer.Spawn(character.gameObject, player.gameObject);
-                character.SetupCharacter(player, squad[i].Character, squad[i].SelectedLoadoutOptions);
-            }
-            nextTeam = true;
-            return;
+            CharacterBase physicalCharacter = Instantiate(GetCharacterBody(character), grid.GetWorldPosition((int)attackerGridSpawn.x + p1i, (int)attackerGridSpawn.y), Quaternion.identity);
+            NetworkServer.Spawn(physicalCharacter.gameObject, player.gameObject);
+            physicalCharacter.SetupCharacter(player, loadout);
+            p1i++;
         }
-        for (int i = 0; i < squad.Count; i++)
+        else
         {
-            CharacterBase character = Instantiate(squad[i].Character.physicalCharacter, grid.GetWorldPosition((int)defenderGridSpawn.x - i, (int)defenderGridSpawn.y), Quaternion.identity);
-            NetworkServer.Spawn(character.gameObject, player.gameObject);
-            character.SetupCharacter(player, squad[i].Character, squad[i].SelectedLoadoutOptions);
+            CharacterBase physicalCharacter = Instantiate(GetCharacterBody(character), grid.GetWorldPosition((int)defenderGridSpawn.x - p2i, (int)defenderGridSpawn.y), Quaternion.identity);
+            NetworkServer.Spawn(physicalCharacter.gameObject, player.gameObject);
+            physicalCharacter.SetupCharacter(player, loadout);
+            p2i++;
         }
+    }
+    private CharacterBase GetCharacterBody(CharacterType type)
+    {
+        switch (type)
+        {
+            case CharacterType.Apothecary:
+                return characterBodies[0];
+            case CharacterType.ArcTrooper:
+                return characterBodies[1];
+            case CharacterType.Commando:
+                return characterBodies[2];
+            case CharacterType.Hitman:
+                return characterBodies[3];
+            case CharacterType.Infiltrator:
+                return characterBodies[4];
+            case CharacterType.Seer:
+                return characterBodies[5];
+        }
+        Debug.LogError($"Unregistered charater type: {type}");
+        return null;
     }
 }
 

@@ -165,11 +165,11 @@ public class CharacterBase : NetworkBehaviour
 
     #endregion
 
-    [Server] public virtual void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
+    [Server] public virtual void SetupCharacter(InGamePlayer player, List<int> selectedEquipmentIndexes)
     {
         owner = player;
         //charInfo = info;
-        currentHealth = info.health;
+        currentHealth = charInfo.health;
         TurnTracker.instance.characters.Add(this);
         if (armorLuck != LuckyRate.Never)
             luckyArmor = true;

@@ -29,7 +29,7 @@ public class Seer : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ultCounter;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
+    public override void SetupCharacter(InGamePlayer player, List<int> selectedEquipmentIndexes)
     {
         //equipedIndexes = new SyncList<int>(new List<int>(2));
         //equipedIndexes.AddRange(new List<int>(2));
@@ -42,11 +42,11 @@ public class Seer : CharacterAttacks
         discipline2 = selectedEquipmentIndexes[3];
         if (selectedEquipmentIndexes[4] == 1)
             hasRunicArmor = true;
-        currentPsychicPoints = ((SeerData)info).psychicPoints;
+        currentPsychicPoints = ((SeerData)charInfo).psychicPoints;
         pointsSpent = 0;
         Invoke("UpdatePsychicPoints", 0.5f);
         Invoke("UpdateUltPoints", 0.5f);
-        base.SetupCharacter(player, info, selectedEquipmentIndexes);
+        base.SetupCharacter(player, selectedEquipmentIndexes);
     }
     [ClientRpc]
     protected override void SetEquipmentNames()

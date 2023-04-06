@@ -20,7 +20,7 @@ public class Apothecary : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ultChargeText;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
+    public override void SetupCharacter(InGamePlayer player, List<int> selectedEquipmentIndexes)
     {
         //equipedIndexes.AddRange(new List<int>(3));
         //equipedIndexes = new SyncList<int>(new List<int>(3));
@@ -29,10 +29,10 @@ public class Apothecary : CharacterAttacks
         {
             equipedIndexes.Add(selectedEquipmentIndexes[i]);
         }
-        remainingHealCharges = ((ApothecaryData)info).healCharges;
+        remainingHealCharges = ((ApothecaryData)charInfo).healCharges;
         Invoke("UpdateHealCharges", 0.5f);
         Invoke("ShowUltCharge", 0.5f);
-        base.SetupCharacter(player, info, selectedEquipmentIndexes);
+        base.SetupCharacter(player, selectedEquipmentIndexes);
     }
     [Server]
     protected override void ReportForCombat(CombatReport report)

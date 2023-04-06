@@ -17,7 +17,7 @@ public class Hitman : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ultProgress;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
+    public override void SetupCharacter(InGamePlayer player, List<int> selectedEquipmentIndexes)
     {
         //equipedIndexes = new SyncList<int>(new List<int>(3));
         //equipedIndexes.AddRange(new List<int>(3));
@@ -28,7 +28,7 @@ public class Hitman : CharacterAttacks
         }
         currentCrits = 0;
         UpdateUltProgress();
-        base.SetupCharacter(player, info, selectedEquipmentIndexes);
+        base.SetupCharacter(player, selectedEquipmentIndexes);
     }
 
     [Server]
