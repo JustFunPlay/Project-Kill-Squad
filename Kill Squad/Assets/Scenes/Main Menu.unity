@@ -1326,7 +1326,7 @@ MonoBehaviour:
   - Character: 4
     SelectedLoadoutOptions: 0000000001000000
   - Character: 5
-    SelectedLoadoutOptions: 0000000001000000000000000500000007000000
+    SelectedLoadoutOptions: 0000000001000000000000000600000007000000
 --- !u!4 &1037171855
 Transform:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ using System.Collections;
 */
 
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
-[RequireComponent(typeof(NetworkTransform))]
+//[RequireComponent(typeof(NetworkTransform))]
 public class CharacterMovement : CharacterBase
 {
 

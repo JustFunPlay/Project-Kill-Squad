@@ -1946,8 +1946,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6761997002819179198}
   - component: {fileID: 8348320944902784930}
-  - component: {fileID: 6922075500727271450}
   - component: {fileID: 7725001508692832866}
+  - component: {fileID: 919532910296618107}
   m_Layer: 0
   m_Name: Hitman
   m_TagString: Untagged
@@ -1991,34 +1991,6 @@ MonoBehaviour:
   serverOnly: 0
   visible: 0
   hasSpawned: 0
---- !u!114 &6922075500727271450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8612920624829106673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  target: {fileID: 6761997002819179198}
-  clientAuthority: 0
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  onlySyncOnChange: 1
-  bufferResetMultiplier: 5
-  positionSensitivity: 0.01
-  rotationSensitivity: 0.01
-  scaleSensitivity: 0.01
 --- !u!114 &7725001508692832866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2043,6 +2015,7 @@ MonoBehaviour:
   attacksModifier: 0
   turnProgress: 0
   currentHealth: 0
+  maxHealth: 0
   dodgeChance: 0
   damageReduction: 0
   armorLuck: 0
@@ -2075,6 +2048,35 @@ MonoBehaviour:
   - {fileID: 3199101894290400968}
   currentCrits: 0
   ultProgress: {fileID: 7817128892290128816}
+--- !u!114 &919532910296618107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8612920624829106673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 6761997002819179198}
+  clientAuthority: 0
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChange: 1
+  onlySyncOnChangeCorrectionMultiplier: 2
+  rotationSensitivity: 0.01
+  compressRotation: 0
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &8642851744295655911
 GameObject:
   m_ObjectHideFlags: 0
