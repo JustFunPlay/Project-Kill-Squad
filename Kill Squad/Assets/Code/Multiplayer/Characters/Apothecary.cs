@@ -22,9 +22,8 @@ public class Apothecary : CharacterAttacks
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
     {
-        //equipedIndexes.AddRange(new List<int>(3));
-        equipedIndexes = new SyncList<int>(new List<int>(3));
-        for (int i = 0; i < equipedIndexes.Count; i++)
+        equipedIndexes = new int[2];
+        for (int i = 0; i < equipedIndexes.Length; i++)
         {
             equipedIndexes[i] = selectedEquipmentIndexes[i];
         }

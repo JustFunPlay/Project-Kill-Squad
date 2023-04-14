@@ -12,7 +12,7 @@ using System.Collections;
 
 public class CharacterAttacks : CharacterMovement
 {
-    public SyncList<int> equipedIndexes = new SyncList<int>();
+    [SyncVar] [SerializeField] protected int[] equipedIndexes;
     [SerializeField] private TMPro.TextMeshProUGUI[] equipmentSlots;
 
 
@@ -28,7 +28,7 @@ public class CharacterAttacks : CharacterMovement
         switch (selectedAction)
         {
             case Action.Action1:
-                if (equipedIndexes.Count >= 1)
+                if (equipedIndexes.Length >= 1)
                 {
                     if (charInfo.weaponOptions[equipedIndexes[0]].type == WeaponType.Melee || charInfo.weaponOptions[equipedIndexes[0]].type == WeaponType.Heavy || charInfo.weaponOptions[equipedIndexes[0]].type == WeaponType.Swift)
                         GetMeleeVisuals(charInfo.weaponOptions[equipedIndexes[0]].range, true);
@@ -37,7 +37,7 @@ public class CharacterAttacks : CharacterMovement
                 }
                 break;
             case Action.Action2:
-                if (equipedIndexes.Count >= 2)
+                if (equipedIndexes.Length >= 2)
                 {
                     if (charInfo.weaponOptions[equipedIndexes[1]].type == WeaponType.Melee || charInfo.weaponOptions[equipedIndexes[1]].type == WeaponType.Heavy || charInfo.weaponOptions[equipedIndexes[1]].type == WeaponType.Swift)
                         GetMeleeVisuals(charInfo.weaponOptions[equipedIndexes[1]].range, true);
@@ -46,7 +46,7 @@ public class CharacterAttacks : CharacterMovement
                 }
                 break;
             case Action.Action3:
-                if (equipedIndexes.Count >= 3)
+                if (equipedIndexes.Length >= 3)
                 {
                     if (charInfo.weaponOptions[equipedIndexes[2]].type == WeaponType.Melee || charInfo.weaponOptions[equipedIndexes[2]].type == WeaponType.Heavy || charInfo.weaponOptions[equipedIndexes[2]].type == WeaponType.Swift)
                         GetMeleeVisuals(charInfo.weaponOptions[equipedIndexes[2]].range, true);

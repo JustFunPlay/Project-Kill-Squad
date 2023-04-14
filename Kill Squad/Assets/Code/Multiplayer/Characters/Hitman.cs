@@ -19,9 +19,8 @@ public class Hitman : CharacterAttacks
     [Server]
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
     {
-        equipedIndexes = new SyncList<int>(new List<int>(3));
-        //equipedIndexes.AddRange(new List<int>(3));
-        for (int i = 0; i < equipedIndexes.Count; i++)
+        equipedIndexes = new int[3];
+        for (int i = 0; i < equipedIndexes.Length; i++)
         {
             equipedIndexes[i] = selectedEquipmentIndexes[i];
         }

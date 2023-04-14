@@ -1314,19 +1314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef3080a9c37cd5d4097c29fb1974652b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  squad:
-  - Character: {fileID: 11400000, guid: c2abe5e3aedb22849bb42fa39500cfa9, type: 2}
-    SelectedLoadoutOptions: 000000000100000002000000
-  - Character: {fileID: 11400000, guid: 850f783e327f6864981894b94d3fa1d9, type: 2}
-    SelectedLoadoutOptions: 0000000002000000
-  - Character: {fileID: 11400000, guid: 185129c466d08324ab93fb93c7096267, type: 2}
-    SelectedLoadoutOptions: 0000000002000000040000000000000001000000
-  - Character: {fileID: 11400000, guid: 1f9bc51eedb7d6345ba261dbb4b4a808, type: 2}
-    SelectedLoadoutOptions: 000000000200000003000000
-  - Character: {fileID: 11400000, guid: 8a0bd2f93eb85834f875842da1ec4e49, type: 2}
-    SelectedLoadoutOptions: 0000000001000000
-  - Character: {fileID: 11400000, guid: 3cca3d71dd3d60f48b2332497002960d, type: 2}
-    SelectedLoadoutOptions: 0000000001000000000000000500000007000000
+  squad: {fileID: 11400000, guid: 65ec0f664ecba9e419260d73a17fac19, type: 2}
 --- !u!4 &1037171855
 Transform:
   m_ObjectHideFlags: 0
@@ -1335,7 +1323,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037171853}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 724.42413, y: 229.0484, z: 2.66987}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -238,24 +238,24 @@ public class GridCombatSystem : Pathfinding
     }
 
     [Server]
-    public void SetupTeam(List<CharacterLoadout> squad, InGamePlayer player)
+    public void SetupTeam(KillSquad squad, InGamePlayer player)
     {
         if (!nextTeam)
         {
-            for (int i = 0; i < squad.Count; i++)
+            for (int i = 0; i < squad.squad.Count; i++)
             {
-                CharacterBase character = Instantiate(squad[i].Character.physicalCharacter, grid.GetWorldPosition((int)attackerGridSpawn.x + i, (int)attackerGridSpawn.y), Quaternion.identity);
+                CharacterBase character = Instantiate(squad.squad[i].physicalCharacter, grid.GetWorldPosition((int)attackerGridSpawn.x + i, (int)attackerGridSpawn.y), Quaternion.identity);
                 NetworkServer.Spawn(character.gameObject, player.gameObject);
-                character.SetupCharacter(player, squad[i].Character, squad[i].SelectedLoadoutOptions);
+                character.SetupCharacter(player, squad.squad[i]);
             }
             nextTeam = true;
             return;
         }
-        for (int i = 0; i < squad.Count; i++)
+        for (int i = 0; i < squad.squad.Count; i++)
         {
-            CharacterBase character = Instantiate(squad[i].Character.physicalCharacter, grid.GetWorldPosition((int)defenderGridSpawn.x - i, (int)defenderGridSpawn.y), Quaternion.identity);
+            CharacterBase character = Instantiate(squad.squad[i].physicalCharacter, grid.GetWorldPosition((int)defenderGridSpawn.x - i, (int)defenderGridSpawn.y), Quaternion.identity);
             NetworkServer.Spawn(character.gameObject, player.gameObject);
-            character.SetupCharacter(player, squad[i].Character, squad[i].SelectedLoadoutOptions);
+            character.SetupCharacter(player, squad.squad[i]);
         }
     }
 }

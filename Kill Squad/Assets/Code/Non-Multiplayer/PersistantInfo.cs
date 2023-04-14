@@ -5,7 +5,7 @@ using UnityEngine;
 public class PersistantInfo : MonoBehaviour
 {
     public static PersistantInfo Instance { get; private set; }
-    public List<CharacterLoadout> squad;
+    public KillSquad squad;
 
     private string playerName;
     public string PlayerName { get { return playerName; } set { playerName = value; } }
