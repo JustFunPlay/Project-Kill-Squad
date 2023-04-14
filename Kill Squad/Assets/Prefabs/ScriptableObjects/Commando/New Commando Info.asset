@@ -30,4 +30,4 @@ MonoBehaviour:
   maxUltHits: 5
   ultAp: -3
   ultDamage: 5
-  requiredDamageDealt: 0
+  requiredDamageDealt: 40

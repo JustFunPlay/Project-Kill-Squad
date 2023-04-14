@@ -39,7 +39,7 @@ public class Commando : CharacterAttacks
         ultAp = comInfo.ultAp;
         ultDamage = comInfo.ultDamage;
         requiredDamageDealt = comInfo.requiredDamageDealt;
-        damageDealt = 40;
+        damageDealt = 0;
         Invoke("UpdateUltProgress", 0.5f);
         Invoke("UpdateGrenadeCount", 0.5f);
         base.SetupCharacter(player, info);
@@ -139,7 +139,7 @@ public class Commando : CharacterAttacks
             case Action.Action1:
                 if (performedActions.Contains(equipedWeapons[0].weaponName))
                     return;
-                if (equipedWeapons[0].type == WeaponType.RapidFire && selectedVariant == ActionVar.Variant1)
+                if (equipedWeapons[0].type == WeaponType.RapidFire && selectedVariant == ActionVar.Variant1 && remainingActions >= 2)
                 {
                     target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)

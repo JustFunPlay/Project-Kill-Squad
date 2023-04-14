@@ -27,7 +27,7 @@ public class Hitman : CharacterAttacks
         ultDamage = hitInfo.ultDamage;
         requiredCrits = hitInfo.requiredCrits;
         currentCrits = 0;
-        UpdateUltProgress();
+        Invoke("UpdateUltProgress", 0.5f);
         base.SetupCharacter(player, info);
     }
 
@@ -117,7 +117,7 @@ public class Hitman : CharacterAttacks
             case Action.Action1:
                 if (performedActions.Contains(equipedWeapons[0].weaponName))
                     return;
-                if (equipedWeapons[0].type == WeaponType.Precision && selectedVariant == ActionVar.Variant1)
+                if (equipedWeapons[0].type == WeaponType.Precision && selectedVariant == ActionVar.Variant1 && remainingActions >= 2)
                 {
                     target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)

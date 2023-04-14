@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: New Infiltrator Info
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 8827378593658907782, guid: f4274d7171fce3647bb7fdcc803afa9a, type: 3}
-  speed: 8
+  speed: 9
   movement: 7
   health: 40
   armor: 5

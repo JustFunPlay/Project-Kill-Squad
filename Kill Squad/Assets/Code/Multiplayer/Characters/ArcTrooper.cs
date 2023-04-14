@@ -19,6 +19,8 @@ public class ArcTrooper : CharacterAttacks
     [SyncVar] [SerializeField] int ultDamage;
     [SyncVar] [SerializeField] int ultchargeRequirement;
     [SyncVar] [SerializeField] int currentUltCharge;
+    [SerializeField] private TMPro.TextMeshProUGUI ultCounter;
+
 
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
@@ -28,6 +30,7 @@ public class ArcTrooper : CharacterAttacks
         ultDamage = arcInfo.ultDamage;
         ultchargeRequirement = arcInfo.ultChargeRequirement;
         currentUltCharge = 0;
+        Invoke("UpdateUltPoints", 0.5f);
         base.SetupCharacter(player, info);
     }
     [Server]
@@ -136,6 +139,9 @@ public class ArcTrooper : CharacterAttacks
                 if (currentUltCharge < ultchargeRequirement)
                     return;
                 StartAction();
+                currentUltCharge = 0;
+                UpdateUltPoints();
+                ProjectEmp();
                 List<CharacterBase> targetsInUlt = new List<CharacterBase>();
                 foreach (CharacterBase character in TurnTracker.instance.characters)
                 {
@@ -164,6 +170,7 @@ public class ArcTrooper : CharacterAttacks
                     }
                     if (hasLos)
                     {
+                        DoTeslaZap(character.transform);
                         character.TakeDamage(ultDamage, true, out int damageDealt, out bool kilingBlow);
                         totalUltDamage += damageDealt;
                         if (kilingBlow)
@@ -171,8 +178,8 @@ public class ArcTrooper : CharacterAttacks
                     }
                 }
                 TeslaCharge(totalUltDamage);
-                TeslaCoilDamage();
-                ContinueTurn();
+                Invoke("TeslaCoilDamage", 0.5f);
+                Invoke("ContinueTurn", 0.5f);
                 break;
             default:
                 base.PerformAction(hit, player);
@@ -223,6 +230,7 @@ public class ArcTrooper : CharacterAttacks
                     if (!hasLos)
                         continue;
                     character.TakeDamage(1, true, out int damageDealt, out bool killingBlow);
+                    DoTeslaZap(character.transform);
                     teslaDamageDealt++;
                     if (killingBlow)
                         hasKilled = true;
@@ -232,6 +240,24 @@ public class ArcTrooper : CharacterAttacks
         Debug.Log($"Tesla coil damage: {teslaDamageDealt}");
         if (teslaDamageDealt > 0)
             TeslaCharge(teslaDamageDealt);
+    }
+    [Server]protected override void OnMoveEnd()
+    {
+        currentUltCharge++;
+        UpdateUltPoints();
+    }
+    [ClientRpc]
+    private void UpdateUltPoints()
+    {
+        ultCounter.text = $"Ult progress:\n[{Mathf.Min(currentUltCharge, ultchargeRequirement)}/{ultchargeRequirement}]";
+    }
+    [ClientRpc] private void DoTeslaZap(Transform target)
+    {
+        ParticleManager.instance.TeslaShock(transform.position, target.position);
+    }
+    [ClientRpc] private void ProjectEmp()
+    {
+        ParticleManager.instance.EMP(transform.position);
     }
 
     [Server]
@@ -253,6 +279,7 @@ public class ArcTrooper : CharacterAttacks
                 report.armorPierced++;
                 report.damageDealt += damageDealt;
                 TeslaCharge(damageDealt);
+                DoTeslaZap(target.transform);
                 if (killingBlow)
                     report.killingBlows.Add(target);
             }
@@ -264,6 +291,7 @@ public class ArcTrooper : CharacterAttacks
                     report.attacksHit++;
                     target.TakeDamage(weapon.damage, true, out damageDealt, out killingBlow);
                     TeslaCharge(damageDealt);
+                    DoTeslaZap(target.transform);
                     report.armorPierced ++;
                     report.damageDealt += damageDealt;
                     if (killingBlow)
@@ -274,7 +302,7 @@ public class ArcTrooper : CharacterAttacks
             {
                 i += 100;
             }
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.2f);
         }
         ReportForCombat(report);
     }
@@ -292,6 +320,7 @@ public class ArcTrooper : CharacterAttacks
                 target.TakeDamage(2, true, out int teslaDamage, out bool teslaKill);
                 report.damageDealt += teslaDamage;
                 TeslaCharge(teslaDamage);
+                DoTeslaZap(target.transform);
                 if (teslaKill)
                     newReport.killingBlows.Add(target);
             }

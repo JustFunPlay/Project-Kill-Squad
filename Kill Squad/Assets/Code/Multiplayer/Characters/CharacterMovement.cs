@@ -96,11 +96,17 @@ public class CharacterMovement : CharacterBase
                 path.RemoveAt(0);
         }
         GridCombatSystem.instance.grid.GetGridObject(transform.position).isOccupied = true;
+        OnMoveEnd();
         ContinueTurn();
     }
     [Server]protected override void OnSelectAction()
     {
         if (selectedAction == Action.Movement)
             GetRangeVisuals(movement, false);
+    }
+
+    [Server] protected virtual void OnMoveEnd()
+    {
+
     }
 }

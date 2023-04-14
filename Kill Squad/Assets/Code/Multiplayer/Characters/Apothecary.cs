@@ -123,7 +123,7 @@ public class Apothecary : CharacterAttacks
             case Action.Action1:
                 if (performedActions.Contains(equipedWeapons[0].weaponName))
                     return;
-                if (equipedWeapons[0].type == WeaponType.Combat && selectedVariant == ActionVar.Variant1)
+                if (equipedWeapons[0].type == WeaponType.Combat && selectedVariant == ActionVar.Variant1 && remainingActions >= 2)
                 {
                     target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)
@@ -132,7 +132,7 @@ public class Apothecary : CharacterAttacks
                         StartCoroutine(DoubleFire(equipedWeapons[0], target));
                     }
                 }
-                else if (equipedWeapons[0].type == WeaponType.Combat && selectedVariant == ActionVar.Variant2)
+                else if (equipedWeapons[0].type == WeaponType.Combat && selectedVariant == ActionVar.Variant2 && remainingActions >= 2)
                 {
                     target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)

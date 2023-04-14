@@ -20,6 +20,13 @@ public class ParticleManager : MonoBehaviour
     [SerializeField] private LineRenderer targetLine;
     [SerializeField] private Transform railRound;
 
+    [Header("Arc Trooper")]
+    [SerializeField] private LineRenderer teslaExample;
+    private List<LineRenderer> teslaLines = new List<LineRenderer>();
+    int teslaIndex;
+    [SerializeField] private Transform[] empSpheres;
+
+
     void Start()
     {
         if (instance != null)
@@ -29,6 +36,8 @@ public class ParticleManager : MonoBehaviour
         {
             bullets.Add(Instantiate(bulletExample, transform.position, Quaternion.identity, transform));
             bullets[i].SetActive(false);
+            teslaLines.Add(Instantiate(teslaExample, transform.position, Quaternion.identity, transform));
+            teslaLines[i].gameObject.SetActive(false);
         }
     }
 
@@ -99,7 +108,48 @@ public class ParticleManager : MonoBehaviour
             railRound.Translate(Vector3.forward * 10);
             yield return new WaitForSeconds(0.01f);
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         railRound.gameObject.SetActive(false);
+    }
+
+    public void TeslaShock(Vector3 origin, Vector3 target)
+    {
+        if (teslaIndex >= teslaLines.Count)
+            teslaIndex = 0;
+        origin += Vector3.up * 1.5f;
+        target += Vector3.up * 1.5f + new Vector3(Random.Range(-0.2f, 0.2f), 0, Random.Range(-0.2f, 0.2f));
+        teslaLines[teslaIndex].SetPosition(0, origin);
+        teslaLines[teslaIndex].SetPosition(1, target);
+        teslaLines[teslaIndex].gameObject.SetActive(true);
+        StartCoroutine(RemoveTeslaLine(teslaIndex));
+        teslaIndex++;
+    }
+    IEnumerator RemoveTeslaLine(int index)
+    {
+        yield return new WaitForSeconds(0.2f);
+        teslaLines[index].gameObject.SetActive(false);
+    }
+    public void EMP(Vector3 origin)
+    {
+        for (int i = 0; i < empSpheres.Length; i++)
+        {
+            empSpheres[i].transform.position = origin + Vector3.up * 1.5f;
+            empSpheres[i].localScale = Vector3.one;
+            empSpheres[i].gameObject.SetActive(true);
+            StartCoroutine(EmpFired(i));
+        }
+    }
+
+    IEnumerator EmpFired(int index)
+    {
+        yield return new WaitForSeconds(0.06f * index);
+        for (int i = 0; i < 22; i++)
+        {
+            empSpheres[index].localScale += new Vector3(0.5f, 0.15f, 0.5f);
+            yield return new WaitForSeconds(0.01f);
+
+        }
+        yield return new WaitForSeconds(0.03f);
+        empSpheres[index].gameObject.SetActive(false);
     }
 }

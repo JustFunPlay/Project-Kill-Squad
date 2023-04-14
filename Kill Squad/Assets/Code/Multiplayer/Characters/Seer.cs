@@ -54,12 +54,12 @@ public class Seer : CharacterAttacks
     [ClientRpc]
     protected override void SetEquipmentNames()
     {
-        disipline1Text[0].text = discipline1.power1Name;
-        disipline1Text[1].text = discipline1.power2Name;
-        disipline1Text[2].text = discipline1.power3Name;
-        disipline2Text[0].text = discipline2.power1Name;
-        disipline2Text[1].text = discipline2.power2Name;
-        disipline2Text[2].text = discipline2.power3Name;
+        disipline1Text[0].text = $"{discipline1.power1Name}({discipline1.power1Cost})";
+        disipline1Text[1].text = $"{discipline1.power2Name}({discipline1.power2Cost})";
+        disipline1Text[2].text = $"{discipline1.power3Name}({discipline1.power3Cost})";
+        disipline2Text[0].text = $"{discipline2.power1Name}({discipline2.power1Cost})";
+        disipline2Text[1].text = $"{discipline2.power2Name}({discipline2.power2Cost})";
+        disipline2Text[2].text = $"{discipline2.power3Name}({discipline2.power3Cost})";
         base.SetEquipmentNames();
     }
 
