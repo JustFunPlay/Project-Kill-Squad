@@ -13,33 +13,41 @@ using System.Collections;
 public class Commando : CharacterAttacks
 {
     [Header("Equipment")]
-    [SyncVar] int grenadeIndex;
+    [SyncVar] [SerializeField] private ScriptableGrenade grenade;
     [SyncVar] [SerializeField] private int remainingGrenades;
     [SerializeField] private TMPro.TextMeshProUGUI grenadeName;
     [SerializeField] private TMPro.TextMeshProUGUI grenadeCount;
 
     [Header("Ult")]
+    [SyncVar] [SerializeField] private int minUltHits;
+    [SyncVar] [SerializeField] private int maxUltHits;
+    [SyncVar] [SerializeField] private int ultAp;
+    [SyncVar] [SerializeField] private int ultDamage;
+    [SyncVar] [SerializeField] private int requiredDamageDealt;
     [SyncVar] [SerializeField] private int damageDealt;
     [SerializeField] private TMPro.TextMeshProUGUI ultProgress;
 
-    [Server] public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
+    [Server] public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
-        equipedIndexes = new int[3];
-        for (int i = 0; i < equipedIndexes.Length; i++)
-        {
-            equipedIndexes[i] = selectedEquipmentIndexes[i];
-        }
-        grenadeIndex = selectedEquipmentIndexes[3];
-        remainingGrenades = ((CommandoData)info).grenades[0].increasedCount * selectedEquipmentIndexes[4];
-        damageDealt = 0;
+        equipedWeapons.Clear();
+        equipedWeapons.AddRange(info.equipedWeapons);
+        CommandoData comInfo = (CommandoData)info;
+        grenade = comInfo.grenade;
+        remainingGrenades = comInfo.extraGrenades ? comInfo.grenade.count : comInfo.grenade.increasedCount;
+        minUltHits = comInfo.minUltHits;
+        maxUltHits = comInfo.maxUltHits;
+        ultAp = comInfo.ultAp;
+        ultDamage = comInfo.ultDamage;
+        requiredDamageDealt = comInfo.requiredDamageDealt;
+        damageDealt = 40;
         Invoke("UpdateUltProgress", 0.5f);
         Invoke("UpdateGrenadeCount", 0.5f);
-        base.SetupCharacter(player, info, selectedEquipmentIndexes);
+        base.SetupCharacter(player, info);
     }
 
     [ClientRpc] protected override void SetEquipmentNames()
     {
-        grenadeName.text = ((CommandoData)charInfo).grenades[grenadeIndex].weaponName;
+        grenadeName.text = grenade.weaponName;
         base.SetEquipmentNames();
     }
 
@@ -56,7 +64,7 @@ public class Commando : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action4:
-                GetRangeVisuals(((CommandoData)charInfo).grenades[grenadeIndex].range, true);
+                GetRangeVisuals(grenade.range, true);
                 break;
             case Action.Ultimate:
                 ClearRangeVisuals();
@@ -129,52 +137,52 @@ public class Commando : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(charInfo.weaponOptions[equipedIndexes[0]].weaponName))
+                if (performedActions.Contains(equipedWeapons[0].weaponName))
                     return;
-                if (charInfo.weaponOptions[equipedIndexes[0]].type == WeaponType.RapidFire && selectedVariant == ActionVar.Variant1)
+                if (equipedWeapons[0].type == WeaponType.RapidFire && selectedVariant == ActionVar.Variant1)
                 {
-                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedIndexes[0]]);
+                    target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)
                     {
-                        StartAction(2, charInfo.weaponOptions[equipedIndexes[0]].weaponName);
-                        StartCoroutine(DoubleFire(charInfo.weaponOptions[equipedIndexes[0]], target));
+                        StartAction(2, equipedWeapons[0].weaponName);
+                        StartCoroutine(DoubleFire(equipedWeapons[0], target));
                     }
                 }
                 else
                 {
-                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedIndexes[0]]);
+                    target = CheckValidTarget(hit, equipedWeapons[0]);
                     if (target)
                     {
-                        StartAction(charInfo.weaponOptions[equipedIndexes[0]].weaponName);
-                        StartCoroutine(NormalFire(charInfo.weaponOptions[equipedIndexes[0]], target));
+                        StartAction(equipedWeapons[0].weaponName);
+                        StartCoroutine(NormalFire(equipedWeapons[0], target));
                     }
                 }
                 break;
             case Action.Action2:
-                if (performedActions.Contains(charInfo.weaponOptions[equipedIndexes[1]].weaponName))
+                if (performedActions.Contains(equipedWeapons[1].weaponName))
                     return;
-                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedIndexes[1]]);
+                target = CheckValidTarget(hit, equipedWeapons[1]);
                 if (target)
                 {
-                    StartAction(charInfo.weaponOptions[equipedIndexes[1]].weaponName);
-                    StartCoroutine(NormalFire(charInfo.weaponOptions[equipedIndexes[1]], target));
+                    StartAction(equipedWeapons[1].weaponName);
+                    StartCoroutine(NormalFire(equipedWeapons[1], target));
                 }
                 break;
             case Action.Action3:
-                if (performedActions.Contains(charInfo.weaponOptions[equipedIndexes[2]].weaponName))
+                if (performedActions.Contains(equipedWeapons[2].weaponName))
                     return;
-                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedIndexes[2]]);
+                target = CheckValidTarget(hit, equipedWeapons[2]);
                 if (target)
                 {
-                    StartAction(charInfo.weaponOptions[equipedIndexes[2]].weaponName);
-                    StartCoroutine(StandardMelee(charInfo.weaponOptions[equipedIndexes[2]], target));
+                    StartAction(equipedWeapons[2].weaponName);
+                    StartCoroutine(StandardMelee(equipedWeapons[2], target));
                 }
                 break;
             case Action.Action4:
-                if (performedActions.Contains(((CommandoData)charInfo).grenades[grenadeIndex].weaponName) || remainingGrenades <= 0)
+                if (performedActions.Contains(grenade.weaponName) || remainingGrenades <= 0)
                     return;
                 List<Vector3> grenadePath = GridCombatSystem.instance.FindPath(transform.position, hit.point, false);
-                if (grenadePath != null && grenadePath.Count <= ((CommandoData)charInfo).grenades[grenadeIndex].range + 1)
+                if (grenadePath != null && grenadePath.Count <= grenade.range + 1)
                 {
                     bool hasLos = false;
                     for (int i = 0; i < 5; i++)
@@ -199,13 +207,13 @@ public class Commando : CharacterAttacks
                         return;
                     remainingGrenades -= 1;
                     GridCombatSystem.instance.grid.GetXZ(hit.point, out int x, out int z);
-                    StartAction(((CommandoData)charInfo).grenades[grenadeIndex].weaponName);
-                    GrenadeThrow(((CommandoData)charInfo).grenades[grenadeIndex], x, z);
+                    StartAction(grenade.weaponName);
+                    GrenadeThrow(grenade, x, z);
                     UpdateGrenadeCount();
                 }
                 break;
             case Action.Ultimate:
-                if (damageDealt < ((CommandoData)charInfo).requiredDamageDealt)
+                if (damageDealt < requiredDamageDealt)
                     return;
                 List<CharacterBase> targetsInUlt = new List<CharacterBase>();
                 Vector3 ultOrigin = hit.point;
@@ -233,13 +241,14 @@ public class Commando : CharacterAttacks
     {
 
         yield return new WaitForSeconds(0.8f);
+        int ultHits = Random.Range(minUltHits, maxUltHits + 1);
         CombatReport report = new CombatReport();
-        for (int hit = 0; hit < ((CommandoData)charInfo).ultHits; hit++)
+        for (int hit = 0; hit < ultHits; hit++)
         {
             yield return new WaitForSeconds(0.25f);
             for (int i = 0; i < targets.Count; i++)
             {
-                targets[i].ArmorSave(((CommandoData)charInfo).ultAp, 0, false, ((CommandoData)charInfo).ultDamage, out bool wound, out bool critConfirm, out int damageDealt, out bool killingBlow);
+                targets[i].ArmorSave(ultAp, 0, false, ultDamage, out bool wound, out bool critConfirm, out int damageDealt, out bool killingBlow);
                 report.totalAttackCount++;
                 report.attacksHit++;
                 if (wound)
@@ -265,7 +274,7 @@ public class Commando : CharacterAttacks
     [ClientRpc]
     private void UpdateUltProgress()
     {
-        ultProgress.text = $"Progress:\n[{Mathf.Min(damageDealt, ((CommandoData)charInfo).requiredDamageDealt)}/{((CommandoData)charInfo).requiredDamageDealt}]";
+        ultProgress.text = $"Progress:\n[{Mathf.Min(damageDealt, requiredDamageDealt)}/{requiredDamageDealt}]";
     }
     [ClientRpc]
     private void UpdateGrenadeCount()

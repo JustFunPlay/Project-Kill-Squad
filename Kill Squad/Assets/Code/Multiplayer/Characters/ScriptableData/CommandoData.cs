@@ -7,9 +7,11 @@ using UnityEngine;
 public class CommandoData : CharacterInfoBase
 {
     [Header("Equipment")]
-    public ScriptableGrenade[] grenades;
+    public ScriptableGrenade grenade;
+    public bool extraGrenades;
     [Header("Ult")]
-    public int ultHits;
+    public int minUltHits;
+    public int maxUltHits;
     public int ultAp;
     public int ultDamage;
     public int requiredDamageDealt;

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a246640269f9a2444b725de11bee2bfc, type: 3}
   m_Name: New Arc Trooper Info
   m_EditorClassIdentifier: 
-  pointsCost: 80
   physicalCharacter: {fileID: 4953558494458179774, guid: 3fa209528caaa6d4e943e50323722c7e, type: 3}
   speed: 5
   movement: 7
@@ -21,10 +20,8 @@ MonoBehaviour:
   ranged: 4
   melee: 7
   attacks: 2
-  weaponOptions:
+  equipedWeapons:
   - {fileID: 11400000, guid: 971d22f6147c0d544924ff4de2f63b3f, type: 2}
-  - {fileID: 11400000, guid: a953b5c5c5541cc41afa7fc46e39e6bc, type: 2}
   - {fileID: 11400000, guid: 2f608e84912d35140a4d6617c2e9b206, type: 2}
-  - {fileID: 11400000, guid: 1d5a63019d9c4fb47a3dd295f0df26b5, type: 2}
   ultDamage: 12
   ultChargeRequirement: 0

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79c4ff16cc31154e85fcb8c2be2530a, type: 3}
   m_Name: New Infiltrator Info
   m_EditorClassIdentifier: 
-  pointsCost: 80
   physicalCharacter: {fileID: 8827378593658907782, guid: f4274d7171fce3647bb7fdcc803afa9a, type: 3}
   speed: 8
   movement: 7
@@ -21,9 +20,7 @@ MonoBehaviour:
   ranged: 5
   melee: 7
   attacks: 4
-  weaponOptions:
+  equipedWeapons:
   - {fileID: 11400000, guid: 6114ad2684f74b4458f1c0ef69605cac, type: 2}
   - {fileID: 11400000, guid: d321d3557af571e4dad471507b234358, type: 2}
-  - {fileID: 11400000, guid: aeda2ebeb79a0b54f85a5dffdfbbb984, type: 2}
-  - {fileID: 11400000, guid: 3e8deb6f0f7750a42b60e3a9a1811892, type: 2}
   ultDuration: 3

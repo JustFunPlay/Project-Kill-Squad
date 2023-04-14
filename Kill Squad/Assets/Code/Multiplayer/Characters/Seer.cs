@@ -12,49 +12,54 @@ using Mirror;
 public class Seer : CharacterAttacks
 {
     [Header("Psychic stuff")]
+    [SyncVar] [SerializeField] private int maxPsychicPoints;
     [SyncVar] [SerializeField] private int currentPsychicPoints;
-    [SerializeField] private TMPro.TextMeshProUGUI ppCounter;
-
+    [SyncVar] [SerializeField] private Vector2 psychicGeneration;
+    [SyncVar] [SerializeField] private int psychicRange;
 
     [SyncVar] [SerializeField] private bool hasRunicArmor;
     [SyncVar] [SerializeField] private bool runicArmorActve;
-    [SyncVar] [SerializeField] private int discipline1;
+    [SerializeField] private TMPro.TextMeshProUGUI ppCounter;
+    [SyncVar] [SerializeField] private BasePsychicDiscipline discipline1;
     [SerializeField] private TMPro.TextMeshProUGUI[] disipline1Text;
-    [SyncVar] [SerializeField] private int discipline2;
+    [SyncVar] [SerializeField] private BasePsychicDiscipline discipline2;
     [SerializeField] private TMPro.TextMeshProUGUI[] disipline2Text;
 
 
     [Header("Ult")]
+    [SyncVar] [SerializeField] private int ultRange;
+    [SyncVar] [SerializeField] private int ultpointRequirement;
     [SyncVar] [SerializeField] private int pointsSpent;
     [SerializeField] private TMPro.TextMeshProUGUI ultCounter;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info, int[] selectedEquipmentIndexes)
+    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
-        equipedIndexes = new int[2];
-        for (int i = 0; i < equipedIndexes.Length; i++)
-        {
-            equipedIndexes[i] = selectedEquipmentIndexes[i];
-        }
-        discipline1 = selectedEquipmentIndexes[2];
-        discipline2 = selectedEquipmentIndexes[3];
-        if (selectedEquipmentIndexes[4] == 1)
-            hasRunicArmor = true;
-        currentPsychicPoints = ((SeerData)info).psychicPoints;
+        equipedWeapons.Clear();
+        equipedWeapons.AddRange(info.equipedWeapons);
+        SeerData seerInfo = (SeerData)info;
+        currentPsychicPoints = maxPsychicPoints = seerInfo.psychicPoints;
+        psychicGeneration = seerInfo.psychicGeneration;
+        psychicRange = seerInfo.psychicRange;
+        discipline1 = seerInfo.discipline1;
+        discipline2 = seerInfo.discipline2;
+        hasRunicArmor = seerInfo.hasRunicArmor;
+        ultRange = seerInfo.ultRange;
+        ultpointRequirement = seerInfo.requiredUltPoints;
         pointsSpent = 0;
         Invoke("UpdatePsychicPoints", 0.5f);
         Invoke("UpdateUltPoints", 0.5f);
-        base.SetupCharacter(player, info, selectedEquipmentIndexes);
+        base.SetupCharacter(player, info);
     }
     [ClientRpc]
     protected override void SetEquipmentNames()
     {
-        disipline1Text[0].text = ((SeerData)charInfo).disciplines[discipline1].power1Name;
-        disipline1Text[1].text = ((SeerData)charInfo).disciplines[discipline1].power2Name;
-        disipline1Text[2].text = ((SeerData)charInfo).disciplines[discipline1].power3Name;
-        disipline2Text[0].text = ((SeerData)charInfo).disciplines[discipline2].power1Name;
-        disipline2Text[1].text = ((SeerData)charInfo).disciplines[discipline2].power2Name;
-        disipline2Text[2].text = ((SeerData)charInfo).disciplines[discipline2].power3Name;
+        disipline1Text[0].text = discipline1.power1Name;
+        disipline1Text[1].text = discipline1.power2Name;
+        disipline1Text[2].text = discipline1.power3Name;
+        disipline2Text[0].text = discipline2.power1Name;
+        disipline2Text[1].text = discipline2.power2Name;
+        disipline2Text[2].text = discipline2.power3Name;
         base.SetEquipmentNames();
     }
 
@@ -77,21 +82,21 @@ public class Seer : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action3:
-                if (currentPsychicPoints == ((SeerData)charInfo).psychicPoints)
+                if (currentPsychicPoints == maxPsychicPoints)
                     return;
-                currentPsychicPoints = Mathf.Min(currentPsychicPoints + Random.Range((int)((SeerData)charInfo).psychicGeneration.x, (int)((SeerData)charInfo).psychicGeneration.y), ((SeerData)charInfo).psychicPoints);
+                currentPsychicPoints = Mathf.Min(currentPsychicPoints + Random.Range((int)psychicGeneration.x, (int)psychicGeneration.y), maxPsychicPoints);
                 UpdatePsychicPoints();
                 StartAction();
                 ContinueTurn();
                 break;
             case Action.Action4:
-                GetRangeVisuals(((SeerData)charInfo).psychicRange, true);
+                GetRangeVisuals(psychicRange, true);
                 break;
             case Action.Action5:
-                GetRangeVisuals(((SeerData)charInfo).psychicRange, true);
+                GetRangeVisuals(psychicRange, true);
                 break;
             case Action.Ultimate:
-                GetRangeVisuals(((SeerData)charInfo).ultRange, true);
+                GetRangeVisuals(ultRange, true);
                 break;
             default:
                 base.OnSelectAction();
@@ -161,50 +166,50 @@ public class Seer : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(charInfo.weaponOptions[equipedIndexes[0]].weaponName))
+                if (performedActions.Contains(equipedWeapons[0].weaponName))
                     return;
-                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedIndexes[0]]);
+                target = CheckValidTarget(hit, equipedWeapons[0]);
                 if (target)
                 {
-                    StartAction(charInfo.weaponOptions[equipedIndexes[0]].weaponName);
-                    StartCoroutine(NormalFire(charInfo.weaponOptions[equipedIndexes[0]], target));
+                    StartAction(equipedWeapons[0].weaponName);
+                    StartCoroutine(NormalFire(equipedWeapons[0], target));
                 }
                 break;
             case Action.Action2:
-                if (performedActions.Contains(charInfo.weaponOptions[equipedIndexes[1]].weaponName))
+                if (performedActions.Contains(equipedWeapons[1].weaponName))
                     return;
-                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedIndexes[1]]);
+                target = CheckValidTarget(hit, equipedWeapons[1]);
                 if (target == null)
                     return;
-                if (charInfo.weaponOptions[equipedIndexes[1]].type == WeaponType.Heavy && selectedVariant == ActionVar.Variant1 && currentPsychicPoints >= 4)
+                if (equipedWeapons[1].type == WeaponType.Heavy && selectedVariant == ActionVar.Variant1 && currentPsychicPoints >= 4)
                 {
                     currentPsychicPoints -= 4;
                     pointsSpent += 4;
                     UpdatePsychicPoints();
                     UpdateUltPoints();
-                    StartAction(charInfo.weaponOptions[equipedIndexes[1]].weaponName);
-                    StartCoroutine(HeavyMelee(charInfo.weaponOptions[equipedIndexes[1]], target));
+                    StartAction(equipedWeapons[1].weaponName);
+                    StartCoroutine(HeavyMelee(equipedWeapons[1], target));
                 }
                 else
                 {
-                    StartAction(charInfo.weaponOptions[equipedIndexes[1]].weaponName);
-                    StartCoroutine(StandardMelee(charInfo.weaponOptions[equipedIndexes[1]], target));
+                    StartAction(equipedWeapons[1].weaponName);
+                    StartCoroutine(StandardMelee(equipedWeapons[1], target));
                 }
                 break;
             case Action.Action4:
-                target = FindPsychicTarget(hit, ((SeerData)charInfo).psychicRange);
+                target = FindPsychicTarget(hit, psychicRange);
                 if (target == null)
                     return;
                 if (selectedVariant == ActionVar.Normal)
                 {
-                    if (currentPsychicPoints < ((SeerData)charInfo).disciplines[discipline1].power1Cost || performedActions.Contains(((SeerData)charInfo).disciplines[discipline1].power1Name))
+                    if (currentPsychicPoints < discipline1.power1Cost || performedActions.Contains(discipline1.power1Name))
                         return;
-                    if (((SeerData)charInfo).disciplines[discipline1].PerformPsychicPower1(this, target))
+                    if (discipline1.PerformPsychicPower1(this, target))
                     {
-                        StartAction(((SeerData)charInfo).disciplines[discipline1].power1Name);
-                        currentPsychicPoints -= ((SeerData)charInfo).disciplines[discipline1].power1Cost;
-                        pointsSpent += ((SeerData)charInfo).disciplines[discipline1].power1Cost;
-                        Debug.Log($"Cast {((SeerData)charInfo).disciplines[discipline1].power1Name} on {target.name}");
+                        StartAction(discipline1.power1Name);
+                        currentPsychicPoints -= discipline1.power1Cost;
+                        pointsSpent += discipline1.power1Cost;
+                        Debug.Log($"Cast {discipline1.power1Name} on {target.name}");
                         UpdatePsychicPoints();
                         UpdateUltPoints();
                         ContinueTurn();
@@ -212,14 +217,14 @@ public class Seer : CharacterAttacks
                 }
                 else if (selectedVariant == ActionVar.Variant1)
                 {
-                    if (currentPsychicPoints < ((SeerData)charInfo).disciplines[discipline1].power2Cost || performedActions.Contains(((SeerData)charInfo).disciplines[discipline1].power2Name))
+                    if (currentPsychicPoints < discipline1.power2Cost || performedActions.Contains(discipline1.power2Name))
                         return;
-                    if (((SeerData)charInfo).disciplines[discipline1].PerformPsychicPower2(this, target))
+                    if (discipline1.PerformPsychicPower2(this, target))
                     {
-                        StartAction(((SeerData)charInfo).disciplines[discipline1].power2Name);
-                        currentPsychicPoints -= ((SeerData)charInfo).disciplines[discipline1].power2Cost;
-                        pointsSpent += ((SeerData)charInfo).disciplines[discipline1].power2Cost;
-                        Debug.Log($"Cast {((SeerData)charInfo).disciplines[discipline1].power2Name} on {target.name}");
+                        StartAction(discipline1.power2Name);
+                        currentPsychicPoints -= discipline1.power2Cost;
+                        pointsSpent += discipline1.power2Cost;
+                        Debug.Log($"Cast {discipline1.power2Name} on {target.name}");
                         UpdatePsychicPoints();
                         UpdateUltPoints();
                         ContinueTurn();
@@ -227,14 +232,14 @@ public class Seer : CharacterAttacks
                 }
                 else if (selectedVariant == ActionVar.Variant2)
                 {
-                    if (currentPsychicPoints < ((SeerData)charInfo).disciplines[discipline1].power3Cost || performedActions.Contains(((SeerData)charInfo).disciplines[discipline1].power3Name))
+                    if (currentPsychicPoints < discipline1.power3Cost || performedActions.Contains(discipline1.power3Name))
                         return;
-                    if (((SeerData)charInfo).disciplines[discipline1].PerformPsychicPower3(this, target))
+                    if (discipline1.PerformPsychicPower3(this, target))
                     {
-                        StartAction(((SeerData)charInfo).disciplines[discipline1].power3Name);
-                        currentPsychicPoints -= ((SeerData)charInfo).disciplines[discipline1].power3Cost;
-                        pointsSpent += ((SeerData)charInfo).disciplines[discipline1].power3Cost;
-                        Debug.Log($"Cast {((SeerData)charInfo).disciplines[discipline1].power3Name} on {target.name}");
+                        StartAction(discipline1.power3Name);
+                        currentPsychicPoints -= discipline1.power3Cost;
+                        pointsSpent += discipline1.power3Cost;
+                        Debug.Log($"Cast {discipline1.power3Name} on {target.name}");
                         UpdatePsychicPoints();
                         UpdateUltPoints();
                         ContinueTurn();
@@ -242,19 +247,19 @@ public class Seer : CharacterAttacks
                 }
                 break;
             case Action.Action5:
-                target = FindPsychicTarget(hit, ((SeerData)charInfo).psychicRange);
+                target = FindPsychicTarget(hit, psychicRange);
                 if (target == null)
                     return;
                 if (selectedVariant == ActionVar.Normal)
                 {
-                    if (currentPsychicPoints < ((SeerData)charInfo).disciplines[discipline2].power1Cost || performedActions.Contains(((SeerData)charInfo).disciplines[discipline2].power1Name))
+                    if (currentPsychicPoints < discipline2.power1Cost || performedActions.Contains(discipline2.power1Name))
                         return;
-                    if (((SeerData)charInfo).disciplines[discipline2].PerformPsychicPower1(this, target))
+                    if (discipline2.PerformPsychicPower1(this, target))
                     {
-                        StartAction(((SeerData)charInfo).disciplines[discipline2].power1Name);
-                        currentPsychicPoints -= ((SeerData)charInfo).disciplines[discipline2].power1Cost;
-                        pointsSpent += ((SeerData)charInfo).disciplines[discipline2].power1Cost;
-                        Debug.Log($"Cast {((SeerData)charInfo).disciplines[discipline2].power1Name} on {target.name}");
+                        StartAction(discipline2.power1Name);
+                        currentPsychicPoints -= discipline2.power1Cost;
+                        pointsSpent += discipline2.power1Cost;
+                        Debug.Log($"Cast {discipline2.power1Name} on {target.name}");
                         UpdatePsychicPoints();
                         UpdateUltPoints();
                         ContinueTurn();
@@ -262,14 +267,14 @@ public class Seer : CharacterAttacks
                 }
                 else if (selectedVariant == ActionVar.Variant1)
                 {
-                    if (currentPsychicPoints < ((SeerData)charInfo).disciplines[discipline2].power2Cost || performedActions.Contains(((SeerData)charInfo).disciplines[discipline2].power2Name))
+                    if (currentPsychicPoints < discipline2.power2Cost || performedActions.Contains(discipline2.power2Name))
                         return;
-                    if (((SeerData)charInfo).disciplines[discipline2].PerformPsychicPower2(this, target))
+                    if (discipline2.PerformPsychicPower2(this, target))
                     {
-                        StartAction(((SeerData)charInfo).disciplines[discipline2].power2Name);
-                        currentPsychicPoints -= ((SeerData)charInfo).disciplines[discipline2].power2Cost;
-                        pointsSpent += ((SeerData)charInfo).disciplines[discipline2].power2Cost;
-                        Debug.Log($"Cast {((SeerData)charInfo).disciplines[discipline2].power2Name} on {target.name}");
+                        StartAction(discipline2.power2Name);
+                        currentPsychicPoints -= discipline2.power2Cost;
+                        pointsSpent += discipline2.power2Cost;
+                        Debug.Log($"Cast {discipline2.power2Name} on {target.name}");
                         UpdatePsychicPoints();
                         UpdateUltPoints();
                         ContinueTurn();
@@ -277,14 +282,14 @@ public class Seer : CharacterAttacks
                 }
                 else if (selectedVariant == ActionVar.Variant2)
                 {
-                    if (currentPsychicPoints < ((SeerData)charInfo).disciplines[discipline2].power3Cost || performedActions.Contains(((SeerData)charInfo).disciplines[discipline2].power3Name))
+                    if (currentPsychicPoints < discipline2.power3Cost || performedActions.Contains(discipline2.power3Name))
                         return;
-                    if (((SeerData)charInfo).disciplines[discipline2].PerformPsychicPower3(this, target))
+                    if (discipline2.PerformPsychicPower3(this, target))
                     {
-                        StartAction(((SeerData)charInfo).disciplines[discipline2].power3Name);
-                        currentPsychicPoints -= ((SeerData)charInfo).disciplines[discipline2].power3Cost;
-                        pointsSpent += ((SeerData)charInfo).disciplines[discipline2].power3Cost;
-                        Debug.Log($"Cast {((SeerData)charInfo).disciplines[discipline2].power3Name} on {target.name}");
+                        StartAction(discipline2.power3Name);
+                        currentPsychicPoints -= discipline2.power3Cost;
+                        pointsSpent += discipline2.power3Cost;
+                        Debug.Log($"Cast {discipline2.power3Name} on {target.name}");
                         UpdatePsychicPoints();
                         UpdateUltPoints();
                         ContinueTurn();
@@ -293,9 +298,9 @@ public class Seer : CharacterAttacks
                 }
                 break;
             case Action.Ultimate:
-                if (pointsSpent < ((SeerData)charInfo).requiredUltPoints)
+                if (pointsSpent < ultpointRequirement)
                     return;
-                target = FindPsychicTarget(hit, ((SeerData)charInfo).ultRange);
+                target = FindPsychicTarget(hit, ultRange);
                 if (target == null || target.Owner != owner)
                     return;
                 StartAction();
@@ -310,11 +315,11 @@ public class Seer : CharacterAttacks
     }
     [ClientRpc] private void UpdatePsychicPoints()
     {
-        ppCounter.text = $"Psychic points:\n[{currentPsychicPoints}/{((SeerData)charInfo).psychicPoints}]";
+        ppCounter.text = $"Psychic points:\n[{currentPsychicPoints}/{maxPsychicPoints}]";
     }
     [ClientRpc] private void UpdateUltPoints()
     {
-        ultCounter.text = $"Ult progress:\n[{Mathf.Min(pointsSpent, ((SeerData)charInfo).requiredUltPoints)}/{((SeerData)charInfo).requiredUltPoints}]";
+        ultCounter.text = $"Ult progress:\n[{Mathf.Min(pointsSpent, ultpointRequirement)}/{ultpointRequirement}]";
     }
 
 
@@ -324,14 +329,14 @@ public class Seer : CharacterAttacks
             return;
         if (runicArmorActve)
         {
-            armorModifier -= 1;
+            armorSave -= 1;
             damageReduction -= 1;
             runicArmorActve = false;
         }
         if (currentPsychicPoints > 0)
         {
             currentPsychicPoints--;
-            armorModifier += 1;
+            armorSave += 1;
             damageReduction += 1;
             runicArmorActve = true;
         }

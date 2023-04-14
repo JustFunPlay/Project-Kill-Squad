@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Character Info", menuName = "ScriptableObjects/Character info")]
 public class CharacterInfoBase : ScriptableObject
 {
-    public int pointsCost;
     public CharacterBase physicalCharacter;
     public int speed;
     public int movement;
@@ -15,5 +14,5 @@ public class CharacterInfoBase : ScriptableObject
     public int melee;
     public int attacks;
 
-    public ScriptableWeapon[] weaponOptions;
+    public List<ScriptableWeapon> equipedWeapons = new List<ScriptableWeapon>();
 }
