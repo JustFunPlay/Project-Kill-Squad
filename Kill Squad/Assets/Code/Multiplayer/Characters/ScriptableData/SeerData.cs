@@ -10,7 +10,9 @@ public class SeerData : CharacterInfoBase
     public int psychicPoints;
     public Vector2 psychicGeneration;
     public int psychicRange;
-    public BasePsychicDiscipline[] disciplines;
+    public BasePsychicDiscipline discipline1;
+    public BasePsychicDiscipline discipline2;
+    public bool hasRunicArmor;
 
     [Header("Ult")]
     public int ultRange;

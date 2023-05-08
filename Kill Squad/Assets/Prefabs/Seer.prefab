@@ -2063,15 +2063,14 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  charInfo: {fileID: 11400000, guid: 3cca3d71dd3d60f48b2332497002960d, type: 2}
-  speedModifier: 0
-  movementModifier: 0
-  armorModifier: 0
-  rangedModifier: 0
-  meleeModifier: 0
-  attacksModifier: 0
+  turnSpeed: 0
+  movement: 0
+  maxHealth: 0
+  armorSave: 0
+  rangedSkill: 0
+  meleeSkill: 0
+  meleeAttacks: 0
   turnProgress: 0
-  currentHealth: 0
   dodgeChance: 0
   damageReduction: 0
   armorLuck: 0
@@ -2108,20 +2107,25 @@ MonoBehaviour:
   equipmentSlots:
   - {fileID: 1528371600212796853}
   - {fileID: 402191174132622465}
+  maxPsychicPoints: 0
   currentPsychicPoints: 0
-  ppCounter: {fileID: 5635407589880905800}
+  psychicGeneration: {x: 0, y: 0}
+  psychicRange: 0
   hasRunicArmor: 0
   runicArmorActve: 0
-  discipline1: 0
+  ppCounter: {fileID: 5635407589880905800}
+  discipline1: {fileID: 0}
   disipline1Text:
   - {fileID: 8032796058868870066}
   - {fileID: 6042334082281356903}
   - {fileID: 8540533844386896903}
-  discipline2: 0
+  discipline2: {fileID: 0}
   disipline2Text:
   - {fileID: 7722152353624617542}
   - {fileID: 6096416116561180492}
   - {fileID: 2476714033294148778}
+  ultRange: 0
+  ultpointRequirement: 0
   pointsSpent: 0
   ultCounter: {fileID: 386932534738350503}
 --- !u!1 &4860237534907853462

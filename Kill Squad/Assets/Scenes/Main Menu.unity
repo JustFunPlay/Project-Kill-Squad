@@ -1314,19 +1314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef3080a9c37cd5d4097c29fb1974652b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  squad:
-  - Character: 0
-    SelectedLoadoutOptions: 000000000100000002000000
-  - Character: 1
-    SelectedLoadoutOptions: 0000000002000000
-  - Character: 2
-    SelectedLoadoutOptions: 0000000002000000040000000000000001000000
-  - Character: 3
-    SelectedLoadoutOptions: 000000000200000003000000
-  - Character: 4
-    SelectedLoadoutOptions: 0000000001000000
-  - Character: 5
-    SelectedLoadoutOptions: 0000000001000000000000000500000007000000
+  squad: {fileID: 11400000, guid: 65ec0f664ecba9e419260d73a17fac19, type: 2}
 --- !u!4 &1037171855
 Transform:
   m_ObjectHideFlags: 0
@@ -1335,7 +1323,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037171853}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 724.42413, y: 229.0484, z: 2.66987}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

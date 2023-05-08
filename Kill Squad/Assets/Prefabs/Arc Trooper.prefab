@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Ult: Invisibility'
+  m_text: 'Ult: EMP'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -708,8 +708,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 550, y: -400}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 550, y: -375}
+  m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3327830490989819433
 CanvasRenderer:
@@ -906,15 +906,14 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  charInfo: {fileID: 11400000, guid: 850f783e327f6864981894b94d3fa1d9, type: 2}
-  speedModifier: 0
-  movementModifier: 0
-  armorModifier: 0
-  rangedModifier: 0
-  meleeModifier: 0
-  attacksModifier: 0
+  turnSpeed: 0
+  movement: 0
+  maxHealth: 0
+  armorSave: 0
+  rangedSkill: 0
+  meleeSkill: 0
+  meleeAttacks: 0
   turnProgress: 0
-  currentHealth: 0
   dodgeChance: 0
   damageReduction: 0
   armorLuck: 0
@@ -931,6 +930,7 @@ MonoBehaviour:
   - {fileID: 7125257681541861566}
   - {fileID: 1297069960731460850}
   - {fileID: 1216329026317110453}
+  - {fileID: 5064778019720836705}
   hpSlider: {fileID: 1976889964474850285}
   hasKilled: 0
   doubleNextHit: 0
@@ -942,7 +942,10 @@ MonoBehaviour:
   - {fileID: 2439948230106317444}
   - {fileID: 1611097134782850476}
   storedPower: 0
+  ultDamage: 0
+  ultchargeRequirement: 0
   currentUltCharge: 0
+  ultCounter: {fileID: 1841134629808601778}
 --- !u!1 &6033162470185035857
 GameObject:
   m_ObjectHideFlags: 0

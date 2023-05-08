@@ -78,7 +78,7 @@ public class CharacterMovement : CharacterBase
     {
         List<Vector3> path = GridCombatSystem.instance.FindPath(transform.position, targetpos, true);
         Debug.Log(path);
-        if (path != null && path.Count <= Movement + 1 && path.Count > 1 && GridCombatSystem.instance.grid.GetGridObject(path[path.Count - 1]).isOccupied == false)
+        if (path != null && path.Count <= movement + 1 && path.Count > 1 && GridCombatSystem.instance.grid.GetGridObject(path[path.Count - 1]).isOccupied == false)
         {
             GridCombatSystem.instance.grid.GetGridObject(transform.position).isOccupied = false;
             StartAction();
@@ -96,11 +96,17 @@ public class CharacterMovement : CharacterBase
                 path.RemoveAt(0);
         }
         GridCombatSystem.instance.grid.GetGridObject(transform.position).isOccupied = true;
+        OnMoveEnd();
         ContinueTurn();
     }
     [Server]protected override void OnSelectAction()
     {
         if (selectedAction == Action.Movement)
-            GetRangeVisuals(Movement, false);
+            GetRangeVisuals(movement, false);
+    }
+
+    [Server] protected virtual void OnMoveEnd()
+    {
+
     }
 }

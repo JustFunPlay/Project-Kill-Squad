@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f80b5502e1ff3d845a90f7c944f198ad, type: 3}
   m_Name: New Hitman Info
   m_EditorClassIdentifier: 
-  pointsCost: 60
   physicalCharacter: {fileID: 7725001508692832866, guid: b968e2042987e474a84ab7796df03486, type: 3}
   speed: 6
   movement: 6
@@ -21,8 +20,7 @@ MonoBehaviour:
   ranged: 8
   melee: 6
   attacks: 3
-  weaponOptions:
-  - {fileID: 11400000, guid: 62721487163824b459d468a4465e74c9, type: 2}
+  equipedWeapons:
   - {fileID: 11400000, guid: d4f714846974c5346aa1af556ebad800, type: 2}
   - {fileID: 11400000, guid: b367df74e08c9b449b80d654454926a5, type: 2}
   - {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}
