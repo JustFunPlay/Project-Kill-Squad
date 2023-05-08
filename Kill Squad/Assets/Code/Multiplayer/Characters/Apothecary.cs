@@ -16,7 +16,7 @@ public class Apothecary : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI chargeCounter;
 
     [Header("Ult")]
-    [SyncVar] [SerializeField] private bool ultCharged = false;
+    [SyncVar] [SerializeField] private bool ultCharged;
     [SerializeField] private TMPro.TextMeshProUGUI ultChargeText;
 
     [Server]
