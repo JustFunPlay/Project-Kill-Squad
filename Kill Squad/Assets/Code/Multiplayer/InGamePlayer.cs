@@ -93,10 +93,11 @@ public class InGamePlayer : NetworkBehaviour
     //[Command] private void CmdSetUpSquad(List<CharacterLoadout> squad)
     [Command] private void CmdSetUpSquad()
     {
-        for (int i = 0; i < PersistantInfo.Instance.squad.Count; i++)
-        {
-            GridCombatSystem.instance.SetupCharacter(PersistantInfo.Instance.squad[i].Character, PersistantInfo.Instance.squad[i].SelectedLoadoutOptions, this);
-        }
+        GridCombatSystem.instance.SetupTeam(PersistantInfo.Instance.squad, this);
+        //for (int i = 0; i < PersistantInfo.Instance.squad; i++)
+        //{
+        //    GridCombatSystem.instance.SetupCharacter(PersistantInfo.Instance.squad[i].Character, PersistantInfo.Instance.squad[i].SelectedLoadoutOptions, this);
+        //}
     }
     [Command] private void CmdSetName()
     {
