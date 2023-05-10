@@ -25,7 +25,7 @@ public class ArcTrooper : CharacterAttacks
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.equipedWeapons);
+        equipedWeapons.AddRange(info.weaponOptions);
         ArcTrooperData arcInfo = (ArcTrooperData)info;
         ultDamage = arcInfo.ultDamage;
         ultchargeRequirement = arcInfo.ultChargeRequirement;

@@ -30,7 +30,7 @@ public class Commando : CharacterAttacks
     [Server] public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.equipedWeapons);
+        equipedWeapons.AddRange(info.weaponOptions);
         CommandoData comInfo = (CommandoData)info;
         grenade = comInfo.grenade;
         remainingGrenades = comInfo.extraGrenades ? comInfo.grenade.count : comInfo.grenade.increasedCount;

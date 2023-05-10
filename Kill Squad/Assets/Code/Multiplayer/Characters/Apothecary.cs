@@ -24,7 +24,7 @@ public class Apothecary : CharacterAttacks
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.equipedWeapons);
+        equipedWeapons.AddRange(info.weaponOptions);
         ApothecaryData medicInfo = (ApothecaryData)info;
         healRange = medicInfo.healValue;
         remainingHealCharges = medicInfo.healCharges;

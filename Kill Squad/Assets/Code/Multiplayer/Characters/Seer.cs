@@ -36,7 +36,7 @@ public class Seer : CharacterAttacks
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.equipedWeapons);
+        equipedWeapons.AddRange(info.weaponOptions);
         SeerData seerInfo = (SeerData)info;
         currentPsychicPoints = maxPsychicPoints = seerInfo.psychicPoints;
         psychicGeneration = seerInfo.psychicGeneration;

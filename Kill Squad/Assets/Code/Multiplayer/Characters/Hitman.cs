@@ -22,7 +22,7 @@ public class Hitman : CharacterAttacks
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.equipedWeapons);
+        equipedWeapons.AddRange(info.weaponOptions);
         HitmanData hitInfo = (HitmanData)info;
         ultDamage = hitInfo.ultDamage;
         requiredCrits = hitInfo.requiredCrits;

@@ -23,7 +23,7 @@ public class Infiltrator : CharacterAttacks
     public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.equipedWeapons);
+        equipedWeapons.AddRange(info.weaponOptions);
         InfiltratorData infilInfo = (InfiltratorData)info;
         ultDuration = infilInfo.ultDuration;
         canGoInvisible = true;
