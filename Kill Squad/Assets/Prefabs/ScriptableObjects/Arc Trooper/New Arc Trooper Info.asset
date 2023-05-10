@@ -20,8 +20,10 @@ MonoBehaviour:
   ranged: 4
   melee: 7
   attacks: 2
-  equipedWeapons:
+  weaponOptions:
   - {fileID: 11400000, guid: 971d22f6147c0d544924ff4de2f63b3f, type: 2}
+  - {fileID: 11400000, guid: a953b5c5c5541cc41afa7fc46e39e6bc, type: 2}
   - {fileID: 11400000, guid: 2f608e84912d35140a4d6617c2e9b206, type: 2}
+  - {fileID: 11400000, guid: 1d5a63019d9c4fb47a3dd295f0df26b5, type: 2}
   ultDamage: 12
   ultChargeRequirement: 5
