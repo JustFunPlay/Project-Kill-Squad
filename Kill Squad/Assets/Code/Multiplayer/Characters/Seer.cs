@@ -33,23 +33,23 @@ public class Seer : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ultCounter;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    public override void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.weaponOptions);
-        SeerData seerInfo = (SeerData)info;
-        currentPsychicPoints = maxPsychicPoints = seerInfo.psychicPoints;
-        psychicGeneration = seerInfo.psychicGeneration;
-        psychicRange = seerInfo.psychicRange;
-        discipline1 = seerInfo.discipline1;
-        discipline2 = seerInfo.discipline2;
-        hasRunicArmor = seerInfo.hasRunicArmor;
-        ultRange = seerInfo.ultRange;
-        ultpointRequirement = seerInfo.requiredUltPoints;
+        //equipedWeapons.AddRange(info.weaponOptions);
+        //SeerData seerInfo = (SeerData)charInfo;
+        //currentPsychicPoints = maxPsychicPoints = seerInfo.psychicPoints;
+        //psychicGeneration = seerInfo.psychicGeneration;
+        //psychicRange = seerInfo.psychicRange;
+        //discipline1 = seerInfo.discipline1;
+        //discipline2 = seerInfo.discipline2;
+        //hasRunicArmor = seerInfo.hasRunicArmor;
+        //ultRange = seerInfo.ultRange;
+        //ultpointRequirement = seerInfo.requiredUltPoints;
         pointsSpent = 0;
         Invoke("UpdatePsychicPoints", 0.5f);
         Invoke("UpdateUltPoints", 0.5f);
-        base.SetupCharacter(player, info);
+        base.SetupCharacter(player, Loadout);
     }
     [ClientRpc]
     protected override void SetEquipmentNames()

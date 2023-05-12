@@ -20,15 +20,15 @@ public class Infiltrator : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ultChargeText;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    public override void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.weaponOptions);
-        InfiltratorData infilInfo = (InfiltratorData)info;
-        ultDuration = infilInfo.ultDuration;
+        //equipedWeapons.AddRange(info.weaponOptions);
+        //InfiltratorData infilInfo = (InfiltratorData)info;
+        //ultDuration = infilInfo.ultDuration;
         canGoInvisible = true;
         Invoke("ShowUltCharge", 0.5f);
-        base.SetupCharacter(player, info);
+        base.SetupCharacter(player, Loadout);
     }
 
     [Server] public override void PrepareTurn()

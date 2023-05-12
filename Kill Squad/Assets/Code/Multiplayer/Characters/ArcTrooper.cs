@@ -22,16 +22,16 @@ public class ArcTrooper : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ultCounter;
 
 
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    public override void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.weaponOptions);
-        ArcTrooperData arcInfo = (ArcTrooperData)info;
-        ultDamage = arcInfo.ultDamage;
-        ultchargeRequirement = arcInfo.ultChargeRequirement;
+        //equipedWeapons.AddRange(info.weaponOptions);
+        //ArcTrooperData arcInfo = (ArcTrooperData)info;
+        //ultDamage = arcInfo.ultDamage;
+        //ultchargeRequirement = arcInfo.ultChargeRequirement;
         currentUltCharge = 0;
         Invoke("UpdateUltPoints", 0.5f);
-        base.SetupCharacter(player, info);
+        base.SetupCharacter(player, Loadout);
     }
     [Server]
     public override void ProgressTurn()

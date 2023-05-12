@@ -27,22 +27,22 @@ public class Commando : CharacterAttacks
     [SyncVar] [SerializeField] private int damageDealt;
     [SerializeField] private TMPro.TextMeshProUGUI ultProgress;
 
-    [Server] public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    [Server] public override void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.weaponOptions);
-        CommandoData comInfo = (CommandoData)info;
-        grenade = comInfo.grenade;
-        remainingGrenades = comInfo.extraGrenades ? comInfo.grenade.count : comInfo.grenade.increasedCount;
-        minUltHits = comInfo.minUltHits;
-        maxUltHits = comInfo.maxUltHits;
-        ultAp = comInfo.ultAp;
-        ultDamage = comInfo.ultDamage;
-        requiredDamageDealt = comInfo.requiredDamageDealt;
+        //equipedWeapons.AddRange(info.weaponOptions);
+        //CommandoData comInfo = (CommandoData)info;
+        //grenade = comInfo.grenade;
+        //remainingGrenades = comInfo.extraGrenades ? comInfo.grenade.count : comInfo.grenade.increasedCount;
+        //minUltHits = comInfo.minUltHits;
+        //maxUltHits = comInfo.maxUltHits;
+        //ultAp = comInfo.ultAp;
+        //ultDamage = comInfo.ultDamage;
+        //requiredDamageDealt = comInfo.requiredDamageDealt;
         damageDealt = 0;
         Invoke("UpdateUltProgress", 0.5f);
         Invoke("UpdateGrenadeCount", 0.5f);
-        base.SetupCharacter(player, info);
+        base.SetupCharacter(player, Loadout);
     }
 
     [ClientRpc] protected override void SetEquipmentNames()

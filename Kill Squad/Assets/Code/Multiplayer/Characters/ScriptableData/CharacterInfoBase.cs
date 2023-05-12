@@ -14,5 +14,5 @@ public class CharacterInfoBase : ScriptableObject
     public int melee;
     public int attacks;
 
-    public List<ScriptableWeapon> weaponOptions = new List<ScriptableWeapon>();
+    public ScriptableWeapon[] weaponOptions;
 }

@@ -1315,6 +1315,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   squad: {fileID: 11400000, guid: 65ec0f664ecba9e419260d73a17fac19, type: 2}
+  characters:
+  - Character: 2
+    SelectedLoadoutOptions: 0000000002000000040000000000000001000000
+  - Character: 4
+    SelectedLoadoutOptions: 0000000002000000
+  - Character: 3
+    SelectedLoadoutOptions: 000000000200000003000000
+  - Character: 0
+    SelectedLoadoutOptions: 0000000001000000020000000a000000
+  - Character: 5
+    SelectedLoadoutOptions: 0000000001000000000000000000000001000000
 --- !u!4 &1037171855
 Transform:
   m_ObjectHideFlags: 0

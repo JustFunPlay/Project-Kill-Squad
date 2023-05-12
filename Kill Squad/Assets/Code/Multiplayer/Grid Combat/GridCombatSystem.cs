@@ -246,7 +246,7 @@ public class GridCombatSystem : Pathfinding
             {
                 CharacterBase character = Instantiate(squad.squad[i].physicalCharacter, grid.GetWorldPosition((int)attackerGridSpawn.x + i, (int)attackerGridSpawn.y), Quaternion.identity);
                 NetworkServer.Spawn(character.gameObject, player.gameObject);
-                character.SetupCharacter(player, squad.squad[i]);
+                //character.SetupCharacter(player, squad.squad[i]);
             }
             nextTeam = true;
             return;
@@ -255,7 +255,7 @@ public class GridCombatSystem : Pathfinding
         {
             CharacterBase character = Instantiate(squad.squad[i].physicalCharacter, grid.GetWorldPosition((int)defenderGridSpawn.x - i, (int)defenderGridSpawn.y), Quaternion.identity);
             NetworkServer.Spawn(character.gameObject, player.gameObject);
-            character.SetupCharacter(player, squad.squad[i]);
+            //character.SetupCharacter(player, squad.squad[i]);
         }
     }
 }

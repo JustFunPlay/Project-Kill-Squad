@@ -12,6 +12,8 @@ using UnityEngine.UI;
 
 public class CharacterBase : NetworkBehaviour
 {
+    [SerializeField] protected CharacterInfoBase charInfo;
+
     [Header("Stats")]
     [SyncVar] [SerializeField] protected int turnSpeed;
     [SyncVar] [SerializeField] protected int movement;
@@ -165,17 +167,17 @@ public class CharacterBase : NetworkBehaviour
 
     #endregion
 
-    [Server] public virtual void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    [Server] public virtual void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         owner = player;
-        turnSpeed = info.speed;
-        movement = info.movement;
-        maxHealth = info.health;
-        armorSave = info.armor;
-        rangedSkill = info.ranged;
-        meleeSkill = info.melee;
-        meleeAttacks = info.attacks;
-        currentHealth = maxHealth;
+        //turnSpeed = info.speed;
+        //movement = info.movement;
+        //maxHealth = info.health;
+        //armorSave = info.armor;
+        //rangedSkill = info.ranged;
+        //meleeSkill = info.melee;
+        //meleeAttacks = info.attacks;
+        currentHealth = charInfo.health;
         TurnTracker.instance.characters.Add(this);
         if (armorLuck != LuckyRate.Never)
             luckyArmor = true;

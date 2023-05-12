@@ -21,16 +21,16 @@ public class Apothecary : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ultChargeText;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    public override void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.weaponOptions);
-        ApothecaryData medicInfo = (ApothecaryData)info;
-        healRange = medicInfo.healValue;
-        remainingHealCharges = medicInfo.healCharges;
+        //equipedWeapons.AddRange(info.weaponOptions);
+        //ApothecaryData medicInfo = (ApothecaryData)info;
+        //healRange = medicInfo.healValue;
+        //remainingHealCharges = medicInfo.healCharges;
         Invoke("UpdateHealCharges", 0.5f);
         Invoke("ShowUltCharge", 0.5f);
-        base.SetupCharacter(player, info);
+        base.SetupCharacter(player, Loadout);
     }
     [Server]
     protected override void ReportForCombat(CombatReport report)

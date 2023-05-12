@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95608235877bd41428be6f0baf33df37, type: 3}
-  m_Name: KillSquad
+  m_Name: KillSquadCharacters
   m_EditorClassIdentifier: 
   squad:
   - {fileID: 11400000, guid: c2abe5e3aedb22849bb42fa39500cfa9, type: 2}

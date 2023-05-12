@@ -19,16 +19,16 @@ public class Hitman : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ultProgress;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    public override void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.weaponOptions);
-        HitmanData hitInfo = (HitmanData)info;
-        ultDamage = hitInfo.ultDamage;
-        requiredCrits = hitInfo.requiredCrits;
+        //equipedWeapons.AddRange(info.weaponOptions);
+        //HitmanData hitInfo = (HitmanData)info;
+        //ultDamage = hitInfo.ultDamage;
+        //requiredCrits = hitInfo.requiredCrits;
         currentCrits = 0;
         Invoke("UpdateUltProgress", 0.5f);
-        base.SetupCharacter(player, info);
+        base.SetupCharacter(player, Loadout);
     }
 
     [Server]
