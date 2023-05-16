@@ -58,14 +58,14 @@ public class CharacterBase : NetworkBehaviour
 
 
     #region Getters/Setters
-    public int Speed { get { return turnSpeed; } protected set { turnSpeed = value; } }
-    public int Movement { get { return movement; } protected set { movement = value; } }
+    public int Speed { get { return turnSpeed + charInfo.speed; } protected set { turnSpeed = value; } }
+    public int Movement { get { return movement + charInfo.movement; } protected set { movement = value; } }
     public float Progress { get { return turnProgress; } protected set { turnProgress = value; } }
     public int Health { get { return currentHealth; } protected set { currentHealth = value; } }
-    public int Armor { get { return armorSave; } protected set { armorSave = value; } }
-    public int Ranged { get { return rangedSkill; } protected set { rangedSkill = value; } }
-    public int Melee { get { return meleeSkill; } protected set { meleeSkill = value; } }
-    public int Attacks { get { return meleeAttacks; } protected set { meleeAttacks = value; } }
+    public int Armor { get { return armorSave + charInfo.armor; } protected set { armorSave = value; } }
+    public int Ranged { get { return rangedSkill + charInfo.ranged; } protected set { rangedSkill = value; } }
+    public int Melee { get { return meleeSkill + charInfo.melee; } protected set { meleeSkill = value; } }
+    public int Attacks { get { return meleeAttacks + charInfo.attacks; } protected set { meleeAttacks = value; } }
     public int Dodge { get { return dodgeChance; } protected set { dodgeChance = value; } }
     public int DR { get { return damageReduction; } protected set { damageReduction = value; } }
     public InGamePlayer Owner { get { return owner; } }
@@ -355,15 +355,15 @@ public class CharacterBase : NetworkBehaviour
     }
     [Server] public void GetHealed(int healValue, out int healingDone)
     {
-        healingDone = Mathf.Min(maxHealth - currentHealth, healValue);
-        currentHealth = Mathf.Min(currentHealth + healValue, maxHealth);
+        healingDone = Mathf.Min(charInfo.health - currentHealth, healValue);
+        currentHealth = Mathf.Min(currentHealth + healValue, charInfo.health);
         UpdateHpBar();
     }
 
     [ClientRpc] private void UpdateHpBar()
     {
         hpSlider.value = currentHealth;
-        hpSlider.maxValue = maxHealth;
+        hpSlider.maxValue = charInfo.health;
         if (isOwned)
             hpSlider.fillRect.GetComponent<Image>().color = Color.green;
         else

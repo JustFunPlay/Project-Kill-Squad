@@ -20,14 +20,21 @@ MonoBehaviour:
   ranged: 5
   melee: 5
   attacks: 3
-  equipedWeapons:
+  weaponOptions:
   - {fileID: 11400000, guid: fc6c1c2fee90cff4891984f600e95697, type: 2}
   - {fileID: 11400000, guid: b297c12e1194e6b47b50561028208551, type: 2}
+  - {fileID: 11400000, guid: ea2efbb9be78cae448bc8744e50b4862, type: 2}
   psychicPoints: 40
   psychicGeneration: {x: 6, y: 15}
   psychicRange: 15
-  discipline1: {fileID: 11400000, guid: 8f0469b188b055c40a966558919ece86, type: 2}
-  discipline2: {fileID: 11400000, guid: 7d8e70a8de910de4ea76e065c2ce47c5, type: 2}
-  hasRunicArmor: 1
+  disciplines:
+  - {fileID: 11400000, guid: a5aa49e46f074c14b9488b63fa9d4b86, type: 2}
+  - {fileID: 11400000, guid: eb0fc221bed62f94ba7435b901fc1182, type: 2}
+  - {fileID: 11400000, guid: cec1140bbb704e44eb96b620b5b2c1ab, type: 2}
+  - {fileID: 11400000, guid: ab1995ee3ab746048b77a0a96214d16b, type: 2}
+  - {fileID: 11400000, guid: dfb1650c8f06f244396bd97453f66470, type: 2}
+  - {fileID: 11400000, guid: ed8b92b6ce9587f499c7876a9cb7d840, type: 2}
+  - {fileID: 11400000, guid: 7d8e70a8de910de4ea76e065c2ce47c5, type: 2}
+  - {fileID: 11400000, guid: 8f0469b188b055c40a966558919ece86, type: 2}
   ultRange: 10
   requiredUltPoints: 40

@@ -2035,6 +2035,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
+  charInfo: {fileID: 11400000, guid: 3cca3d71dd3d60f48b2332497002960d, type: 2}
   turnSpeed: 0
   movement: 0
   maxHealth: 0

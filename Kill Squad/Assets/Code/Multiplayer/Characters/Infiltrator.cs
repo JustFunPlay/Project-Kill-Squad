@@ -12,8 +12,6 @@ using Mirror;
 public class Infiltrator : CharacterAttacks
 {
     [Header("Ult")]
-    [SyncVar] [SerializeField] private int ultDuration;
-
     [SyncVar] [SerializeField] private int invisibleDuration;
     [SyncVar] [SerializeField] private bool canGoInvisible;
     [SerializeField] private GameObject[] invisibleObjects;
@@ -23,9 +21,10 @@ public class Infiltrator : CharacterAttacks
     public override void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         equipedWeapons.Clear();
-        //equipedWeapons.AddRange(info.weaponOptions);
-        //InfiltratorData infilInfo = (InfiltratorData)info;
-        //ultDuration = infilInfo.ultDuration;
+        for (int i = 0; i < 2; i++)
+        {
+            equipedWeapons.Add(Loadout[i]);
+        }
         canGoInvisible = true;
         Invoke("ShowUltCharge", 0.5f);
         base.SetupCharacter(player, Loadout);
@@ -129,30 +128,30 @@ public class Infiltrator : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(equipedWeapons[0].weaponName) && (performedActions.Contains($"{ equipedWeapons[0].weaponName}2") || equipedWeapons[0].weaponName.Contains("Twin") == false))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[0]].weaponName) && (performedActions.Contains($"{ charInfo.weaponOptions[equipedWeapons[0]].weaponName}2") || charInfo.weaponOptions[equipedWeapons[0]].weaponName.Contains("Twin") == false))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[0]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                 if (target)
                 {
-                    if (performedActions.Contains(equipedWeapons[0].weaponName) && equipedWeapons[0].weaponName.Contains("Twin"))
-                        StartAction($"{ equipedWeapons[0].weaponName}2");
+                    if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[0]].weaponName) && charInfo.weaponOptions[equipedWeapons[0]].weaponName.Contains("Twin"))
+                        StartAction($"{ charInfo.weaponOptions[equipedWeapons[0]].weaponName}2");
                     else
-                        StartAction(equipedWeapons[0].weaponName);
+                        StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
                     if (invisibleDuration > 0)
                         ExitInvisible();
-                    StartCoroutine(NormalFire(equipedWeapons[0], target));
+                    StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                 }
                 break;
             case Action.Action2:
-                if (performedActions.Contains(equipedWeapons[1].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[1]].weaponName))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[1]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[1]]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[1].weaponName);
+                    StartAction(charInfo.weaponOptions[equipedWeapons[1]].weaponName);
                     if (invisibleDuration > 0)
                         ExitInvisible();
-                    StartCoroutine(StandardMelee(equipedWeapons[1], target));
+                    StartCoroutine(StandardMelee(charInfo.weaponOptions[equipedWeapons[1]], target));
                 }
                 break;
             default:
@@ -162,7 +161,8 @@ public class Infiltrator : CharacterAttacks
     }
     [Server] private void GoInvisible()
     {
-        invisibleDuration = ultDuration;
+        InfiltratorData infilInfo = (InfiltratorData)charInfo;
+        invisibleDuration = infilInfo.ultDuration;
         movement += 1;
         dodgeChance += 10;
         ToggleInvisible(false);

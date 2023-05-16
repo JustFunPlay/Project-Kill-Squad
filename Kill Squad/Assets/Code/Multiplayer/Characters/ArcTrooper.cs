@@ -16,8 +16,6 @@ public class ArcTrooper : CharacterAttacks
     [SyncVar] [SerializeField] int storedPower;
 
     [Header("Ult")]
-    [SyncVar] [SerializeField] int ultDamage;
-    [SyncVar] [SerializeField] int ultchargeRequirement;
     [SyncVar] [SerializeField] int currentUltCharge;
     [SerializeField] private TMPro.TextMeshProUGUI ultCounter;
 
@@ -25,10 +23,10 @@ public class ArcTrooper : CharacterAttacks
     public override void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         equipedWeapons.Clear();
-        //equipedWeapons.AddRange(info.weaponOptions);
-        //ArcTrooperData arcInfo = (ArcTrooperData)info;
-        //ultDamage = arcInfo.ultDamage;
-        //ultchargeRequirement = arcInfo.ultChargeRequirement;
+        for (int i = 0; i < 2; i++)
+        {
+            equipedWeapons.Add(Loadout[i]);
+        }
         currentUltCharge = 0;
         Invoke("UpdateUltPoints", 0.5f);
         base.SetupCharacter(player, Loadout);
@@ -116,27 +114,28 @@ public class ArcTrooper : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(equipedWeapons[0].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[0]].weaponName))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[0]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[0].weaponName);
-                    StartCoroutine(TeslaFire(equipedWeapons[0], target));
+                    StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
+                    StartCoroutine(TeslaFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                 }
                 break;
             case Action.Action2:
-                if (performedActions.Contains(equipedWeapons[1].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[1]].weaponName))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[1]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[1]]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[1].weaponName);
-                    StartCoroutine(TeslaMelee(equipedWeapons[1], target));
+                    StartAction(charInfo.weaponOptions[equipedWeapons[1]].weaponName);
+                    StartCoroutine(TeslaMelee(charInfo.weaponOptions[equipedWeapons[1]], target));
                 }
                 break;
             case Action.Ultimate:
-                if (currentUltCharge < ultchargeRequirement)
+                ArcTrooperData arcInfo = (ArcTrooperData)charInfo;
+                if (currentUltCharge < arcInfo.ultChargeRequirement)
                     return;
                 StartAction();
                 currentUltCharge = 0;
@@ -171,7 +170,7 @@ public class ArcTrooper : CharacterAttacks
                     if (hasLos)
                     {
                         DoTeslaZap(character.transform);
-                        character.TakeDamage(ultDamage, true, out int damageDealt, out bool kilingBlow);
+                        character.TakeDamage(arcInfo.ultDamage, true, out int damageDealt, out bool kilingBlow);
                         totalUltDamage += damageDealt;
                         if (kilingBlow)
                             hasKilled = true;
@@ -249,7 +248,8 @@ public class ArcTrooper : CharacterAttacks
     [ClientRpc]
     private void UpdateUltPoints()
     {
-        ultCounter.text = $"Ult progress:\n[{Mathf.Min(currentUltCharge, ultchargeRequirement)}/{ultchargeRequirement}]";
+        ArcTrooperData arcInfo = (ArcTrooperData)charInfo;
+        ultCounter.text = $"Ult progress:\n[{Mathf.Min(currentUltCharge, arcInfo.ultChargeRequirement)}/{arcInfo.ultChargeRequirement}]";
     }
     [ClientRpc] private void DoTeslaZap(Transform target)
     {
