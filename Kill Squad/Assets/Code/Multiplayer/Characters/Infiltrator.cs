@@ -164,9 +164,9 @@ public class Infiltrator : CharacterAttacks
         InfiltratorData infilInfo = (InfiltratorData)charInfo;
         invisibleDuration = infilInfo.ultDuration;
         movement += 1;
+        GetRangeVisuals(Movement, false);
         dodgeChance += 10;
         ToggleInvisible(false);
-
     }
     [Server] private void ExitInvisible()
     {

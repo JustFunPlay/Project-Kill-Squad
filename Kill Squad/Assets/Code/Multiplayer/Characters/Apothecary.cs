@@ -27,6 +27,7 @@ public class Apothecary : CharacterAttacks
         {
             equipedWeapons.Add(Loadout[i]);
         }
+        remainingHealCharges = Loadout[3];
         Invoke("UpdateHealCharges", 0.5f);
         Invoke("ShowUltCharge", 0.5f);
         base.SetupCharacter(player, Loadout);

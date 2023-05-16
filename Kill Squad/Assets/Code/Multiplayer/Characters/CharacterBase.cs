@@ -251,7 +251,7 @@ public class CharacterBase : NetworkBehaviour
             EndTurn();
             return;
         }
-        GetRangeVisuals(movement, false);
+        GetRangeVisuals(Movement, false);
     }
     [Server] protected void StartAction(int actionCost = 1, string performedAction = null)
     {
