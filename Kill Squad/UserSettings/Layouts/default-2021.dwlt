@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 28
+  controlID: 62
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 29
+  controlID: 72
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 30
+  controlID: 73
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -653,9 +653,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 29.757618, y: -4.632449, z: -79.07534}
+    m_Target: {x: -1.0289854, y: -0.9548965, z: -0.9610446}
     speed: 2
-    m_Value: {x: 29.757618, y: -4.632449, z: -79.07534}
+    m_Value: {x: -1.0289854, y: -0.9548965, z: -0.9610446}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -702,13 +702,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.00031537816, y: 0.9990923, z: -0.040794566, w: -0.007191136}
+    m_Target: {x: -0.073491655, y: 0.92601705, z: -0.24917322, w: -0.27373987}
     speed: 2
-    m_Value: {x: -0.00037658823, y: 0.99912965, z: -0.04079606, w: -0.008690195}
+    m_Value: {x: -0.07390485, y: 0.925675, z: -0.2505708, w: -0.273639}
   m_Size:
-    m_Target: 40.226524
+    m_Target: 1.869979
     speed: 2
-    m_Value: 38.49428
+    m_Value: 40.226524
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -894,13 +894,13 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Marnix stuff/Hitman
+    - Assets/Marnix stuff/Assault Rifle
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Marnix stuff/Hitman
+  - Assets/Marnix stuff/Assault Rifle
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Marni\OneDrive\Documenten\GitHub\Project-Kill-Squad\Kill
     Squad
@@ -908,9 +908,9 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 50}
-    m_SelectedIDs: 24630000
-    m_LastClickedID: 25380
-    m_ExpandedIDs: 00000000d46200001263000000ca9a3b
+    m_SelectedIDs: 68650000
+    m_LastClickedID: 25960
+    m_ExpandedIDs: 0000000096640000a064000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -938,7 +938,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000d4620000
+    m_ExpandedIDs: 0000000096640000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
