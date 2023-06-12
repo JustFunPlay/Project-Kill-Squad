@@ -5,8 +5,8 @@ using UnityEngine;
 public class ChangeScreenRatio : MonoBehaviour
 {
     [SerializeField] Vector2[] resolutions;
-    public int resolutionIndex;
-    public bool isFullScreen;
+    [SerializeField] int resolutionIndex;
+    [SerializeField] bool isFullScreen;
 
     public void ToggleFS(bool fs)
     {
