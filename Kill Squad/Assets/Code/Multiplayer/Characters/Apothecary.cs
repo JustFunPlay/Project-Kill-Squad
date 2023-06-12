@@ -12,7 +12,6 @@ using Mirror;
 public class Apothecary : CharacterAttacks
 {
     [Header("Equipment")]
-    [SyncVar] [SerializeField] private Vector2 healRange;
     [SyncVar] [SerializeField] private int remainingHealCharges;
     [SerializeField] private TMPro.TextMeshProUGUI chargeCounter;
 
@@ -21,16 +20,17 @@ public class Apothecary : CharacterAttacks
     [SerializeField] private TMPro.TextMeshProUGUI ultChargeText;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    public override void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.equipedWeapons);
-        ApothecaryData medicInfo = (ApothecaryData)info;
-        healRange = medicInfo.healValue;
-        remainingHealCharges = medicInfo.healCharges;
+        for (int i = 0; i < 3; i++)
+        {
+            equipedWeapons.Add(Loadout[i]);
+        }
+        remainingHealCharges = Loadout[3];
         Invoke("UpdateHealCharges", 0.5f);
         Invoke("ShowUltCharge", 0.5f);
-        base.SetupCharacter(player, info);
+        base.SetupCharacter(player, Loadout);
     }
     [Server]
     protected override void ReportForCombat(CombatReport report)
@@ -121,54 +121,54 @@ public class Apothecary : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(equipedWeapons[0].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[0]].weaponName))
                     return;
-                if (equipedWeapons[0].type == WeaponType.Combat && selectedVariant == ActionVar.Variant1 && remainingActions >= 2)
+                if (charInfo.weaponOptions[equipedWeapons[0]].type == WeaponType.Combat && selectedVariant == ActionVar.Variant1 && remainingActions >= 2)
                 {
-                    target = CheckValidTarget(hit, equipedWeapons[0]);
+                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                     if (target)
                     {
-                        StartAction(2, equipedWeapons[0].weaponName);
-                        StartCoroutine(DoubleFire(equipedWeapons[0], target));
+                        StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
+                        StartCoroutine(DoubleFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                     }
                 }
-                else if (equipedWeapons[0].type == WeaponType.Combat && selectedVariant == ActionVar.Variant2 && remainingActions >= 2)
+                else if (charInfo.weaponOptions[equipedWeapons[0]].type == WeaponType.Combat && selectedVariant == ActionVar.Variant2 && remainingActions >= 2)
                 {
-                    target = CheckValidTarget(hit, equipedWeapons[0]);
+                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                     if (target)
                     {
-                        StartAction(2, equipedWeapons[0].weaponName);
-                        StartCoroutine(AimedFire(equipedWeapons[0], target));
+                        StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
+                        StartCoroutine(AimedFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                     }
                 }
                 else
                 {
-                    target = CheckValidTarget(hit, equipedWeapons[0]);
+                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                     if (target)
                     {
-                        StartAction(equipedWeapons[0].weaponName);
-                        StartCoroutine(NormalFire(equipedWeapons[0], target));
+                        StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
+                        StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                     }
                 }
                 break;
             case Action.Action2:
-                if (performedActions.Contains(equipedWeapons[1].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[1]].weaponName))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[1]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[1]]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[1].weaponName);
-                    SpreadFire(equipedWeapons[1], target);
+                    StartAction(charInfo.weaponOptions[equipedWeapons[1]].weaponName);
+                    SpreadFire(charInfo.weaponOptions[equipedWeapons[1]], target);
                 }
                 break;
             case Action.Action3:
-                if (performedActions.Contains(equipedWeapons[2].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[2]].weaponName))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[2]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[2]]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[2].weaponName);
-                    StartCoroutine(StandardMelee(equipedWeapons[2], target));
+                    StartAction(charInfo.weaponOptions[equipedWeapons[2]].weaponName);
+                    StartCoroutine(StandardMelee(charInfo.weaponOptions[equipedWeapons[2]], target));
                 }
                 break;
             case Action.Action4:
@@ -217,7 +217,8 @@ public class Apothecary : CharacterAttacks
                     if (!hasLos)
                         return;
                     StartAction();
-                    int healvalue = Random.Range((int)healRange.x, (int)healRange.y);
+                    ApothecaryData medicInfo = (ApothecaryData)charInfo;
+                    int healvalue = Random.Range((int)medicInfo.healValue.x, (int)medicInfo.healValue.y);
                     target.GetHealed(healvalue, out int healingDone);
                     remainingHealCharges--;
                     UpdateHealCharges();

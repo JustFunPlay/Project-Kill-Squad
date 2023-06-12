@@ -20,9 +20,10 @@ MonoBehaviour:
   ranged: 6
   melee: 6
   attacks: 3
-  equipedWeapons:
+  weaponOptions:
   - {fileID: 11400000, guid: a468d40f553a91b4b808e1ba225eeaa5, type: 2}
   - {fileID: 11400000, guid: f627d3d24b95b1c409f61abe9ce35313, type: 2}
   - {fileID: 11400000, guid: 3fd1e48e503ac604dadf3712057fe630, type: 2}
+  - {fileID: 11400000, guid: 461a13120ba3d054a9a729ffda2402de, type: 2}
   healValue: {x: 6, y: 15}
   healCharges: 10

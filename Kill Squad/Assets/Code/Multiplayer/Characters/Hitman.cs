@@ -13,22 +13,20 @@ using System.Collections;
 public class Hitman : CharacterAttacks
 {
     [Header("Ult")]
-    [SyncVar] [SerializeField] private int ultDamage;
-    [SyncVar] [SerializeField] private int requiredCrits;
     [SyncVar] [SerializeField] private int currentCrits;
     [SerializeField] private TMPro.TextMeshProUGUI ultProgress;
 
     [Server]
-    public override void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    public override void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         equipedWeapons.Clear();
-        equipedWeapons.AddRange(info.equipedWeapons);
-        HitmanData hitInfo = (HitmanData)info;
-        ultDamage = hitInfo.ultDamage;
-        requiredCrits = hitInfo.requiredCrits;
+        for (int i = 0; i < 3; i++)
+        {
+            equipedWeapons.Add(Loadout[i]);
+        }
         currentCrits = 0;
         Invoke("UpdateUltProgress", 0.5f);
-        base.SetupCharacter(player, info);
+        base.SetupCharacter(player, Loadout);
     }
 
     [Server]
@@ -115,49 +113,50 @@ public class Hitman : CharacterAttacks
         switch (selectedAction)
         {
             case Action.Action1:
-                if (performedActions.Contains(equipedWeapons[0].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[0]].weaponName))
                     return;
-                if (equipedWeapons[0].type == WeaponType.Precision && selectedVariant == ActionVar.Variant1 && remainingActions >= 2)
+                if (charInfo.weaponOptions[equipedWeapons[0]].type == WeaponType.Precision && selectedVariant == ActionVar.Variant1 && remainingActions >= 2)
                 {
-                    target = CheckValidTarget(hit, equipedWeapons[0]);
+                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                     if (target)
                     {
-                        StartAction(2, equipedWeapons[0].weaponName);
-                        StartCoroutine(AimedFire(equipedWeapons[0], target));
+                        StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
+                        StartCoroutine(AimedFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                     }
                 }
                 else
                 {
-                    target = CheckValidTarget(hit, equipedWeapons[0]);
+                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                     if (target)
                     {
-                        StartAction(equipedWeapons[0].weaponName);
-                        StartCoroutine(NormalFire(equipedWeapons[0], target));
+                        StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
+                        StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                     }
                 }
                 break;
             case Action.Action2:
-                if (performedActions.Contains(equipedWeapons[1].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[1]].weaponName))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[1]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[1]]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[1].weaponName);
-                    StartCoroutine(NormalFire(equipedWeapons[1], target));
+                    StartAction(charInfo.weaponOptions[equipedWeapons[1]].weaponName);
+                    StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[1]], target));
                 }
                 break;
             case Action.Action3:
-                if (performedActions.Contains(equipedWeapons[2].weaponName))
+                if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[2]].weaponName))
                     return;
-                target = CheckValidTarget(hit, equipedWeapons[2]);
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[2]]);
                 if (target)
                 {
-                    StartAction(equipedWeapons[2].weaponName);
-                    StartCoroutine(StandardMelee(equipedWeapons[2], target));
+                    StartAction(charInfo.weaponOptions[equipedWeapons[2]].weaponName);
+                    StartCoroutine(StandardMelee(charInfo.weaponOptions[equipedWeapons[2]], target));
                 }
                 break;
             case Action.Ultimate:
-                if (currentCrits < requiredCrits)
+                HitmanData hitInfo = (HitmanData)charInfo;
+                if (currentCrits < hitInfo.requiredCrits)
                     return;
                 if (hit.collider.GetComponent<CharacterBase>() && hit.collider.GetComponent<CharacterBase>().Owner != owner)
                 {
@@ -189,9 +188,10 @@ public class Hitman : CharacterAttacks
 
     [Server] IEnumerator PerformUlt(CharacterBase target)
     {
+        HitmanData hitInfo = (HitmanData)charInfo; 
         ShowUlt(target.transform.position);
         yield return new WaitForSeconds(0.8f);
-        Attack(Ranged + 10, false, -10, 19, false, ultDamage, target, out CombatReport newReport);
+        Attack(Ranged + 10, false, -10, 19, false, hitInfo.ultDamage, target, out CombatReport newReport);
         newReport.totalAttackCount++;
         ReportForCombat(newReport);
     }
@@ -203,6 +203,7 @@ public class Hitman : CharacterAttacks
 
     [ClientRpc] private void UpdateUltProgress()
     {
-        ultProgress.text = $"Progress:\n[{Mathf.Min(currentCrits, requiredCrits)}/{requiredCrits}]";
+        HitmanData hitInfo = (HitmanData)charInfo;
+        ultProgress.text = $"Progress:\n[{Mathf.Min(currentCrits, hitInfo.requiredCrits)}/{hitInfo.requiredCrits}]";
     }
 }

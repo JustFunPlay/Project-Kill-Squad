@@ -87,13 +87,13 @@ public class InGamePlayer : NetworkBehaviour
         //{
         //    playerSquad.Add(PersistantInfo.Instance.squad[i]);
         //}
-        //CmdSetUpSquad(playerSquad);
-        CmdSetUpSquad();
+        CmdSetUpSquad(PersistantInfo.Instance.characters);
+        //CmdSetUpSquad();
     }
     //[Command] private void CmdSetUpSquad(List<CharacterLoadout> squad)
-    [Command] private void CmdSetUpSquad()
+    [Command] private void CmdSetUpSquad(List<CharacterLoadout> characters)
     {
-        GridCombatSystem.instance.SetupTeam(PersistantInfo.Instance.squad, this);
+        GridCombatSystem.instance.SetupTeam(characters, this);
         //for (int i = 0; i < PersistantInfo.Instance.squad; i++)
         //{
         //    GridCombatSystem.instance.SetupCharacter(PersistantInfo.Instance.squad[i].Character, PersistantInfo.Instance.squad[i].SelectedLoadoutOptions, this);

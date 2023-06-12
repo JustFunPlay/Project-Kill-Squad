@@ -12,6 +12,8 @@ using UnityEngine.UI;
 
 public class CharacterBase : NetworkBehaviour
 {
+    [SerializeField] protected CharacterInfoBase charInfo;
+
     [Header("Stats")]
     [SyncVar] [SerializeField] protected int turnSpeed;
     [SyncVar] [SerializeField] protected int movement;
@@ -56,14 +58,14 @@ public class CharacterBase : NetworkBehaviour
 
 
     #region Getters/Setters
-    public int Speed { get { return turnSpeed; } protected set { turnSpeed = value; } }
-    public int Movement { get { return movement; } protected set { movement = value; } }
+    public int Speed { get { return turnSpeed + charInfo.speed; } protected set { turnSpeed = value; } }
+    public int Movement { get { return movement + charInfo.movement; } protected set { movement = value; } }
     public float Progress { get { return turnProgress; } protected set { turnProgress = value; } }
     public int Health { get { return currentHealth; } protected set { currentHealth = value; } }
-    public int Armor { get { return armorSave; } protected set { armorSave = value; } }
-    public int Ranged { get { return rangedSkill; } protected set { rangedSkill = value; } }
-    public int Melee { get { return meleeSkill; } protected set { meleeSkill = value; } }
-    public int Attacks { get { return meleeAttacks; } protected set { meleeAttacks = value; } }
+    public int Armor { get { return armorSave + charInfo.armor; } protected set { armorSave = value; } }
+    public int Ranged { get { return rangedSkill + charInfo.ranged; } protected set { rangedSkill = value; } }
+    public int Melee { get { return meleeSkill + charInfo.melee; } protected set { meleeSkill = value; } }
+    public int Attacks { get { return meleeAttacks + charInfo.attacks; } protected set { meleeAttacks = value; } }
     public int Dodge { get { return dodgeChance; } protected set { dodgeChance = value; } }
     public int DR { get { return damageReduction; } protected set { damageReduction = value; } }
     public InGamePlayer Owner { get { return owner; } }
@@ -165,17 +167,17 @@ public class CharacterBase : NetworkBehaviour
 
     #endregion
 
-    [Server] public virtual void SetupCharacter(InGamePlayer player, CharacterInfoBase info)
+    [Server] public virtual void SetupCharacter(InGamePlayer player, List<int> Loadout)
     {
         owner = player;
-        turnSpeed = info.speed;
-        movement = info.movement;
-        maxHealth = info.health;
-        armorSave = info.armor;
-        rangedSkill = info.ranged;
-        meleeSkill = info.melee;
-        meleeAttacks = info.attacks;
-        currentHealth = maxHealth;
+        //turnSpeed = info.speed;
+        //movement = info.movement;
+        //maxHealth = info.health;
+        //armorSave = info.armor;
+        //rangedSkill = info.ranged;
+        //meleeSkill = info.melee;
+        //meleeAttacks = info.attacks;
+        currentHealth = charInfo.health;
         TurnTracker.instance.characters.Add(this);
         if (armorLuck != LuckyRate.Never)
             luckyArmor = true;
@@ -249,7 +251,7 @@ public class CharacterBase : NetworkBehaviour
             EndTurn();
             return;
         }
-        GetRangeVisuals(movement, false);
+        GetRangeVisuals(Movement, false);
     }
     [Server] protected void StartAction(int actionCost = 1, string performedAction = null)
     {
@@ -353,15 +355,15 @@ public class CharacterBase : NetworkBehaviour
     }
     [Server] public void GetHealed(int healValue, out int healingDone)
     {
-        healingDone = Mathf.Min(maxHealth - currentHealth, healValue);
-        currentHealth = Mathf.Min(currentHealth + healValue, maxHealth);
+        healingDone = Mathf.Min(charInfo.health - currentHealth, healValue);
+        currentHealth = Mathf.Min(currentHealth + healValue, charInfo.health);
         UpdateHpBar();
     }
 
     [ClientRpc] private void UpdateHpBar()
     {
         hpSlider.value = currentHealth;
-        hpSlider.maxValue = maxHealth;
+        hpSlider.maxValue = charInfo.health;
         if (isOwned)
             hpSlider.fillRect.GetComponent<Image>().color = Color.green;
         else
