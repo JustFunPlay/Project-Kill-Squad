@@ -242,6 +242,7 @@ public class ArcTrooper : CharacterAttacks
     }
     [Server]protected override void OnMoveEnd()
     {
+        base.OnMoveEnd();
         currentUltCharge++;
         UpdateUltPoints();
     }
