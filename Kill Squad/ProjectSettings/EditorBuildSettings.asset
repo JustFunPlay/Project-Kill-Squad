@@ -17,5 +17,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Skirmish.unity
     guid: 46c2d6e7667ef84408e5be13959a474a
+  - enabled: 1
+    path: Assets/Scenes/Showcase.unity
+    guid: 5070aa4b7a6e4394280c6be4dfd68ccd
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: efe6ee6d24fc0284b98fc21b524fbd73, type: 2}

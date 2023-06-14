@@ -55,6 +55,8 @@ public class CharacterBase : NetworkBehaviour
     [SyncVar] [SerializeField] protected ActionVar selectedVariant;
     protected SyncList<string> performedActions = new SyncList<string>();
 
+    [SerializeField] protected Animator animationController;
+
 
 
     #region Getters/Setters

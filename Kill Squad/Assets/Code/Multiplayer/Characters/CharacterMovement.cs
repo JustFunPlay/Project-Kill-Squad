@@ -87,6 +87,7 @@ public class CharacterMovement : CharacterBase
     }
     [Server] private IEnumerator MoveCharacter(List<Vector3> path)
     {
+        CallMoveAnimation(true);
         while (path.Count > 0)
         {
             transform.LookAt(path[0], Vector3.up);
@@ -107,6 +108,12 @@ public class CharacterMovement : CharacterBase
 
     [Server] protected virtual void OnMoveEnd()
     {
+        CallMoveAnimation(false);
+    }
 
+    [ClientRpc] private void CallMoveAnimation(bool isMoving)
+    {
+        if (animationController)
+            animationController.SetBool("IsMoving", isMoving);
     }
 }
