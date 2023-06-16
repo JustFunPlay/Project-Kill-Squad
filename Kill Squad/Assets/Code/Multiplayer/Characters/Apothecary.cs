@@ -123,32 +123,24 @@ public class Apothecary : CharacterAttacks
             case Action.Action1:
                 if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[0]].weaponName))
                     return;
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
+                if (!target)
+                    return;
+                AimGun();
                 if (charInfo.weaponOptions[equipedWeapons[0]].type == WeaponType.Combat && selectedVariant == ActionVar.Variant1 && remainingActions >= 2)
                 {
-                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
-                    if (target)
-                    {
                         StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
                         StartCoroutine(DoubleFire(charInfo.weaponOptions[equipedWeapons[0]], target));
-                    }
                 }
                 else if (charInfo.weaponOptions[equipedWeapons[0]].type == WeaponType.Combat && selectedVariant == ActionVar.Variant2 && remainingActions >= 2)
                 {
-                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
-                    if (target)
-                    {
                         StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
                         StartCoroutine(AimedFire(charInfo.weaponOptions[equipedWeapons[0]], target));
-                    }
                 }
                 else
                 {
-                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
-                    if (target)
-                    {
                         StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
                         StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[0]], target));
-                    }
                 }
                 break;
             case Action.Action2:
@@ -157,8 +149,9 @@ public class Apothecary : CharacterAttacks
                 target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[1]]);
                 if (target)
                 {
+                    AimGun();
                     StartAction(charInfo.weaponOptions[equipedWeapons[1]].weaponName);
-                    SpreadFire(charInfo.weaponOptions[equipedWeapons[1]], target);
+                    StartCoroutine(SpreadFire(charInfo.weaponOptions[equipedWeapons[1]], target));
                 }
                 break;
             case Action.Action3:
@@ -280,6 +273,11 @@ public class Apothecary : CharacterAttacks
                 base.PerformAction(hit, player);
                 break;
         }
+    }
+    
+    [ClientRpc] private void AimGun()
+    {
+        animationController.SetTrigger("Aim");
     }
 
     [ClientRpc] private void UpdateHealCharges()

@@ -374,7 +374,7 @@ public class CharacterBase : NetworkBehaviour
 
     [Server] public void GetRessurected()
     {
-        currentHealth = (int)(maxHealth * 0.3f);
+        currentHealth = (int)(charInfo.health * 0.3f);
         TurnTracker.instance.characters.Add(this);
         TurnTracker.instance.deadCharacters.Remove(this);
         hasKilled = false;

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: New Commando Info
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 3423450269583213764, guid: 526152e1ca2c8f5479fac8b42d9b7e05, type: 3}
-  speed: 5
+  speed: 8
   movement: 6
   health: 52
   armor: 6

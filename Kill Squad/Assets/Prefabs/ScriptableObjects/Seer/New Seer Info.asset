@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: New Seer Info
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 387466440081277886, guid: 134ccead41d4d624c9c476381ad61738, type: 3}
-  speed: 7
+  speed: 6
   movement: 6
   health: 60
   armor: 5

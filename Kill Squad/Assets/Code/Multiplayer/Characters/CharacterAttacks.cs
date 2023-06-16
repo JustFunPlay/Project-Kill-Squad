@@ -223,9 +223,11 @@ public class CharacterAttacks : CharacterMovement
     [Server]
     protected IEnumerator NormalFire(ScriptableWeapon weapon, CharacterBase target)
     {
+        yield return new WaitForSeconds(1);
         CombatReport report = new CombatReport();
         for (int i = 0; i < weapon.attacks; i++)
         {
+            DoAttack();
             report.totalAttackCount++;
             Attack(Ranged, false, weapon.armorPenetration, weapon.crit, false, weapon.damage, target, out CombatReport newReport);
             CallForGunParticle(target.transform, newReport.attacksHit > 0);
@@ -245,9 +247,11 @@ public class CharacterAttacks : CharacterMovement
     [Server]
     protected IEnumerator DoubleFire(ScriptableWeapon weapon, CharacterBase target)
     {
+        yield return new WaitForSeconds(1);
         CombatReport report = new CombatReport();
         for (int i = 0; i < weapon.attacks * 2; i++)
         {
+            DoAttack();
             report.totalAttackCount++;
             Attack(Ranged, false, weapon.armorPenetration, weapon.crit, false, weapon.damage, target, out CombatReport newReport);
             CallForGunParticle(target.transform, newReport.attacksHit > 0);
@@ -260,16 +264,18 @@ public class CharacterAttacks : CharacterMovement
                 report.killingBlows.AddRange(newReport.killingBlows);
                 break;
             }
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.1f);
         }
         ReportForCombat(report);
     }
     [Server]
     protected IEnumerator AimedFire(ScriptableWeapon weapon, CharacterBase target)
     {
+        yield return new WaitForSeconds(1.2f);
         CombatReport report = new CombatReport();
         for (int i = 0; i < weapon.attacks; i++)
         {
+            DoAttack();
             report.totalAttackCount++;
             Attack(Ranged, true, weapon.armorPenetration, weapon.crit, true, weapon.damage, target, out CombatReport newReport);
             CallForGunParticle(target.transform, newReport.attacksHit > 0);
@@ -282,15 +288,17 @@ public class CharacterAttacks : CharacterMovement
                 report.killingBlows.AddRange(newReport.killingBlows);
                 break;
             }
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.25f);
         }
         ReportForCombat(report);
     }
     [Server]
-    protected void SpreadFire(ScriptableWeapon weapon, CharacterBase target)
+    protected IEnumerator SpreadFire(ScriptableWeapon weapon, CharacterBase target)
     {
+        yield return new WaitForSeconds(1);
         CombatReport report = new CombatReport();
         bool isHalfRange = (GridCombatSystem.instance.FindPath(transform.position, target.transform.position, false).Count - 1) * 2 <= weapon.range;
+        DoAttack();
         for (int i = 0; i < (isHalfRange ? weapon.attacks * 2 : weapon.attacks); i++)
         {
             report.totalAttackCount++;
@@ -312,9 +320,11 @@ public class CharacterAttacks : CharacterMovement
     [Server]
     protected IEnumerator StandardMelee(ScriptableWeapon weapon, CharacterBase target)
     {
+        yield return new WaitForSeconds(1f);
         CombatReport report = new CombatReport();
         for (int i = 0; i < (weapon.type == WeaponType.Swift ? (Attacks + weapon.attacks) * 2 : Attacks + weapon.attacks); i++)
         {
+            DoAttack();
             report.totalAttackCount++;
             Attack(Melee, LuckyMeleeAttack(), weapon.armorPenetration, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
             report.attacksHit += newReport.attacksHit;
@@ -333,9 +343,11 @@ public class CharacterAttacks : CharacterMovement
     [Server]
     protected IEnumerator HeavyMelee(ScriptableWeapon weapon, CharacterBase target)
     {
+        yield return new WaitForSeconds(1);
         CombatReport report = new CombatReport();
         for (int i = 0; i < Attacks + weapon.attacks; i++)
         {
+            DoAttack();
             report.totalAttackCount++;
             Attack(Melee, LuckyMeleeAttack(), weapon.armorPenetration - 2, weapon.crit, LuckyCrit(), (int)(weapon.damage * 1.5f), target, out CombatReport newReport);
             report.attacksHit += newReport.attacksHit;
@@ -410,6 +422,12 @@ public class CharacterAttacks : CharacterMovement
     [ClientRpc] private void CallForGrenadeParticle(Vector3 origin)
     {
         ParticleManager.instance.GrenadeBlast(origin);
+    }
+
+    [ClientRpc] private void DoAttack()
+    {
+        if (animationController)
+            animationController.SetTrigger("Attack");
     }
 }
 

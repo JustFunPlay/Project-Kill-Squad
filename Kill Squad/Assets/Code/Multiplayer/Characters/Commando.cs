@@ -138,23 +138,19 @@ public class Commando : CharacterAttacks
             case Action.Action1:
                 if (performedActions.Contains(charInfo.weaponOptions[equipedWeapons[0]].weaponName))
                     return;
+                target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
+                if (!target)
+                    return;
+                AimGun();
                 if (charInfo.weaponOptions[equipedWeapons[0]].type == WeaponType.RapidFire && selectedVariant == ActionVar.Variant1 && remainingActions >= 2)
                 {
-                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
-                    if (target)
-                    {
                         StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
                         StartCoroutine(DoubleFire(charInfo.weaponOptions[equipedWeapons[0]], target));
-                    }
                 }
                 else
                 {
-                    target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
-                    if (target)
-                    {
                         StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
                         StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[0]], target));
-                    }
                 }
                 break;
             case Action.Action2:
@@ -163,6 +159,7 @@ public class Commando : CharacterAttacks
                 target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[1]]);
                 if (target)
                 {
+                    AimPistol();
                     StartAction(charInfo.weaponOptions[equipedWeapons[1]].weaponName);
                     StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[1]], target));
                 }
@@ -173,6 +170,7 @@ public class Commando : CharacterAttacks
                 target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[2]]);
                 if (target)
                 {
+                    GrabKnife();
                     StartAction(charInfo.weaponOptions[equipedWeapons[2]].weaponName);
                     StartCoroutine(StandardMelee(charInfo.weaponOptions[equipedWeapons[2]], target));
                 }
@@ -271,6 +269,21 @@ public class Commando : CharacterAttacks
         ContinueTurn();
     }
 
+    [ClientRpc]
+    private void AimGun()
+    {
+        animationController.SetTrigger("Aim");
+    }
+    [ClientRpc]
+    private void AimPistol()
+    {
+        animationController.SetTrigger("AimPistol");
+    }
+    [ClientRpc]
+    private void GrabKnife()
+    {
+        animationController.SetTrigger("Knife");
+    }
     [ClientRpc]
     private void UpdateUltProgress()
     {

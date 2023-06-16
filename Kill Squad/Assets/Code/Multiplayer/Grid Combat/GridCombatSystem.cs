@@ -101,13 +101,13 @@ public class GridCombatSystem : Pathfinding
                 }
                 else
                 {
-                    if (Physics.Raycast(grid.GetWorldPosition(x, z) + Vector3.up, Vector3.forward, 2, obstacleLayer))
+                    if (Physics.Raycast(grid.GetWorldPosition(x, z) + Vector3.up * 0.9f, Vector3.forward, 2, obstacleLayer))
                         grid.GetGridObject(x, z).canMoveNorth = false;
-                    if (Physics.Raycast(grid.GetWorldPosition(x, z) + Vector3.up, Vector3.right, 2, obstacleLayer))
+                    if (Physics.Raycast(grid.GetWorldPosition(x, z) + Vector3.up * 0.9f, Vector3.right, 2, obstacleLayer))
                         grid.GetGridObject(x, z).canMoveEast = false;
-                    if (Physics.Raycast(grid.GetWorldPosition(x, z) + Vector3.up, Vector3.back, 2, obstacleLayer))
+                    if (Physics.Raycast(grid.GetWorldPosition(x, z) + Vector3.up * 0.9f, Vector3.back, 2, obstacleLayer))
                         grid.GetGridObject(x, z).canMoveSouth = false;
-                    if (Physics.Raycast(grid.GetWorldPosition(x, z) + Vector3.up, Vector3.left, 2, obstacleLayer))
+                    if (Physics.Raycast(grid.GetWorldPosition(x, z) + Vector3.up * 0.9f, Vector3.left, 2, obstacleLayer))
                         grid.GetGridObject(x, z).canMoveWest = false;
 
                 }
