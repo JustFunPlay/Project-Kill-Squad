@@ -38,6 +38,7 @@ public class Commando : CharacterAttacks
         damageDealt = 0;
         Invoke("UpdateUltProgress", 0.5f);
         Invoke("UpdateGrenadeCount", 0.5f);
+        ChangeEquippedWeapon(equipedWeapons[0]);
         base.SetupCharacter(player, Loadout);
     }
 
@@ -160,6 +161,7 @@ public class Commando : CharacterAttacks
                 if (target)
                 {
                     AimPistol();
+                    ChangeEquippedWeapon(equipedWeapons[1]);
                     StartAction(charInfo.weaponOptions[equipedWeapons[1]].weaponName);
                     StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[1]], target));
                 }
@@ -171,6 +173,7 @@ public class Commando : CharacterAttacks
                 if (target)
                 {
                     GrabKnife();
+                    ChangeEquippedWeapon(equipedWeapons[2]);
                     StartAction(charInfo.weaponOptions[equipedWeapons[2]].weaponName);
                     StartCoroutine(StandardMelee(charInfo.weaponOptions[equipedWeapons[2]], target));
                 }

@@ -60,6 +60,11 @@ public class CharacterAttacks : CharacterMovement
         }
     }
 
+    [Server] public override void ContinueTurn()
+    {
+        ChangeEquippedWeapon(equipedWeapons[0]);
+        base.ContinueTurn();
+    }
 
     #region Start & Stop Callbacks
 
@@ -223,6 +228,7 @@ public class CharacterAttacks : CharacterMovement
     [Server]
     protected IEnumerator NormalFire(ScriptableWeapon weapon, CharacterBase target)
     {
+        transform.LookAt(target.transform.position, Vector3.up);
         yield return new WaitForSeconds(1);
         CombatReport report = new CombatReport();
         for (int i = 0; i < weapon.attacks; i++)
@@ -242,11 +248,13 @@ public class CharacterAttacks : CharacterMovement
             }
             yield return new WaitForSeconds(0.15f);
         }
+        yield return new WaitForSeconds(0.8f);
         ReportForCombat(report);
     }
     [Server]
     protected IEnumerator DoubleFire(ScriptableWeapon weapon, CharacterBase target)
     {
+        transform.LookAt(target.transform.position, Vector3.up);
         yield return new WaitForSeconds(1);
         CombatReport report = new CombatReport();
         for (int i = 0; i < weapon.attacks * 2; i++)
@@ -266,11 +274,13 @@ public class CharacterAttacks : CharacterMovement
             }
             yield return new WaitForSeconds(0.1f);
         }
+        yield return new WaitForSeconds(0.8f);
         ReportForCombat(report);
     }
     [Server]
     protected IEnumerator AimedFire(ScriptableWeapon weapon, CharacterBase target)
     {
+        transform.LookAt(target.transform.position, Vector3.up);
         yield return new WaitForSeconds(1.2f);
         CombatReport report = new CombatReport();
         for (int i = 0; i < weapon.attacks; i++)
@@ -290,11 +300,13 @@ public class CharacterAttacks : CharacterMovement
             }
             yield return new WaitForSeconds(0.25f);
         }
+        yield return new WaitForSeconds(0.8f);
         ReportForCombat(report);
     }
     [Server]
     protected IEnumerator SpreadFire(ScriptableWeapon weapon, CharacterBase target)
     {
+        transform.LookAt(target.transform.position, Vector3.up);
         yield return new WaitForSeconds(1);
         CombatReport report = new CombatReport();
         bool isHalfRange = (GridCombatSystem.instance.FindPath(transform.position, target.transform.position, false).Count - 1) * 2 <= weapon.range;
@@ -314,12 +326,14 @@ public class CharacterAttacks : CharacterMovement
                 break;
             }
         }
+        yield return new WaitForSeconds(0.8f);
         ReportForCombat(report);
     }
 
     [Server]
     protected IEnumerator StandardMelee(ScriptableWeapon weapon, CharacterBase target)
     {
+        transform.LookAt(target.transform.position, Vector3.up);
         yield return new WaitForSeconds(1f);
         CombatReport report = new CombatReport();
         for (int i = 0; i < (weapon.type == WeaponType.Swift ? (Attacks + weapon.attacks) * 2 : Attacks + weapon.attacks); i++)
@@ -338,11 +352,13 @@ public class CharacterAttacks : CharacterMovement
             }
             yield return new WaitForSeconds(0.2f);
         }
+        yield return new WaitForSeconds(1);
         ReportForCombat(report);
     }
     [Server]
     protected IEnumerator HeavyMelee(ScriptableWeapon weapon, CharacterBase target)
     {
+        transform.LookAt(target.transform.position, Vector3.up);
         yield return new WaitForSeconds(1);
         CombatReport report = new CombatReport();
         for (int i = 0; i < Attacks + weapon.attacks; i++)
@@ -361,12 +377,14 @@ public class CharacterAttacks : CharacterMovement
             }
             yield return new WaitForSeconds(0.25f);
         }
+        yield return new WaitForSeconds(1);
         ReportForCombat(report);
     }
 
     [Server]
     protected void GrenadeThrow(ScriptableGrenade grenade, int xLocation, int zLocation)
     {
+        transform.LookAt(GridCombatSystem.instance.grid.GetWorldPosition(xLocation, zLocation), Vector3.up);
         CombatReport report = new CombatReport();
         CallForGrenadeParticle(GridCombatSystem.instance.grid.GetWorldPosition(xLocation, zLocation));
         foreach (CharacterBase character in TurnTracker.instance.characters)

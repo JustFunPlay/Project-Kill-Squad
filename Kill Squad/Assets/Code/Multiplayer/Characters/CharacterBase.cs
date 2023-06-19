@@ -55,7 +55,9 @@ public class CharacterBase : NetworkBehaviour
     [SyncVar] [SerializeField] protected ActionVar selectedVariant;
     protected SyncList<string> performedActions = new SyncList<string>();
 
+    [Header("Client visualisation")]
     [SerializeField] protected Animator animationController;
+    [SerializeField] protected GameObject[] weaponModels;
 
 
 
@@ -244,7 +246,7 @@ public class CharacterBase : NetworkBehaviour
         }
     }
 
-    [Server] public void ContinueTurn()
+    [Server] public virtual void ContinueTurn()
     {
         canAct = true;
         SelectAction(Action.Movement, ActionVar.Normal);
@@ -398,6 +400,19 @@ public class CharacterBase : NetworkBehaviour
     [Server] protected void ClearRangeVisuals()
     {
         GridCombatSystem.instance.ResetVisualRange();
+    }
+
+    [ClientRpc] protected void ChangeEquippedWeapon(int weaponIndex)
+    {
+        for (int i = 0; i < weaponModels.Length; i++)
+        {
+            if (!weaponModels[i])
+                continue;
+            if (i == weaponIndex)
+                weaponModels[i].SetActive(true);
+            else
+                weaponModels[i].SetActive(false);
+        }
     }
 
     #region Buffs
