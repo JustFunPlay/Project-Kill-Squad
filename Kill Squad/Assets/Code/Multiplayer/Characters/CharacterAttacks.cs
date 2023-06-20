@@ -435,14 +435,15 @@ public class CharacterAttacks : CharacterMovement
 
     [ClientRpc] private void CallForGunParticle(Transform target, bool hit)
     {
-        ParticleManager.instance.FireBullet(transform.position + Vector3.up * 1.5f, target.position, hit);
+        Vector3 firepos = currentFirePoint != null ? currentFirePoint.position : transform.position + Vector3.up * 1.5f;
+        ParticleManager.instance.FireBullet(firepos, target.position, hit);
     }
     [ClientRpc] private void CallForGrenadeParticle(Vector3 origin)
     {
         ParticleManager.instance.GrenadeBlast(origin);
     }
 
-    [ClientRpc] private void DoAttack()
+    [ClientRpc] protected void DoAttack()
     {
         if (animationController)
             animationController.SetTrigger("Attack");

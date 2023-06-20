@@ -26,6 +26,7 @@ public class Hitman : CharacterAttacks
         }
         currentCrits = 0;
         Invoke("UpdateUltProgress", 0.5f);
+        ChangeEquippedWeapon(equipedWeapons[0]);
         base.SetupCharacter(player, Loadout);
     }
 
@@ -120,6 +121,7 @@ public class Hitman : CharacterAttacks
                     target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                     if (target)
                     {
+                        AimGun();
                         StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
                         StartCoroutine(AimedFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                     }
@@ -129,6 +131,7 @@ public class Hitman : CharacterAttacks
                     target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                     if (target)
                     {
+                        AimGun();
                         StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
                         StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                     }
@@ -140,6 +143,8 @@ public class Hitman : CharacterAttacks
                 target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[1]]);
                 if (target)
                 {
+                    ChangeEquippedWeapon(equipedWeapons[1]);
+                    AimPistol();
                     StartAction(charInfo.weaponOptions[equipedWeapons[1]].weaponName);
                     StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[1]], target));
                 }
@@ -150,6 +155,8 @@ public class Hitman : CharacterAttacks
                 target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[2]]);
                 if (target)
                 {
+                    ChangeEquippedWeapon(equipedWeapons[2]);
+                    GrabKnife();
                     StartAction(charInfo.weaponOptions[equipedWeapons[2]].weaponName);
                     StartCoroutine(StandardMelee(charInfo.weaponOptions[equipedWeapons[2]], target));
                 }
@@ -178,6 +185,7 @@ public class Hitman : CharacterAttacks
                     return;
                 StartAction();
                 currentCrits = 0;
+                ChangeEquippedWeapon(4);
                 StartCoroutine(PerformUlt(target));
                 break;
             default:
@@ -188,16 +196,21 @@ public class Hitman : CharacterAttacks
 
     [Server] IEnumerator PerformUlt(CharacterBase target)
     {
+        transform.LookAt(target.transform.position);
         HitmanData hitInfo = (HitmanData)charInfo; 
         ShowUlt(target.transform.position);
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(2.25f);
+        DoAttack();
         Attack(Ranged + 10, false, -10, 19, false, hitInfo.ultDamage, target, out CombatReport newReport);
         newReport.totalAttackCount++;
+        yield return new WaitForSeconds(2f);
         ReportForCombat(newReport);
     }
     [ClientRpc] void ShowUlt(Vector3 target)
     {
-        ParticleManager.instance.FireRailRound(transform.position, target);
+        animationController.SetTrigger("Railgun");
+        Vector3 firepos = currentFirePoint != null ? currentFirePoint.position : transform.position + Vector3.up * 1.5f;
+        ParticleManager.instance.FireRailRound(firepos, target);
     }
 
 
@@ -206,4 +219,20 @@ public class Hitman : CharacterAttacks
         HitmanData hitInfo = (HitmanData)charInfo;
         ultProgress.text = $"Progress:\n[{Mathf.Min(currentCrits, hitInfo.requiredCrits)}/{hitInfo.requiredCrits}]";
     }
+
+    [ClientRpc]
+    private void AimGun()
+    {
+        animationController.SetTrigger("Aim");
+    }
+    [ClientRpc]
+    private void AimPistol()
+    {
+        animationController.SetTrigger("AimPistol");
+    }
+    [ClientRpc]
+    private void GrabKnife()
+    {
+        animationController.SetTrigger("Knife");
+    } 
 }

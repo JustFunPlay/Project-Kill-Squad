@@ -62,9 +62,10 @@ public class ParticleManager : MonoBehaviour
         float dst = Vector3.Distance(startpoint, endpoint);
         for (int i = 0; i < 10; i++)
         {
-            bullets[index].transform.Translate(Vector3.forward * (dst / 10));
             yield return new WaitForSeconds(0.01f);
+            bullets[index].transform.Translate(Vector3.forward * (dst / 10));
         }
+        yield return new WaitForSeconds(0.01f);
         bullets[index].SetActive(false);
     }
 
@@ -87,19 +88,23 @@ public class ParticleManager : MonoBehaviour
     
     public void FireRailRound(Vector3 origin, Vector3 target)
     {
-        origin += Vector3.up * 1.5f;
         target += Vector3.up * 1.5f;
-        targetLine.SetPosition(0, origin);
-        targetLine.SetPosition(1, target);
-        targetLine.gameObject.SetActive(true);
+        //targetLine.SetPosition(0, origin);
+        //targetLine.SetPosition(1, target);
+        //targetLine.gameObject.SetActive(true);
         StartCoroutine(BurnRailRound(origin, target));
     }
 
     IEnumerator BurnRailRound(Vector3 origin, Vector3 target)
     {
+        yield return new WaitForSeconds(1.5f);
+        targetLine.SetPosition(0, origin);
+        targetLine.SetPosition(1, target);
+        targetLine.gameObject.SetActive(true);
+
         railRound.position = origin;
         railRound.LookAt(target, Vector3.up);
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.75f);
         targetLine.gameObject.SetActive(false);
         railRound.gameObject.SetActive(true);
         railRound.GetComponentInChildren<TrailRenderer>().Clear();

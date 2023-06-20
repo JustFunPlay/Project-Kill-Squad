@@ -58,6 +58,8 @@ public class CharacterBase : NetworkBehaviour
     [Header("Client visualisation")]
     [SerializeField] protected Animator animationController;
     [SerializeField] protected GameObject[] weaponModels;
+    [SerializeField] protected Transform currentFirePoint;
+    [SerializeField] protected Transform[] firePoints;
 
 
 
@@ -366,8 +368,8 @@ public class CharacterBase : NetworkBehaviour
 
     [ClientRpc] private void UpdateHpBar()
     {
-        hpSlider.value = currentHealth;
         hpSlider.maxValue = charInfo.health;
+        hpSlider.value = currentHealth;
         if (isOwned)
             hpSlider.fillRect.GetComponent<Image>().color = Color.green;
         else
@@ -413,6 +415,10 @@ public class CharacterBase : NetworkBehaviour
             else
                 weaponModels[i].SetActive(false);
         }
+        if (weaponIndex >= 0 && weaponIndex < firePoints.Length)
+            currentFirePoint = firePoints[weaponIndex];
+        else
+            currentFirePoint = null;
     }
 
     #region Buffs
