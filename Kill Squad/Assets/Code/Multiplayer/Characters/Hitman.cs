@@ -197,18 +197,23 @@ public class Hitman : CharacterAttacks
     [Server] IEnumerator PerformUlt(CharacterBase target)
     {
         transform.LookAt(target.transform.position);
-        HitmanData hitInfo = (HitmanData)charInfo; 
+        HitmanData hitInfo = (HitmanData)charInfo;
+        UltAnim();
+        yield return new WaitForSeconds(1.5f);
         ShowUlt(target.transform.position);
-        yield return new WaitForSeconds(2.25f);
+        yield return new WaitForSeconds(.75f);
         DoAttack();
         Attack(Ranged + 10, false, -10, 19, false, hitInfo.ultDamage, target, out CombatReport newReport);
         newReport.totalAttackCount++;
         yield return new WaitForSeconds(2f);
         ReportForCombat(newReport);
     }
-    [ClientRpc] void ShowUlt(Vector3 target)
+    [ClientRpc] void UltAnim()
     {
         animationController.SetTrigger("Railgun");
+    }
+    [ClientRpc] void ShowUlt(Vector3 target)
+    {
         Vector3 firepos = currentFirePoint != null ? currentFirePoint.position : transform.position + Vector3.up * 1.5f;
         ParticleManager.instance.FireRailRound(firepos, target);
     }

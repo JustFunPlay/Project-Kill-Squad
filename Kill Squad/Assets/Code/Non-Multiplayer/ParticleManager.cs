@@ -89,19 +89,14 @@ public class ParticleManager : MonoBehaviour
     public void FireRailRound(Vector3 origin, Vector3 target)
     {
         target += Vector3.up * 1.5f;
-        //targetLine.SetPosition(0, origin);
-        //targetLine.SetPosition(1, target);
-        //targetLine.gameObject.SetActive(true);
+        targetLine.SetPosition(0, origin);
+        targetLine.SetPosition(1, target);
+        targetLine.gameObject.SetActive(true);
         StartCoroutine(BurnRailRound(origin, target));
     }
 
     IEnumerator BurnRailRound(Vector3 origin, Vector3 target)
     {
-        yield return new WaitForSeconds(1.5f);
-        targetLine.SetPosition(0, origin);
-        targetLine.SetPosition(1, target);
-        targetLine.gameObject.SetActive(true);
-
         railRound.position = origin;
         railRound.LookAt(target, Vector3.up);
         yield return new WaitForSeconds(0.75f);
