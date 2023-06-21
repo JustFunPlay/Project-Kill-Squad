@@ -11,12 +11,14 @@ GameObject:
   - component: {fileID: 1957109021077813585}
   - component: {fileID: 3208489125816645364}
   - component: {fileID: 820253909545239102}
-  m_Layer: 0
+  - component: {fileID: 2102910247684528440}
+  - component: {fileID: 8773016343172544973}
+  m_Layer: 6
   m_Name: Wall_Corner_Inverted
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1957109021077813585
 Transform:
@@ -83,3 +85,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2102910247684528440
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180748930824954859}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.05, y: 4, z: 1}
+  m_Center: {x: 0, y: 2, z: 0.5}
+--- !u!65 &8773016343172544973
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180748930824954859}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 4, z: 0.05}
+  m_Center: {x: -0.5, y: 2, z: 0}

@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 4508881061161470890}
   - component: {fileID: 665715785817850895}
   - component: {fileID: 3375992947989016773}
-  m_Layer: 0
+  - component: {fileID: 5034484700339752330}
+  m_Layer: 6
   m_Name: Fence_Chainlink
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4508881061161470890
 Transform:
@@ -62,6 +63,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: a5fb21bdc05f62c40a657436a28ed656, type: 2}
+  - {fileID: 2100000, guid: 0143d2126dc601b4ea083d85fbfcb5ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,3 +85,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5034484700339752330
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3880154283197616400}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1, z: 0.05}
+  m_Center: {x: 0, y: 0.5, z: 0}

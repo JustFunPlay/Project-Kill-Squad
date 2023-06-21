@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 2823855270936950228}
   - component: {fileID: 1197820049432296049}
   - component: {fileID: 3997918514425908923}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Fence_Chainlink_Post
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2823855270936950228
 Transform:
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a5fb21bdc05f62c40a657436a28ed656, type: 2}
+  - {fileID: 2100000, guid: 0143d2126dc601b4ea083d85fbfcb5ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

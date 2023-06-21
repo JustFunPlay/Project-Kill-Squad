@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 628434479482450561}
   - component: {fileID: 4546241166964145444}
   - component: {fileID: 1797931347834522094}
+  - component: {fileID: 6881360624745142596}
   m_Layer: 0
   m_Name: Door_GasStation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &628434479482450561
 Transform:
@@ -84,3 +85,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6881360624745142596
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284700362942244923}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.313208, y: 2, z: 0.05}
+  m_Center: {x: -0.656604, y: 2.5, z: 0}

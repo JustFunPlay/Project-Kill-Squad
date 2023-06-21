@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 129935296009468044}
   - component: {fileID: 3918770371211491113}
   - component: {fileID: 1262894289163256803}
-  m_Layer: 0
+  - component: {fileID: 7050909954549211551}
+  m_Layer: 6
   m_Name: Fence_Wood_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &129935296009468044
 Transform:
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7050909954549211551
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758381384994497078}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2, z: 0.05}
+  m_Center: {x: 0, y: 1, z: 0}

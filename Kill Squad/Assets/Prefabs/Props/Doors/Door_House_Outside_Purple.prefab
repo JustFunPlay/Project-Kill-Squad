@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 1059458878156306746}
   - component: {fileID: 1059458878156306747}
   - component: {fileID: 1059458878156306748}
+  - component: {fileID: -5208796822233143761}
   m_Layer: 0
   m_Name: Door_House_Outside_Purple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1059458878156306746
 Transform:
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &-5208796822233143761
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059458878156306749}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0943404, y: 2, z: 0.05}
+  m_Center: {x: -0.5471702, y: 2, z: 0}

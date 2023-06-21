@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 1793801895227739649}
   - component: {fileID: 3407824984544362916}
   - component: {fileID: 625984463106946414}
-  m_Layer: 0
+  - component: {fileID: 7212346249302861572}
+  m_Layer: 6
   m_Name: GasStation_Pump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1793801895227739649
 Transform:
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7212346249302861572
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418367789009769659}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.941273, y: 2.7936, z: 0.9109337}
+  m_Center: {x: 0, y: 1.3968, z: 0}
