@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Apothecary Data
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 3555823683757961821, guid: 468946791af016c44af13fbdd096a65a, type: 3}
+  pointsCost: 60
   speed: 4
   movement: 7
   health: 42
@@ -25,5 +26,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f627d3d24b95b1c409f61abe9ce35313, type: 2}
   - {fileID: 11400000, guid: 3fd1e48e503ac604dadf3712057fe630, type: 2}
   - {fileID: 11400000, guid: 461a13120ba3d054a9a729ffda2402de, type: 2}
+  has3slots: 1
   healValue: {x: 6, y: 15}
   healCharges: 10

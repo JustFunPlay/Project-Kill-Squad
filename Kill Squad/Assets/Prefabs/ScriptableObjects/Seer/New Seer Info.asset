@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: New Seer Info
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 387466440081277886, guid: 134ccead41d4d624c9c476381ad61738, type: 3}
+  pointsCost: 110
   speed: 6
   movement: 6
   health: 60
@@ -24,6 +25,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fc6c1c2fee90cff4891984f600e95697, type: 2}
   - {fileID: 11400000, guid: b297c12e1194e6b47b50561028208551, type: 2}
   - {fileID: 11400000, guid: ea2efbb9be78cae448bc8744e50b4862, type: 2}
+  has3slots: 0
   psychicPoints: 40
   psychicGeneration: {x: 6, y: 15}
   psychicRange: 15

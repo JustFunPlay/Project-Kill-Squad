@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: New Hitman Info
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 7725001508692832866, guid: b968e2042987e474a84ab7796df03486, type: 3}
+  pointsCost: 75
   speed: 8
   movement: 6
   health: 48
@@ -25,5 +26,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 62721487163824b459d468a4465e74c9, type: 2}
   - {fileID: 11400000, guid: b367df74e08c9b449b80d654454926a5, type: 2}
   - {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}
+  has3slots: 1
   ultDamage: 10
   requiredCrits: 0

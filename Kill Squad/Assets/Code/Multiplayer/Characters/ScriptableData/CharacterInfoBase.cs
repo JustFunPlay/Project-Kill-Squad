@@ -6,6 +6,8 @@ using UnityEngine;
 public class CharacterInfoBase : ScriptableObject
 {
     public CharacterBase physicalCharacter;
+    public int pointsCost;
+
     public int speed;
     public int movement;
     public int health;
@@ -15,4 +17,5 @@ public class CharacterInfoBase : ScriptableObject
     public int attacks;
 
     public ScriptableWeapon[] weaponOptions;
+    public bool has3slots;
 }

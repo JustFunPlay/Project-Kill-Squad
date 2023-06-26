@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: New Arc Trooper Info
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 4953558494458179774, guid: 3fa209528caaa6d4e943e50323722c7e, type: 3}
+  pointsCost: 80
   speed: 5
   movement: 7
   health: 60
@@ -25,5 +26,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a953b5c5c5541cc41afa7fc46e39e6bc, type: 2}
   - {fileID: 11400000, guid: 2f608e84912d35140a4d6617c2e9b206, type: 2}
   - {fileID: 11400000, guid: 1d5a63019d9c4fb47a3dd295f0df26b5, type: 2}
+  has3slots: 0
   ultDamage: 12
   ultChargeRequirement: 5
