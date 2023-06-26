@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ElectricalBox
+  m_Name: Van
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_ValidKeywords:
   - _EMISSION
@@ -25,11 +25,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: e1568a46cf3b7b548b624d3d726c12bc, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8ef3b2afa726fac4a8ae5e296c9c99ed, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: c6777384d8ff97248a678c7968cc722f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6377acc3ba59f5c49983968adf90d009, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -45,15 +45,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 2800000, guid: e194754831fe8b4459f6332a2cfac5a6, type: 3}
+        m_Texture: {fileID: 2800000, guid: 13b1dabaef008c14eb9564a3b6255164, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: e1568a46cf3b7b548b624d3d726c12bc, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8ef3b2afa726fac4a8ae5e296c9c99ed, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 2800000, guid: 3abc7f6c3424c324f93664d50a13467a, type: 3}
+        m_Texture: {fileID: 2800000, guid: f9c8ef47b027b0140b0df3cec241de03, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -114,7 +114,7 @@ Material:
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &8513147987008368311
+--- !u!114 &2646589547546043890
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
