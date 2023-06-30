@@ -119,6 +119,7 @@ public class ArcTrooper : CharacterAttacks
                 target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                 if (target)
                 {
+                    Attack(equipedWeapons[0]);
                     StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
                     StartCoroutine(TeslaFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                 }
@@ -129,6 +130,7 @@ public class ArcTrooper : CharacterAttacks
                 target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[1]]);
                 if (target)
                 {
+                    Attack(equipedWeapons[0]);
                     StartAction(charInfo.weaponOptions[equipedWeapons[1]].weaponName);
                     StartCoroutine(TeslaMelee(charInfo.weaponOptions[equipedWeapons[1]], target));
                 }
@@ -258,12 +260,14 @@ public class ArcTrooper : CharacterAttacks
     }
     [ClientRpc] private void ProjectEmp()
     {
+        animationController.SetTrigger("EMP");
         ParticleManager.instance.EMP(transform.position);
     }
 
     [Server]
     protected IEnumerator TeslaFire(ScriptableWeapon weapon, CharacterBase target)
     {
+        yield return new WaitForSeconds(0.4f);
         CombatReport report = new CombatReport();
         for (int i = 0; i < weapon.attacks; i++)
         {
@@ -305,6 +309,7 @@ public class ArcTrooper : CharacterAttacks
             }
             yield return new WaitForSeconds(0.2f);
         }
+        ReturnFromAttack();
         ReportForCombat(report);
     }
     [Server]
@@ -313,6 +318,7 @@ public class ArcTrooper : CharacterAttacks
         CombatReport report = new CombatReport();
         for (int i = 0; i < (weapon.type == WeaponType.Swift ? (Attacks + weapon.attacks) * 2 : Attacks + weapon.attacks); i++)
         {
+            DoAttack();
             report.totalAttackCount++;
             Attack(Melee, LuckyMeleeAttack(), weapon.armorPenetration, weapon.crit, LuckyCrit(), weapon.damage, target, out CombatReport newReport);
             report.attacksHit += newReport.attacksHit;
@@ -333,8 +339,19 @@ public class ArcTrooper : CharacterAttacks
                 report.killingBlows = newReport.killingBlows;
                 break;
             }
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.5f);
         }
         ReportForCombat(report);
+    }
+
+    [ClientRpc]
+    private void Attack(int weaponSlot)
+    {
+        animationController.SetInteger("Weapon", weaponSlot);
+        animationController.SetTrigger("Aim");
+    }
+    [ClientRpc] private void ReturnFromAttack()
+    {
+        animationController.SetTrigger("FinishAttack");
     }
 }

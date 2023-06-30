@@ -127,20 +127,21 @@ public class Apothecary : CharacterAttacks
                 if (!target)
                     return;
                 AimGun();
+                ChangeEquippedWeapon(equipedWeapons[0]);
                 if (charInfo.weaponOptions[equipedWeapons[0]].type == WeaponType.Combat && selectedVariant == ActionVar.Variant1 && remainingActions >= 2)
                 {
-                        StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
-                        StartCoroutine(DoubleFire(charInfo.weaponOptions[equipedWeapons[0]], target));
+                    StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
+                    StartCoroutine(DoubleFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                 }
                 else if (charInfo.weaponOptions[equipedWeapons[0]].type == WeaponType.Combat && selectedVariant == ActionVar.Variant2 && remainingActions >= 2)
                 {
-                        StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
-                        StartCoroutine(AimedFire(charInfo.weaponOptions[equipedWeapons[0]], target));
+                    StartAction(2, charInfo.weaponOptions[equipedWeapons[0]].weaponName);
+                    StartCoroutine(AimedFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                 }
                 else
                 {
-                        StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
-                        StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[0]], target));
+                    StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
+                    StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                 }
                 break;
             case Action.Action2:
@@ -150,6 +151,7 @@ public class Apothecary : CharacterAttacks
                 if (target)
                 {
                     AimGun();
+                    ChangeEquippedWeapon(equipedWeapons[1]);
                     StartAction(charInfo.weaponOptions[equipedWeapons[1]].weaponName);
                     StartCoroutine(SpreadFire(charInfo.weaponOptions[equipedWeapons[1]], target));
                 }
@@ -160,6 +162,8 @@ public class Apothecary : CharacterAttacks
                 target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[2]]);
                 if (target)
                 {
+                    GrabMelee();
+                    ChangeEquippedWeapon(equipedWeapons[2]);
                     StartAction(charInfo.weaponOptions[equipedWeapons[2]].weaponName);
                     StartCoroutine(StandardMelee(charInfo.weaponOptions[equipedWeapons[2]], target));
                 }
@@ -278,6 +282,10 @@ public class Apothecary : CharacterAttacks
     [ClientRpc] private void AimGun()
     {
         animationController.SetTrigger("Aim");
+    }
+    [ClientRpc] private void GrabMelee()
+    {
+        animationController.SetTrigger("GrabMelee");
     }
 
     [ClientRpc] private void UpdateHealCharges()

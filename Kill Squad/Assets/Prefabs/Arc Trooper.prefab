@@ -842,7 +842,7 @@ Transform:
   - {fileID: 4267648204256633194}
   - {fileID: 6889770874459927058}
   - {fileID: 1303625000089998004}
-  - {fileID: 7976389219898874858}
+  - {fileID: 2164527694026892968}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -911,6 +911,10 @@ MonoBehaviour:
   remainingActions: 0
   selectedAction: 0
   selectedVariant: 0
+  animationController: {fileID: 6800233595569502964}
+  weaponModels: []
+  currentFirePoint: {fileID: 0}
+  firePoints: []
   equipmentSlots:
   - {fileID: 2439948230106317444}
   - {fileID: 1611097134782850476}
@@ -1869,6 +1873,97 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4867189762766904, guid: 3051c727a9e218f4eaff572b5d1e8771, type: 3}
   m_PrefabInstance: {fileID: 1298763652701350540}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1838395558990610755
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 7233328889787291325}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_Name
+      value: Arc Trooper
+      objectReference: {fileID: 0}
+    - target: {fileID: 8153101253863224186, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d38d8627a8a96f740b2fd614ad81063e, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+--- !u!1 &1531825120111737874 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+  m_PrefabInstance: {fileID: 1838395558990610755}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &6800233595569502964
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531825120111737874}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f00b8295bacd85c4099eb05b02ef36c0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!4 &2164527694026892968 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
+  m_PrefabInstance: {fileID: 1838395558990610755}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6289055724859790986
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1945,95 +2040,4 @@ MonoBehaviour:
 Transform:
   m_CorrespondingSourceObject: {fileID: 637915511721796760, guid: 6b9c37937a4b93e40b7934237b4a7fa1, type: 3}
   m_PrefabInstance: {fileID: 6289055724859790986}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &7582771776462961665
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 7233328889787291325}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_Name
-      value: Arc Trooper
-      objectReference: {fileID: 0}
-    - target: {fileID: 7071182760956848314, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: d38d8627a8a96f740b2fd614ad81063e, type: 2}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
---- !u!1 &7348189111425139024 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-  m_PrefabInstance: {fileID: 7582771776462961665}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &5745759082772587087
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7348189111425139024}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: db2d10478dc3b90478712884a2661ed3, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!4 &7976389219898874858 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6b7a905f04c6c7d458246e07a23d93c8, type: 3}
-  m_PrefabInstance: {fileID: 7582771776462961665}
   m_PrefabAsset: {fileID: 0}

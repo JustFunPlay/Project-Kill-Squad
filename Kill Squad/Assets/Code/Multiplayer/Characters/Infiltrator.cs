@@ -197,4 +197,14 @@ public class Infiltrator : CharacterAttacks
         else
             ultChargeText.text = "Requires Charging";
     }
+    [ClientRpc]
+    private void AimPistol()
+    {
+        animationController.SetTrigger("AimPistol");
+    }
+    [ClientRpc]
+    private void GrabKnife()
+    {
+        animationController.SetTrigger("Knife");
+    }
 }

@@ -169,6 +169,8 @@ public class Seer : CharacterAttacks
                 target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[0]]);
                 if (target)
                 {
+                    AimGun();
+                    ChangeEquippedWeapon(equipedWeapons[0]);
                     StartAction(charInfo.weaponOptions[equipedWeapons[0]].weaponName);
                     StartCoroutine(NormalFire(charInfo.weaponOptions[equipedWeapons[0]], target));
                 }
@@ -179,6 +181,8 @@ public class Seer : CharacterAttacks
                 target = CheckValidTarget(hit, charInfo.weaponOptions[equipedWeapons[1]]);
                 if (target == null)
                     return;
+                GrabMelee();
+                ChangeEquippedWeapon(equipedWeapons[1]);
                 if (charInfo.weaponOptions[equipedWeapons[1]].type == WeaponType.Heavy && selectedVariant == ActionVar.Variant1 && currentPsychicPoints >= 4)
                 {
                     currentPsychicPoints -= 4;
@@ -389,5 +393,16 @@ public class Seer : CharacterAttacks
         if (path != null && path.Count <= range + 1)
             return target;
         return null;
+    }
+
+    [ClientRpc]
+    private void AimGun()
+    {
+        animationController.SetTrigger("Aim");
+    }
+    [ClientRpc]
+    private void GrabMelee()
+    {
+        animationController.SetTrigger("GrabMelee");
     }
 }
