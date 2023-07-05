@@ -19,7 +19,10 @@ public class LoadoutEditor : MonoBehaviour
 
     private void Start()
     {
-        currentCharacters = PersistantInfo.Instance.characters;
+        for (int i = 0; i < PersistantInfo.Instance.characters.Count; i++)
+        {
+            currentCharacters.Add(PersistantInfo.Instance.characters[i]);
+        }
         UpdatePointsValue();
     }
     private void UpdatePointsValue()
@@ -85,7 +88,11 @@ public class LoadoutEditor : MonoBehaviour
 
     public void ConfirmSquad()
     {
-        PersistantInfo.Instance.characters = currentCharacters;
+        PersistantInfo.Instance.characters.Clear();
+        for (int i = 0; i < currentCharacters.Count; i++)
+        {
+            PersistantInfo.Instance.characters.Add(currentCharacters[i]);
+        }
     }
 
 }
