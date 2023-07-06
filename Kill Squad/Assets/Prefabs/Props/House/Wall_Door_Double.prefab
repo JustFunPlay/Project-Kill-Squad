@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 6751934580451827131}
   - component: {fileID: 9026799669458607285}
   - component: {fileID: 1635795849458272862}
+  - component: {fileID: 4086651247353106330}
   m_Layer: 6
   m_Name: Wall_Door_Double
   m_TagString: Untagged
@@ -208,6 +209,35 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.8468592, y: 3, z: 0.26262045}
   m_Center: {x: -1.57657, y: 1.5, z: 0.031310216}
+--- !u!114 &4086651247353106330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5723230163472145847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 4910945793944225549}
+  clientAuthority: 0
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChange: 1
+  onlySyncOnChangeCorrectionMultiplier: 2
+  rotationSensitivity: 0.01
+  compressRotation: 0
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &6504011704164325641
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,7 +388,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4611198733794038702, guid: 42b99bb6e6246194580250206f3de475, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42b99bb6e6246194580250206f3de475, type: 3}
@@ -424,7 +454,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4611198733794038702, guid: 42b99bb6e6246194580250206f3de475, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42b99bb6e6246194580250206f3de475, type: 3}

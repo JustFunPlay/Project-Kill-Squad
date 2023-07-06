@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 2479499111280546972}
   - component: {fileID: 2736782417271001306}
   - component: {fileID: 218699702208150899}
+  - component: {fileID: 7553860478696611083}
   m_Layer: 6
   m_Name: Wall_Inner_Door
   m_TagString: Untagged
@@ -184,6 +185,35 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.45104063, y: 2.7, z: 0.12}
   m_Center: {x: -0.7744797, y: 1.35, z: 0}
+--- !u!114 &7553860478696611083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4424346539081859119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 3903986531391789717}
+  clientAuthority: 0
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChange: 1
+  onlySyncOnChangeCorrectionMultiplier: 2
+  rotationSensitivity: 0.01
+  compressRotation: 0
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &8722469350822126401
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,7 +258,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1238451842275130500, guid: 2c2506d5c6ca8ea4eb0cc7341223a799, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1901660125510035006, guid: 2c2506d5c6ca8ea4eb0cc7341223a799, type: 3}
       propertyPath: m_RootOrder
