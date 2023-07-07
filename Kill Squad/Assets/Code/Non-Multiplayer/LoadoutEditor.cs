@@ -17,11 +17,17 @@ public class LoadoutEditor : MonoBehaviour
     [SerializeField] private Button confirmButton;
     [SerializeField] private TMPro.TextMeshProUGUI pointsCount;
 
+    [Header("ShowSquad")]
+    [SerializeField] private GameObject[] exampleButtons;
+    [SerializeField] private List<GameObject> currentList = new List<GameObject>();
+    [SerializeField] private GameObject scrollFill;
+
     private void Start()
     {
         for (int i = 0; i < PersistantInfo.Instance.characters.Count; i++)
         {
             currentCharacters.Add(PersistantInfo.Instance.characters[i]);
+            currentList.Add(Instantiate(exampleButtons[currentCharacters[i].Character], scrollFill.transform));
         }
         UpdatePointsValue();
     }
@@ -68,11 +74,20 @@ public class LoadoutEditor : MonoBehaviour
     public void AddCharacter(int character = 0)
     {
         currentCharacters.Add(defaultCharacters[character]);
+        currentList.Add(Instantiate(exampleButtons[character], scrollFill.transform));
         UpdatePointsValue();
     }
-    public void RemoveCharacter(int index)
+    public void RemoveCharacter(GameObject character)
     {
-        currentCharacters.RemoveAt(index);
+        for (int i = 0; i < currentList.Count; i++)
+        {
+            if (character != currentList[i])
+                continue;
+            currentCharacters.RemoveAt(i);
+            Destroy(currentList[i]);
+            currentList.RemoveAt(i);
+            i--;
+        }
         UpdatePointsValue();
     }
     public void ChangeCharacter(int index, int character)

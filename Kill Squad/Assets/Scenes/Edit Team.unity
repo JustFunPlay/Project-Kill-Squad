@@ -860,7 +860,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Add Commando
+  m_text: Commando
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aff558976ade90947adb7b5c457e13a1, type: 2}
   m_sharedMaterial: {fileID: -6831785726816015751, guid: aff558976ade90947adb7b5c457e13a1, type: 2}
@@ -3081,7 +3081,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &455099613
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3122,7 +3122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0.2264151, g: 0.22299752, b: 0.22299752, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4024,7 +4024,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Add Arc Trooper
+  m_text: Arc Trooper
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aff558976ade90947adb7b5c457e13a1, type: 2}
   m_sharedMaterial: {fileID: -6831785726816015751, guid: aff558976ade90947adb7b5c457e13a1, type: 2}
@@ -5083,7 +5083,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Add Hitman
+  m_text: 'Hitman
 
 '
   m_isRightToLeft: 0
@@ -6182,6 +6182,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 996122911}
+  - component: {fileID: 996122912}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -6209,6 +6210,30 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 2000}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &996122912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996122910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 500, y: 120}
+  m_Spacing: {x: 10, y: 10}
+  m_Constraint: 0
+  m_ConstraintCount: 2
 --- !u!1 &1017003900
 GameObject:
   m_ObjectHideFlags: 0
@@ -6828,7 +6853,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Add Infiltrator
+  m_text: Infiltrator
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aff558976ade90947adb7b5c457e13a1, type: 2}
   m_sharedMaterial: {fileID: -6831785726816015751, guid: aff558976ade90947adb7b5c457e13a1, type: 2}
@@ -7484,6 +7509,15 @@ MonoBehaviour:
   currentCharacters: []
   confirmButton: {fileID: 1356289683}
   pointsCount: {fileID: 1221015984}
+  exampleButtons:
+  - {fileID: 6423335177705383893, guid: 2949f960859a2974682ff52d97d3e13f, type: 3}
+  - {fileID: 6423335177705383893, guid: c871be475c07b934cbb852b0558c00f0, type: 3}
+  - {fileID: 6423335177705383893, guid: 6265f95fd1aa6fc42941fed8358f1095, type: 3}
+  - {fileID: 6423335177705383893, guid: 2985e1341f84f514d9fb6b6f419e47ce, type: 3}
+  - {fileID: 6423335177705383893, guid: a91e5bea487aeb24ead5c6905b1980d2, type: 3}
+  - {fileID: 6423335177705383893, guid: b68b0430927e26c48a51d6b824ee0afc, type: 3}
+  currentList: []
+  scrollFill: {fileID: 996122910}
 --- !u!4 &1236401676
 Transform:
   m_ObjectHideFlags: 0
@@ -10319,7 +10353,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Add Seer
+  m_text: Seer
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aff558976ade90947adb7b5c457e13a1, type: 2}
   m_sharedMaterial: {fileID: -6831785726816015751, guid: aff558976ade90947adb7b5c457e13a1, type: 2}
@@ -11008,7 +11042,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.8509804, b: 1, a: 0.8}
+  m_Color: {r: 0, g: 0.8509803, b: 1, a: 0.8}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11534,7 +11568,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Add Apothecary
+  m_text: Apothecary
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aff558976ade90947adb7b5c457e13a1, type: 2}
   m_sharedMaterial: {fileID: -6831785726816015751, guid: aff558976ade90947adb7b5c457e13a1, type: 2}
