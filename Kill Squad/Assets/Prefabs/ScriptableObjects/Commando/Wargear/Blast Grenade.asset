@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Blast Grenade
   attacks: {x: 2, y: 6}
-  range: 10
+  range: 12
   armorPenetration: -4
   crit: 1
-  damage: 9
+  damage: 10
   pointsCost: 5
   count: 2
   extraCost: 15

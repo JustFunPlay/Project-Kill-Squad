@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Shrapnel Grenade
   m_EditorClassIdentifier: 
   weaponName: Shrapnel Grenade
-  attacks: {x: 4, y: 12}
-  range: 10
+  attacks: {x: 5, y: 15}
+  range: 12
   armorPenetration: -2
   crit: 1
   damage: 4

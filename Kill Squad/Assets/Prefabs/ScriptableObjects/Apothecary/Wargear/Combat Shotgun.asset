@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Combat Shotgun
   type: 4
-  attacks: 5
-  range: 6
+  attacks: 6
+  range: 8
   armorPenetration: -3
   crit: 4
-  damage: 2
+  damage: 3
   pointsCost: 0

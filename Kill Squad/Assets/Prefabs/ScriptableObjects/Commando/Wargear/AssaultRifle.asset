@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Assault Rifle
   type: 1
-  attacks: 4
-  range: 15
+  attacks: 5
+  range: 24
   armorPenetration: -1
   crit: 2
-  damage: 4
+  damage: 5
   pointsCost: 0

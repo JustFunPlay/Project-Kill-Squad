@@ -163,7 +163,7 @@ public class Infiltrator : CharacterAttacks
     {
         InfiltratorData infilInfo = (InfiltratorData)charInfo;
         invisibleDuration = infilInfo.ultDuration;
-        movement += 1;
+        movement += 2;
         GetRangeVisuals(Movement, false);
         dodgeChance += 10;
         ToggleInvisible(false);
@@ -176,8 +176,8 @@ public class Infiltrator : CharacterAttacks
         RecieveBuff(StatChange.Melee, 1, 1, true);
         RecieveBuff(StatChange.Ranged, 1, 1, true);
         RecieveBuff(StatChange.Attacks, 1, 1, true);
-        RecieveBuff(StatChange.Crit, 1, 1, true);
-        RecieveBuff(StatChange.Ap, -1, 1, true);
+        RecieveBuff(StatChange.Crit, 2, 1, true);
+        RecieveBuff(StatChange.Ap, -2, 1, true);
         ToggleInvisible(true);
     }
     [ClientRpc] private void ToggleInvisible(bool active)

@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: Burst Rifle
   type: 5
   attacks: 3
-  range: 15
+  range: 24
   armorPenetration: -3
   crit: 6
   damage: 5

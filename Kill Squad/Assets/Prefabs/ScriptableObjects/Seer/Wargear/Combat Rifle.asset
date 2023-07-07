@@ -15,8 +15,8 @@ MonoBehaviour:
   weaponName: Combat Rifle
   type: 0
   attacks: 5
-  range: 18
+  range: 30
   armorPenetration: -2
-  crit: 3
-  damage: 4
+  crit: 4
+  damage: 5
   pointsCost: 0

@@ -77,10 +77,10 @@ public class AutomaticDoor : NetworkBehaviour
         {
             if (Vector3.Distance(TurnTracker.instance.characters[i].transform.position, detectionPoint.position) <= detectionRadius)
             {
-                door.position = Vector3.Lerp(door.position, openPosition.position, Time.fixedDeltaTime);
+                door.position = Vector3.Lerp(door.position, openPosition.position, Time.fixedDeltaTime * 5);
                 return;
             }
         }
-        door.position = Vector3.Lerp(door.position, closedPosition.position, Time.fixedDeltaTime);
+        door.position = Vector3.Lerp(door.position, closedPosition.position, Time.fixedDeltaTime * 5);
     }
 }

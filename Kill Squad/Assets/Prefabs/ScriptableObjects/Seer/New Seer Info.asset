@@ -16,10 +16,10 @@ MonoBehaviour:
   pointsCost: 110
   speed: 6
   movement: 6
-  health: 60
-  armor: 5
+  health: 50
+  armor: 6
   ranged: 5
-  melee: 5
+  melee: 6
   attacks: 3
   weaponOptions:
   - {fileID: 11400000, guid: fc6c1c2fee90cff4891984f600e95697, type: 2}
@@ -27,8 +27,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ea2efbb9be78cae448bc8744e50b4862, type: 2}
   has3slots: 0
   psychicPoints: 40
-  psychicGeneration: {x: 6, y: 15}
-  psychicRange: 15
+  psychicGeneration: {x: 10, y: 20}
+  psychicRange: 18
   disciplines:
   - {fileID: 11400000, guid: a5aa49e46f074c14b9488b63fa9d4b86, type: 2}
   - {fileID: 11400000, guid: eb0fc221bed62f94ba7435b901fc1182, type: 2}
@@ -38,5 +38,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ed8b92b6ce9587f499c7876a9cb7d840, type: 2}
   - {fileID: 11400000, guid: 7d8e70a8de910de4ea76e065c2ce47c5, type: 2}
   - {fileID: 11400000, guid: 8f0469b188b055c40a966558919ece86, type: 2}
-  ultRange: 10
+  ultRange: 18
   requiredUltPoints: 40

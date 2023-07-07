@@ -15,8 +15,8 @@ MonoBehaviour:
   weaponName: Sniper Rifle
   type: 0
   attacks: 1
-  range: 25
+  range: 48
   armorPenetration: -5
   crit: 7
-  damage: 9
+  damage: 10
   pointsCost: 0

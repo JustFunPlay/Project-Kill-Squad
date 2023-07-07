@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Arc Blast
   m_EditorClassIdentifier: 
   weaponName: Arc Blast
-  type: 3
+  type: 0
   attacks: 3
-  range: 20
+  range: 36
   armorPenetration: 0
   crit: 0
-  damage: 6
+  damage: 9
   pointsCost: 0

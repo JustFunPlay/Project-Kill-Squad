@@ -324,7 +324,7 @@ public class ArcTrooper : CharacterAttacks
             report.attacksHit += newReport.attacksHit;
             if (newReport.attacksHit >0 && newReport.killingBlows.Count == 0)
             {
-                target.TakeDamage(2, true, out int teslaDamage, out bool teslaKill);
+                target.TakeDamage(3, true, out int teslaDamage, out bool teslaKill);
                 report.damageDealt += teslaDamage;
                 TeslaCharge(teslaDamage);
                 DoTeslaZap(target.transform);

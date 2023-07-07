@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b435321c4c220d94899710a132796a19, type: 3}
   m_Name: Havoc Twin Pistol(melee)
   m_EditorClassIdentifier: 
-  weaponName: Twin Havoc Blades
+  weaponName: Havoc Twin Blades
   type: 8
   attacks: 0
   range: 1
   armorPenetration: -1
-  crit: 4
+  crit: 5
   damage: 4
   pointsCost: 0

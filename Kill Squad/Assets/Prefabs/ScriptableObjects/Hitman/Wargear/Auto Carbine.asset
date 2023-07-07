@@ -15,8 +15,8 @@ MonoBehaviour:
   weaponName: Auto Carbine
   type: 0
   attacks: 5
-  range: 12
+  range: 18
   armorPenetration: -2
-  crit: 3
+  crit: 4
   damage: 3
   pointsCost: 0

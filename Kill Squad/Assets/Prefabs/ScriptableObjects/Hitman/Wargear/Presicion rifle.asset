@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: Precision rifle
   type: 2
   attacks: 2
-  range: 20
+  range: 36
   armorPenetration: -4
   crit: 5
   damage: 7

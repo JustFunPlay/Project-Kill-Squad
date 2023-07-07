@@ -15,11 +15,11 @@ MonoBehaviour:
   physicalCharacter: {fileID: 4953558494458179774, guid: 3fa209528caaa6d4e943e50323722c7e, type: 3}
   pointsCost: 80
   speed: 5
-  movement: 7
-  health: 60
-  armor: 7
+  movement: 8
+  health: 70
+  armor: 8
   ranged: 4
-  melee: 7
+  melee: 8
   attacks: 2
   weaponOptions:
   - {fileID: 11400000, guid: 971d22f6147c0d544924ff4de2f63b3f, type: 2}

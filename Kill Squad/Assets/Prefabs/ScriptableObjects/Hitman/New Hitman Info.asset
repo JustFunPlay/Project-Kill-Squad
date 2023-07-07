@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   physicalCharacter: {fileID: 7725001508692832866, guid: b968e2042987e474a84ab7796df03486, type: 3}
   pointsCost: 75
-  speed: 8
+  speed: 6
   movement: 6
-  health: 48
-  armor: 5
-  ranged: 8
-  melee: 6
+  health: 50
+  armor: 6
+  ranged: 9
+  melee: 5
   attacks: 3
   weaponOptions:
   - {fileID: 11400000, guid: d4f714846974c5346aa1af556ebad800, type: 2}
@@ -28,4 +28,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e53e921b081a4784f8b771fc4aa6f317, type: 2}
   has3slots: 1
   ultDamage: 10
-  requiredCrits: 0
+  requiredCrits: 5

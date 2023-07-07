@@ -15,8 +15,8 @@ MonoBehaviour:
   weaponName: Zap Cannon
   type: 3
   attacks: 5
-  range: 15
+  range: 18
   armorPenetration: 0
   crit: 0
-  damage: 4
+  damage: 5
   pointsCost: 0

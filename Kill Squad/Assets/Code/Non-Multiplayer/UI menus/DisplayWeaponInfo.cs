@@ -19,7 +19,7 @@ public class DisplayWeaponInfo : MonoBehaviour
         if (weapon.type == WeaponType.Melee || weapon.type == WeaponType.Heavy)
             attacks.text = $"Attacks: +{weapon.attacks}";
         else if (weapon.type == WeaponType.Swift)
-            attacks.text = $"Attacks: +{weapon.attacks}×2";
+            attacks.text = $"Attacks: ×2";
         else
             attacks.text = $"Attacks: {weapon.attacks}";
         armourPen.text = $"AP: {weapon.armorPenetration}";
