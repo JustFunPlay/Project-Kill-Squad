@@ -3075,6 +3075,10 @@ PrefabInstance:
       propertyPath: sceneId
       value: 754056177
       objectReference: {fileID: 0}
+    - target: {fileID: 7663315943408848574, guid: d2405bce06f0dc14ba1a63e60c52813b, type: 3}
+      propertyPath: sceneId
+      value: 1007794823
+      objectReference: {fileID: 0}
     - target: {fileID: 9105469612795249173, guid: d2405bce06f0dc14ba1a63e60c52813b, type: 3}
       propertyPath: sceneId
       value: 195279364
@@ -3159,9 +3163,17 @@ PrefabInstance:
       propertyPath: sceneId
       value: 410103073
       objectReference: {fileID: 0}
+    - target: {fileID: 539928970239731723, guid: 46562c02cfc0fc9498014d6ccbba74ba, type: 3}
+      propertyPath: sceneId
+      value: 4204962508
+      objectReference: {fileID: 0}
     - target: {fileID: 3116866865795025095, guid: 46562c02cfc0fc9498014d6ccbba74ba, type: 3}
       propertyPath: sceneId
       value: 246566691
+      objectReference: {fileID: 0}
+    - target: {fileID: 4975236342397972710, guid: 46562c02cfc0fc9498014d6ccbba74ba, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5305431696237943727, guid: 46562c02cfc0fc9498014d6ccbba74ba, type: 3}
       propertyPath: m_RootOrder
