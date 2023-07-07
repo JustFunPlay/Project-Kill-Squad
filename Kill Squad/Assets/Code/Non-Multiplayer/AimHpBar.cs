@@ -15,7 +15,8 @@ public class AimHpBar : MonoBehaviour
         lookAt = GetComponentInParent<CharacterBase>().Owner.GetComponentInChildren<Camera>().transform;
         while (true) 
         {
-            transform.LookAt(lookAt, Vector3.up);
+            //transform.LookAt(new Vector3(lookAt.position.x, transform.position.y, lookAt.position.z), Vector3.up);
+            transform.rotation = lookAt.rotation;
             yield return new WaitForSeconds(0.1f);
         }
     }

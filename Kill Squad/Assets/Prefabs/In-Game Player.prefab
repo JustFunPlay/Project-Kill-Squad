@@ -25,14 +25,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3238597813436926916}
-  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 0, y: 20, z: -10}
+  m_LocalRotation: {x: 0.6427876, y: 0, z: 0, w: 0.7660445}
+  m_LocalPosition: {x: 0, y: 15, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6157914302107609602}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 80, y: 0, z: 0}
 --- !u!20 &6956326884816333900
 Camera:
   m_ObjectHideFlags: 0
@@ -177,6 +177,16 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   moveSpeed: 10
+  edgeMoveSpeed: 30
+  mouseMoveSpeed: 0.1
+  moveMargin: 0.05
+  rotateSpeed: 90
+  zoomSpeed: 6
+  camBoundary:
+    xLimit: {x: -86, y: 86}
+    zLimit: {x: -30, y: 30}
+  zoomBoundary: {x: 10, y: 50}
+  cam: {fileID: 0}
 --- !u!114 &9158309464153799676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,7 +248,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7090007459527378745}
         m_TargetAssemblyTypeName: InGamePlayer, Assembly-CSharp
-        m_MethodName: RotatePlayer
+        m_MethodName: RotateCamInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -250,6 +260,70 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 70babc27-aed6-4000-94d9-6153df00acc7
     m_ActionName: New action map/Rotate[/Keyboard/rightArrow,/Keyboard/leftArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7090007459527378745}
+        m_TargetAssemblyTypeName: InGamePlayer, Assembly-CSharp
+        m_MethodName: ZoomCamInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: af3888ae-c49d-4b94-814e-488f3ca74cc7
+    m_ActionName: New action map/zoomCamInput[/Keyboard/upArrow,/Keyboard/downArrow,/Mouse/scroll/up,/Mouse/scroll/down]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7090007459527378745}
+        m_TargetAssemblyTypeName: InGamePlayer, Assembly-CSharp
+        m_MethodName: RightClick
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 17d1d1ba-7cc0-4152-af72-b557fb686443
+    m_ActionName: New action map/rightClick[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7090007459527378745}
+        m_TargetAssemblyTypeName: InGamePlayer, Assembly-CSharp
+        m_MethodName: MoveMouse
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a8cdc29f-753f-4072-bc09-cdb2f83ab685
+    m_ActionName: New action map/MoveMouse[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7090007459527378745}
+        m_TargetAssemblyTypeName: InGamePlayer, Assembly-CSharp
+        m_MethodName: MiddleClick
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d6da4439-ec9b-4fb8-8861-be806d088acc
+    m_ActionName: New action map/middleMouse[/Mouse/middleButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: New action map
